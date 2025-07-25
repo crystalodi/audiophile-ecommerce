@@ -4,11 +4,12 @@ import QuantitySelector from "./QuantitySelector";
 import { Slug } from "@/sanity.types";
 
 export default function AddToCart({stock, slug}: {stock: number; slug: Slug}) {
-  const [quantity, setQuantity] = useState(1)
+  const [quantity, setQuantity] = useState(1);
   const isDisabled = stock === 0;
 
   const handleAddToCart = () => {
     // call state management
+    console.log(`add ${slug.current} to cart`);
   };
 
   return (

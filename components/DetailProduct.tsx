@@ -46,9 +46,9 @@ export default function DetailProduct(props: DetailProductType) {
       </div>
       <div className='flex flex-col items-center justify-center flex-1'>
         <div className='flex flex-col'>
-          {isNewProduct && (<div className='overline-text text-audiophile-orange mb-6'>new product</div>)}
-          <h1 className='heading-4 mb-6 max-w-65'>{productName}</h1>
-          <p className='body-text opacity-50 mb-6'>{description}</p>
+          {isNewProduct && (<div className='overline-text text-audiophile-orange mb-6 md:mb-[17px]'>new product</div>)}
+          <h1 className='heading-4 mb-6 max-w-65 md:mb-8 xl:heading-2'>{productName}</h1>
+          <p className='body-text opacity-50 mb-6 md:mb-8'>{description}</p>
           <div className='font-bold mb-[31px]'>{`$ ${price.toLocaleString('en-US')}`}</div>
           <div>
             <AddToCart stock={stock} slug={slug}/>

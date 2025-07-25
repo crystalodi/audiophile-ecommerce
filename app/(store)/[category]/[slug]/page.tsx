@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { imageUrl } from '@/lib/imageUrl'
 import RelatedProduct from "@/components/RelatedProduct";
 import DetailProduct from "@/components/DetailProduct";
+import Link from "next/link";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }>}) {
   const { slug } = await params;
@@ -42,7 +43,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="main-container">
-      <div className="mt-[15px] flex flex-col">
+      <div className="mt-4 md:mt-[33px] xl:mt-[79px] flex flex-col">
+        <div className="mb-6 xl:mb-[52px]">
+          <Link href={`/${category.categoryName}`} className="body-text opacity-50">Go Back</Link>
+        </div>
         <section aria-label={`Add ${productName} to cart`} className="mb-22">
           <DetailProduct {...product}/>
         </section>
@@ -50,7 +54,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <div className="flex flex-col xl:flex-row xl:gap-x-[125px]">
             <div className="flex flex-col mb-22 md:mb-30 xl:flex-1/3 xl:mb-0">
               <h2 className="mb-6 md:mb-8 heading-5 md:heading-3">Features</h2>
-              <div className="text-black opacity-50 prose max-w-none body-text">
+              <div className="opacity-50 prose max-w-none body-text">
                 {Array.isArray(features) && (<PortableText value={features}/>)}
               </div>
             </div>
@@ -60,7 +64,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {includes?.map(item => (
                   <li key={item._key} className="flex gap-x-[21px]">
                     <div className="text-audiophile-orange font-bold">{item.quantity}x</div>
-                    <div className="text-black opacity-50">{item.item}</div>
+                    <div className="opacity-50">{item.item}</div>
                   </li>
                 ))}
               </ul>
@@ -106,7 +110,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </section>
         <section aria-label="products you might also like" className="mb-30">
           <div className="text-center w-full">
-            <h2 className="text-black mb-10 heading-5 md:heading-3">you may also like</h2>
+            <h2 className="mb-10 md:mb-13 xl:mb-16 heading-5 md:heading-3">you may also like</h2>
             <div className="flex flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px]">
               {others?.map(other => (
               <RelatedProduct
