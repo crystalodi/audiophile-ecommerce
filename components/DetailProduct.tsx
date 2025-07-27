@@ -31,8 +31,8 @@ export default function DetailProduct(props: DetailProductType) {
 
   return (
     <article className={cardClasses}>
-      <div className="flex flex-col rounded-lg md:flex-1 md:w-1/2">
-        <picture className="w-full md:max-h-[480px] xl:max-h-[560px]">
+      <div className="flex flex-col rounded-lg md:flex-1 md:w-2/5 xl:w-1/2">
+        <picture className='md:max-h-[481px] xl:max-h-[initial]'>
           <source
             srcSet={imageUrl(mediaImage.desktop.asset).url()}
             media="(min-width: 1280px)"
@@ -41,13 +41,13 @@ export default function DetailProduct(props: DetailProductType) {
             srcSet={imageUrl(mediaImage.tablet.asset).url()}
             media="(min-width: 768px)"
           />
-          <img src={imageUrl(mediaImage.mobile.asset).url()} alt={productName} className="rounded-lg h-full w-full md:object-center md:object-cover" loading="lazy"/>
+          <img src={imageUrl(mediaImage.mobile.asset).url()} alt={productName} className="rounded-lg h-full w-full md:object-cover" loading="lazy"/>
         </picture>
       </div>
       <div className='flex flex-col items-center justify-center flex-1'>
         <div className='flex flex-col'>
           {isNewProduct && (<div className='overline-text text-audiophile-orange mb-6 md:mb-[17px]'>new product</div>)}
-          <h1 className='heading-4 mb-6 max-w-65 md:mb-8 xl:heading-2'>{productName}</h1>
+          <h1 className='heading-4 mb-6 md:mb-8 xl:heading-2'>{productName}</h1>
           <p className='body-text opacity-50 mb-6 md:mb-8'>{description}</p>
           <div className='font-bold mb-[31px]'>{`$ ${price.toLocaleString('en-US')}`}</div>
           <div>

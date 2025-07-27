@@ -25,7 +25,7 @@ export default function RelatedProduct(props: RelatedProductType) {
             srcSet={imageUrl(mediaImage.tablet.asset).url()}
             media="(min-width: 768px)"
           />
-          <img src={imageUrl(mediaImage.mobile.asset).url()} alt={productName} loading="lazy" className='rounded-[8px] h-full w-full object-contain object-center md:object-cover'/>
+          <img src={imageUrl(mediaImage.mobile.asset).url()} alt={productName} loading="lazy" className='rounded-[8px] h-full w-full object-contain object-center md:object-cover 2xl:object-contain'/>
         </picture>
       </div>
       <div className="flex flex-col justify-center items-center">

@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               <ul className="list-none flex flex-col gap-y-2 body-text capitalize md:flex-1 xl:flex-[initial]">
                 {includes?.map(item => (
                   <li key={item._key} className="flex gap-x-[21px]">
-                    <div className="text-audiophile-orange font-bold">{item.quantity}x</div>
+                    <div className="text-audiophile-orange font-bold basis-[18px]">{item.quantity}x</div>
                     <div className="opacity-50">{item.item}</div>
                   </li>
                 ))}
