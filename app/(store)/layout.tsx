@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google"
 import "../globals.css";
 import NavMenu from "@/components/NavMenu";
 import { SanityLive } from "@/sanity/lib/live";
+import ToastContainer from "@/components/Toast";
 
 export const metadata: Metadata = {
   title: "Audiophile",
@@ -27,6 +28,7 @@ export default function RootLayout({
           {children}
         </main>
         <SanityLive/>
+        <ToastContainer />
       </body>
     </html>
   );

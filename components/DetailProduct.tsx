@@ -51,7 +51,7 @@ export default function DetailProduct(props: DetailProductType) {
           <p className='body-text opacity-50 mb-6 md:mb-8'>{description}</p>
           <div className='font-bold mb-[31px]'>{`$ ${price.toLocaleString('en-US')}`}</div>
           <div>
-            <AddToCart stock={stock} slug={slug}/>
+            <AddToCart stock={stock} slug={slug} productName={productName}/>
           </div>
         </div>
       </div>
