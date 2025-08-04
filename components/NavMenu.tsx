@@ -1,14 +1,22 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
+import Dialog from "./Dialog"
 
 export default function NavMenu() {
+  const [isCartDialogOpen, setCartIsDialogOpen] = useState(false)
+
+  const openCartDialog = () => setCartIsDialogOpen(true)
+  const closeCartDialog = () => setCartIsDialogOpen(false)
+
   return (
     <header className="bg-audiophile-black relative z-[10000000]">
       <nav className="flex items-center justify-between border-b-[1px] border-b-audiophile-divider py-[32px] px-[24px] md:px-[42px] xl:px-[164px] w-full" aria-label="Main navigation">
         <button 
-          className="xl:hidden" 
+          className="xl:hidden cursor-pointer" 
           aria-label="Open mobile menu"
-          aria-expanded="false"
           aria-controls="mobile-menu"
         >
           <Image src="/icon-hamburger.svg" width={16} height={15} alt="" />
@@ -33,10 +41,11 @@ export default function NavMenu() {
           </li>
         </ul>
         
-        <button aria-label="Open shopping cart" className="hover:cursor-pointer">
+        <button aria-label="Open shopping cart" className="cursor-pointer" onClick={openCartDialog}>
           <Image src="/icon-cart.svg" width={23} height={20} alt="" />
         </button>
       </nav>
+      <Dialog isOpen={isCartDialogOpen} onClose={closeCartDialog} />
     </header>
   )
 }
