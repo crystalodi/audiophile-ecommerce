@@ -3,16 +3,10 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import Dialog from "./Dialog"
 
 export default function NavMenu() {
-  const [isCartDialogOpen, setCartIsDialogOpen] = useState(false)
-
-  const openCartDialog = () => setCartIsDialogOpen(true)
-  const closeCartDialog = () => setCartIsDialogOpen(false)
-
   return (
-    <header className="bg-audiophile-black relative z-[10000000]">
+    <header className="bg-audiophile-black relative z-3">
       <nav className="flex items-center justify-between border-b-[1px] border-b-audiophile-divider py-[32px] px-[24px] md:px-[42px] xl:px-[164px] w-full" aria-label="Main navigation">
         <button 
           className="xl:hidden cursor-pointer" 
@@ -40,12 +34,10 @@ export default function NavMenu() {
             <Link href="/earphones" className="hover:text-audiophile-orange" role="menuitem">Earphones</Link>
           </li>
         </ul>
-        
-        <button aria-label="Open shopping cart" className="cursor-pointer" onClick={openCartDialog}>
+        <button aria-label="Open shopping cart" className="cursor-pointer">
           <Image src="/icon-cart.svg" width={23} height={20} alt="" />
         </button>
       </nav>
-      <Dialog isOpen={isCartDialogOpen} onClose={closeCartDialog} />
     </header>
   )
 }

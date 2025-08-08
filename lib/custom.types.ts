@@ -4,4 +4,4 @@ export type DetailProductType = Omit<NonNullable<PRODUCT_BY_ID_QUERYResult>, "_i
 
 export type RelatedProductType = Omit<NonNullable<NonNullable<PRODUCT_BY_ID_QUERYResult>["others"]>[0], "_id">;
 
-export type CategoryProductType = Omit<PRODUCTS_BY_CATEGORY_QUERYResult[0], "_id">
+export type CategoryProductType = Omit<PRODUCTS_BY_CATEGORY_QUERYResult[0], "_id">;
