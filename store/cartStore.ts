@@ -1,27 +1,34 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-type CartItem = {
-  slug: string,
-  productName: string,
-  quantity: number
+export type CartItem = {
+  slug: string;
+  productName: string;
+  quantity: number;
 }
 
 type UpdateQuantityType = Omit<CartItem, "productName">
 
 interface CartStore {
-  cartItems: Map<string, CartItem> // slug as key
-  getCartItemsArray: () => CartItem[] // Helper to get array
-  addCartItem: (item: CartItem) => void
-  deleteCartItem: (slug: string) => void
-  updateQuantity: (item: UpdateQuantityType) => void
-  clearCart: () => void
+  cartItems: Map<string, CartItem>;
+  hasHydrated: boolean;
+  setHasHydrated: (state: boolean) => void;
+  getCartItemsArray: () => CartItem[];
+  addCartItem: (item: CartItem) => void;
+  deleteCartItem: (slug: string) => void;
+  updateQuantity: (item: UpdateQuantityType) => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       cartItems: new Map(),
+      hasHydrated: false,
+      
+      setHasHydrated: (state: boolean) => {
+        set({ hasHydrated: state })
+      },
       
       getCartItemsArray: () => Array.from(get().cartItems.values()),
       
@@ -75,6 +82,9 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'audiophile-cart-storage',
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      },
       storage: {
         getItem: (name) => {
           const str = localStorage.getItem(name)

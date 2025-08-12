@@ -2,9 +2,13 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useRef, useState } from "react"
+import CartDialog from "./CartDialog"
 
 export default function NavMenu() {
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   return (
     <header className="bg-audiophile-black relative z-3">
       <nav className="flex items-center justify-between border-b-[1px] border-b-audiophile-divider py-[32px] px-[24px] md:px-[42px] xl:px-[164px] w-full" aria-label="Main navigation">
@@ -34,9 +38,10 @@ export default function NavMenu() {
             <Link href="/earphones" className="hover:text-audiophile-orange" role="menuitem">Earphones</Link>
           </li>
         </ul>
-        <button aria-label="Open shopping cart" className="cursor-pointer">
+        <button aria-label="Open shopping cart" className="cursor-pointer" onClick={() => setIsCartModalOpen(true)} ref={buttonRef}>
           <Image src="/icon-cart.svg" width={23} height={20} alt="" />
         </button>
+        <CartDialog open={isCartModalOpen} onClose={() => setIsCartModalOpen(false)}/>
       </nav>
     </header>
   )
