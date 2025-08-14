@@ -3,11 +3,8 @@ import { persist } from 'zustand/middleware'
 
 export type CartItem = {
   slug: string;
-  productName: string;
   quantity: number;
 }
-
-type UpdateQuantityType = Omit<CartItem, "productName">
 
 interface CartStore {
   cartItems: Map<string, CartItem>;
@@ -16,7 +13,7 @@ interface CartStore {
   getCartItemsArray: () => CartItem[];
   addCartItem: (item: CartItem) => void;
   deleteCartItem: (slug: string) => void;
-  updateQuantity: (item: UpdateQuantityType) => void;
+  updateQuantity: (item: CartItem) => void;
   clearCart: () => void;
 }
 
@@ -60,7 +57,7 @@ export const useCartStore = create<CartStore>()(
         })
       },
       
-      updateQuantity: (item: UpdateQuantityType) => {
+      updateQuantity: (item: CartItem) => {
         set(state => {
           const newCartItems = new Map(state.cartItems)
           const existingItem = newCartItems.get(item.slug)

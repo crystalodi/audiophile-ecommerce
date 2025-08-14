@@ -68,6 +68,17 @@ async function getProductDetail(slug: string) {
   }
 }
 
+async function getCartDetail(slugs: string[]) {
+  // get cart detail
+  const PRODUCTS_BY_SLUG_IDS_QUERY = defineQuery(`
+    *[_type == "product" && slug.current in $slugs] {
+      "mediaImage":image->{mobile},
+      price,
+      shortName
+    }
+  `);
+}
+
 export {
   getProductDetail,
   getProductsByCategory

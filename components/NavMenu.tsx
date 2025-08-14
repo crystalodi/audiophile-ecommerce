@@ -41,7 +41,7 @@ export default function NavMenu() {
         <button aria-label="Open shopping cart" className="cursor-pointer" onClick={() => setIsCartModalOpen(true)} ref={buttonRef}>
           <Image src="/icon-cart.svg" width={23} height={20} alt="" />
         </button>
-        <CartDialog open={isCartModalOpen} onClose={() => setIsCartModalOpen(false)}/>
+        <CartDialog open={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} anchorRef={buttonRef}/>
       </nav>
     </header>
   )
