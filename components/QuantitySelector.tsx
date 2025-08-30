@@ -6,9 +6,10 @@ type QuantitySelectorProps = {
   quantity: number;
   onQuantityChange: (quantity: number) => void;
   disabled?: boolean;
+  minQuantity?: number;
 }
 
-export default function QuantitySelector({ maxQuantity, quantity, onQuantityChange, disabled = false }: QuantitySelectorProps) {
+export default function QuantitySelector({ maxQuantity, quantity, onQuantityChange, disabled = false, minQuantity = 1 }: QuantitySelectorProps) {
   const buttonControlClasses = cn(
     "flex",
     "items-center",
@@ -36,13 +37,13 @@ export default function QuantitySelector({ maxQuantity, quantity, onQuantityChan
   }
 
   const handleDecrement = () => {
-    const num = Math.max(1, quantity - 1);
+    const num = Math.max(minQuantity, quantity - 1);
     onQuantityChange(num);
   }
 
   const handleQuantityInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
-    const num = Math.max(1, Math.min(maxQuantity, Number(value) || 1));
+    const num = Math.max(minQuantity, Math.min(maxQuantity, Number(value) || minQuantity));
     onQuantityChange(num);
   };
 
@@ -64,7 +65,7 @@ export default function QuantitySelector({ maxQuantity, quantity, onQuantityChan
     >
       <button 
         className={buttonControlClasses} 
-        disabled={disabled || quantity <= 1} 
+        disabled={disabled || quantity <= minQuantity} 
         onClick={handleDecrement}
         aria-label={`Decrease quantity, current quantity ${quantity}`}
         type="button"
@@ -80,7 +81,7 @@ export default function QuantitySelector({ maxQuantity, quantity, onQuantityChan
         onKeyDown={handleKeyDown}
         disabled={disabled} 
         aria-label="Product quantity"
-        aria-valuemin={1} 
+        aria-valuemin={minQuantity} 
         aria-valuemax={maxQuantity}
         aria-valuenow={quantity}
         role="spinbutton"

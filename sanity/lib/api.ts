@@ -69,17 +69,31 @@ async function getProductDetail(slug: string) {
 }
 
 async function getCartDetail(slugs: string[]) {
-  // get cart detail
   const PRODUCTS_BY_SLUG_IDS_QUERY = defineQuery(`
     *[_type == "product" && slug.current in $slugs] {
-      "mediaImage":image->{mobile},
+      image,
       price,
-      shortName
+      shortName,
+      productName,
+      "maxQuantity": stock,
+      "slug": slug.current
     }
   `);
+
+  try {
+    const products = await sanityFetch({
+      query: PRODUCTS_BY_SLUG_IDS_QUERY,
+      params: { slugs }
+    });
+    return products.data || [];
+  } catch (error) {
+    console.error("Error fetching cart details:", error);
+    return [];
+  }
 }
 
 export {
   getProductDetail,
-  getProductsByCategory
+  getProductsByCategory,
+  getCartDetail
 }

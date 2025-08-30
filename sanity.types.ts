@@ -380,6 +380,16 @@ export type PRODUCT_BY_ID_QUERYResult = {
   stock: number;
   price: number;
 } | null;
+// Variable: PRODUCTS_BY_SLUG_IDS_QUERY
+// Query: *[_type == "product" && slug.current in $slugs] {      "image": image.mobile.asset->url,      price,      shortName,      productName,      "maxQuantity": stock,      "slug": slug.current    }
+export type PRODUCTS_BY_SLUG_IDS_QUERYResult = Array<{
+  image: string | null;
+  price: number;
+  shortName: string | null;
+  productName: string;
+  maxQuantity: number;
+  slug: string;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -387,5 +397,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "\n    *[\n        _type == \"product\"\n        && references(*[_type == \"category\" && slug.current == $categorySlug]._id)\n    ] {\n      _id,\n      \"mediaImage\": categoryImage,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      isNewProduct\n    }\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n    *[\n        _type == \"product\"\n        && slug.current == $slug\n    ] [0] {\n      \"mediaImage\": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, \"mediaImage\":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price\n    }\n  ": PRODUCT_BY_ID_QUERYResult;
+    "\n    *[_type == \"product\" && slug.current in $slugs] {\n      \"image\": image.mobile.asset->url,\n      price,\n      shortName,\n      productName,\n      \"maxQuantity\": stock,\n      \"slug\": slug.current\n    }\n  ": PRODUCTS_BY_SLUG_IDS_QUERYResult;
   }
 }

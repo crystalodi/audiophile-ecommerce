@@ -14,14 +14,9 @@ export default function AddToCart({stock, slug, productName}: {stock: number; sl
   const handleAddToCart = () => {
     addCartItem({
       slug: slug.current,
-      productName,
       quantity
     });
-    
-    // Show success toast
     addToast(`${productName} added to cart!`, 'success', 3000);
-    
-    // Reset quantity after adding
     setQuantity(1);
   };
 

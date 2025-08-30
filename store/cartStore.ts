@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
@@ -109,4 +110,54 @@ export const useCartStore = create<CartStore>()(
       },
     }
   )
-)
+);
+
+export function useCartWithProductDetail() {
+  const cartItems = useCartStore(state => state.cartItems);
+  const hasHydrated = useCartStore(state => state.hasHydrated);
+  const [itemsWithPrices, setItemsWithPrices] = useState<(CartItem & {price:number, productName: string, image: string, maxQuantity: number})[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    const fetchCartWithProductDetail = async () => {
+      const items = Array.from(cartItems.values());
+      const slugs = items.map(items => items.slug);
+      if (slugs.length === 0) {
+        setItemsWithPrices([]);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/cart/details", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ slugs })
+        });
+
+        if(!response.ok) throw new Error("Failed to fetch cart details");
+        const products = await response.json();
+        const itemsWithDetails = items.map(cartItem => {
+          const product = products.find((prod: any) => prod.slug === cartItem.slug);
+          return {
+            ...cartItem,
+            price: product?.price,
+            productName: product?.shortName ? product?.shortName : product?.productName,
+            image: product?.image,
+            maxQuantity: product?.maxQuantity
+          }
+        });
+        setItemsWithPrices(itemsWithDetails);
+      } catch (error) {
+        console.error('Failed to fetch cart details:', error)
+        setItemsWithPrices([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCartWithProductDetail();
+  }, [hasHydrated, cartItems])
+  return { itemsWithPrices, isLoading }
+}
