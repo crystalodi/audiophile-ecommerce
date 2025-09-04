@@ -7,9 +7,10 @@ type QuantitySelectorProps = {
   onQuantityChange: (quantity: number) => void;
   disabled?: boolean;
   minQuantity?: number;
+  variant: "small" | "large"
 }
 
-export default function QuantitySelector({ maxQuantity, quantity, onQuantityChange, disabled = false, minQuantity = 1 }: QuantitySelectorProps) {
+export default function QuantitySelector({ maxQuantity, quantity, onQuantityChange, disabled = false, minQuantity = 1, variant = "large" }: QuantitySelectorProps) {
   const buttonControlClasses = cn(
     "flex",
     "items-center",
@@ -30,6 +31,18 @@ export default function QuantitySelector({ maxQuantity, quantity, onQuantityChan
     "focus:outline-0",
     "disabled:opacity-25"
   );
+
+  const containerClasses = cn(
+    "inline-flex", 
+    "justify-center",
+    "bg-audiophile-gray",
+    "subtitle-text",
+    {
+      "max-w-[120px] h-[48px]": variant === "large",
+      "max-w-[96px] h-[32px]": variant === "small"
+
+    }
+  )
 
   const handleIncrement = () => {
     const num = Math.min(maxQuantity, quantity + 1);
@@ -59,7 +72,7 @@ export default function QuantitySelector({ maxQuantity, quantity, onQuantityChan
 
   return (
     <div 
-      className="inline-flex justify-center max-w-[120px] h-[48px] bg-audiophile-gray subtitle-text"
+      className={containerClasses}
       role="group"
       aria-label={`Quantity selector, current quantity ${quantity}, maximum ${maxQuantity}`}
     >

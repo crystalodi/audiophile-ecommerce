@@ -1,3 +1,4 @@
+import { CustomImageType } from '@/sanity.types';
 import { useEffect, useState } from 'react';
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
@@ -115,7 +116,7 @@ export const useCartStore = create<CartStore>()(
 export function useCartWithProductDetail() {
   const cartItems = useCartStore(state => state.cartItems);
   const hasHydrated = useCartStore(state => state.hasHydrated);
-  const [itemsWithPrices, setItemsWithPrices] = useState<(CartItem & {price:number, productName: string, image: string, maxQuantity: number})[]>([]);
+  const [itemsWithPrices, setItemsWithPrices] = useState<(CartItem & {price:number, productName: string, image: CustomImageType, maxQuantity: number})[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

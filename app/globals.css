@@ -79,6 +79,33 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gray-200);
+}
+
+.animate-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--color-gray-50), transparent);
+  animation: shimmer .5s linear infinite;
+  z-index: 1;
+}
+
 @utility heading-1 {
   font-weight: bold;
   text-transform: uppercase;
