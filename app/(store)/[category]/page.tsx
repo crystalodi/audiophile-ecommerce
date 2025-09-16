@@ -1,4 +1,4 @@
-import CategoryProduct from "@/components/CategoryProduct";
+import ProductCard from "@/components/ProductCard";
 import { getStaticPaths } from "@/lib/getStaticPaths";
 import { getProductsByCategory } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
@@ -19,7 +19,7 @@ async function CategoryPage({ params }: { params: Promise<{ category: string }>}
         <section className="flex flex-col mt-16 md:mt-30 xl:mt-40 justify-center items-center gap-y-30 mb-30" aria-label={`${category} products`}>
           {products.length > 0 ? (
             products.map((product) => (
-              <CategoryProduct {...product} key={product._id}/>
+              <ProductCard product={product} key={product._id} variant="category"/>
             ))
           ) : (
             <p>No products found.</p>

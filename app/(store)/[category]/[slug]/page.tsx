@@ -3,8 +3,8 @@ import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
 import { imageUrl } from '@/lib/imageUrl'
 import RelatedProduct from "@/components/RelatedProduct";
-import DetailProduct from "@/components/DetailProduct";
 import Link from "next/link";
+import ProductCard from "@/components/ProductCard";
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }>}) {
   const { slug } = await params;
@@ -48,7 +48,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <Link href={`/${category.categoryName}`} className="body-text opacity-50">Go Back</Link>
         </div>
         <section aria-label={`Add ${productName} to cart`} className="mb-22">
-          <DetailProduct {...product}/>
+          <ProductCard product={product} variant="detail"/>
         </section>
         <section aria-label={`${productName} features and includes`} className="mb-[121px] xl:mb-40">
           <div className="flex flex-col xl:flex-row xl:gap-x-[125px]">
