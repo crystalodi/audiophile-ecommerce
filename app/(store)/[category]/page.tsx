@@ -1,5 +1,6 @@
 import ProductCard from "@/components/ProductCard";
 import { getStaticPaths } from "@/lib/getStaticPaths";
+import { cn } from "@/lib/utils";
 import { getProductsByCategory } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
 

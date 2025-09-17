@@ -24,12 +24,12 @@ export default function ProductCardSkeleton({ variant, showNewProduct = true }: 
 
   const pictureClasses = clsx({
     'flex flex-col items-center justify-center xl:flex-1': variant === 'category',
-    'md:max-h-[481px] xl:max-h-[initial]': variant === 'detail',
+    'h-[327px] md:h-[480px] xl:h-[560px]': variant === 'detail',
   })
 
   const imgSkeletonClasses = clsx('rounded-lg animate-shimmer', {
-    'w-full h-[352px] md:h-[352px] xl:h-[560px]': variant === 'category',
-    'h-full w-full md:h-[481px] md:object-cover': variant === 'detail',
+    'w-full h-[327px] md:h-[352px] xl:h-[560px]': variant === 'category',
+    'w-full h-full md:object-cover': variant === 'detail',
   })
 
   const contentWrapperClasses = clsx({
