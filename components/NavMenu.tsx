@@ -7,11 +7,11 @@ import CartDialog from "./CartDialog"
 
 export default function NavMenu() {
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   return (
     <header className="bg-audiophile-black relative z-3">
-      <nav className="flex items-center justify-between border-b-[1px] border-b-audiophile-divider py-[32px] px-[24px] md:px-[42px] xl:px-[164px] w-full" aria-label="Main navigation">
+      <nav className="flex items-center justify-between border-b-[1px] border-b-audiophile-divider py-[32px] px-[24px] md:px-[42px] xl:px-[164px] w-full" aria-label="Main navigation" ref={navRef}>
         <button 
           className="xl:hidden cursor-pointer" 
           aria-label="Open mobile menu"
@@ -38,10 +38,10 @@ export default function NavMenu() {
             <Link href="/earphones" className="hover:text-audiophile-orange" role="menuitem">Earphones</Link>
           </li>
         </ul>
-        <button aria-label="Open shopping cart" className="cursor-pointer" onClick={() => setIsCartModalOpen(true)} ref={buttonRef}>
+        <button aria-label="Open shopping cart" className="cursor-pointer" onClick={() => setIsCartModalOpen(true)}>
           <Image src="/icon-cart.svg" width={23} height={20} alt="" />
         </button>
-        <CartDialog open={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} anchorRef={buttonRef}/>
+        <CartDialog open={isCartModalOpen} onClose={() => setIsCartModalOpen(false)} anchorRef={navRef}/>
       </nav>
     </header>
   )

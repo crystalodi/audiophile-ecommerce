@@ -22,7 +22,7 @@ export default function AddToCart({stock, slug, productName}: {stock: number; sl
 
   return (
     <div className="flex items-center gap-[16px]">
-      <QuantitySelector maxQuantity={stock} quantity={quantity} onQuantityChange={setQuantity} disabled={isDisabled} variant="large"/>
+      <QuantitySelector maxQuantity={stock} quantity={quantity} onQuantityChange={setQuantity} disabled={isDisabled}/>
       <button className="btn btn-orange" onClick={handleAddToCart} disabled={isDisabled}>
         Add to cart
       </button>

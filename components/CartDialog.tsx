@@ -1,17 +1,18 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useEffect, useState } from "react";
 import Image from "next/image";
 import Dialog from "./Dialog";
 import { useCartStore, useCartWithProductDetail } from "@/store/cartStore";
 import QuantitySelector from "./QuantitySelector";
 import { CustomImageType } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
+import Link from "next/link";
 
 type CartDialogProps = {
   open: boolean;
   onClose: () => void;
-  anchorRef: RefObject<HTMLButtonElement | null>
+  anchorRef: RefObject<HTMLElement | null>
 }
 
 
@@ -77,6 +78,71 @@ function CartDialogSkeleton() {
   </>
 }
 
+function CartDialogHeader({ isLoading, totalItems, onRemoveAll }: {
+  isLoading: boolean;
+  totalItems: number;
+  onRemoveAll: () => void;
+}) {
+
+  if (!isLoading && totalItems === 0) {
+    return <></>;
+  }
+
+  return (
+    <div className="flex justify-between items-center mb-[31px]">
+      {isLoading ? (
+        <>
+          <div className="h-6 w-20 animate-shimmer"/>
+          <div className="h-4 w-16 animate-shimmer"/>
+        </>
+      ) : (
+        <>
+          <h1 className="heading-6">cart {`(${totalItems})`}</h1>
+          {totalItems > 0 && (
+            <button className="btn-transparent body-text text-black/50 cursor-pointer underline" onClick={onRemoveAll}>Remove All</button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function CartDialogFooter({ isLoading, total, itemsWithPrices }: {
+  isLoading: boolean;
+  total: number;
+  itemsWithPrices: any[];
+}) {
+
+  if (!isLoading && itemsWithPrices.length === 0) {
+    return <></>;
+  }
+
+  return (
+    <>
+      <div className="flex mt-8">
+        {isLoading ? (
+          <>
+            <div className="h-4 w-12 animate-shimmer mr-auto"/>
+            <div className="h-4 w-16 animate-shimmer"/>
+          </>
+        ) : (
+          <>
+            <div className="body-text text-black/50 uppercase mr-auto">total</div>
+            <div className="font-bold">${total.toLocaleString('en-US')}</div>
+          </>
+        )}
+      </div>
+      <div className="mt-6">
+        {isLoading ? (
+          <div className="h-12 w-full animate-shimmer"/>
+        ) : itemsWithPrices.length > 0 && (
+          <button className="btn btn-orange w-full">checkout</button>
+        )}
+      </div>
+    </>
+  );
+}
+
 function CartDialog({open, onClose, anchorRef}: CartDialogProps) {
   const clearCart = useCartStore(state => state.clearCart);
   const { itemsWithPrices, isLoading } = useCartWithProductDetail();
@@ -109,16 +175,26 @@ function CartDialog({open, onClose, anchorRef}: CartDialogProps) {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} className="w-[87.2%] md:w-[377px]" anchorRef={anchorRef}>
-      <div className="max-h-[488px] py-[31px] pl-[33px] pr-[31px]">
+    <Dialog open={open} onClose={onClose} className="w-[87.2%] md:w-[377px] rounded-lg max-h-[488px]" anchorRef={anchorRef} placement="bottom-right" positionStrategy="anchor"
+    useParentHorizontalPaddingAsOffset offset={{
+      x: 0,
+      y: 24
+    }}>
+      <div className="py-[31px] pl-[33px] pr-[31px]">
         <div className="flex flex-col">
-          <div className="flex justify-between items-center mb-[31px]">
-            <h1 className="heading-6">cart {`(${totalItems})`}</h1>
-            {(!isLoading) && <button className="btn-transparent body-text text-black/50 cursor-pointer underline" onClick={removeAllCartItems}>Remove All</button>}
-          </div>
+          <CartDialogHeader 
+            isLoading={isLoading} 
+            totalItems={totalItems} 
+            onRemoveAll={removeAllCartItems}
+          />
           <div className="flex flex-col gap-y-3.5">
             {renderCartContent()}
           </div>
+          <CartDialogFooter 
+            isLoading={isLoading} 
+            total={total} 
+            itemsWithPrices={itemsWithPrices}
+          />
         </div>
       </div>
     </Dialog>

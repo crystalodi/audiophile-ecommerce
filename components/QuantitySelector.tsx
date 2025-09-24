@@ -7,7 +7,7 @@ type QuantitySelectorProps = {
   onQuantityChange: (quantity: number) => void;
   disabled?: boolean;
   minQuantity?: number;
-  variant: "small" | "large"
+  variant?: "small" | "large"
 }
 
 export default function QuantitySelector({ maxQuantity, quantity, onQuantityChange, disabled = false, minQuantity = 1, variant = "large" }: QuantitySelectorProps) {

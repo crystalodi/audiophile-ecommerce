@@ -41,12 +41,12 @@ export default function ProductCardSkeleton({ variant, showNewProduct = true }: 
     'items-center justify-center text-center md:max-w-[83%] xl:text-left xl:items-start xl:max-w-[initial]': variant === 'category',
   })
 
-  const newProductSkeletonClasses = clsx('animate-shimmer rounded h-5', {
+  const newProductSkeletonClasses = clsx('animate-shimmer h-5', {
     'mb-4 w-32': variant === 'category',
     'mb-6 md:mb-[17px] w-32': variant === 'detail',
   })
 
-  const titleSkeletonClasses = clsx('animate-shimmer rounded', {
+  const titleSkeletonClasses = clsx('animate-shimmer', {
     'mb-4 md:mb-8 h-10 md:h-12 w-3/4': variant === 'category',
     'mb-6 md:mb-8 h-10 md:h-12 xl:h-12 w-4/5': variant === 'detail',
   })
@@ -73,21 +73,21 @@ export default function ProductCardSkeleton({ variant, showNewProduct = true }: 
           <div className={titleSkeletonClasses}></div>
           
           <div className={descriptionSkeletonClasses}>
-            <div className="h-6 w-full animate-shimmer rounded"></div>
-            <div className="h-6 w-5/6 animate-shimmer rounded"></div>
-            <div className="h-6 w-4/5 animate-shimmer rounded"></div>
+            <div className="h-6 w-full animate-shimmer"></div>
+            <div className="h-6 w-5/6 animate-shimmer"></div>
+            <div className="h-6 w-4/5 animate-shimmer"></div>
           </div>
           
           {variant === 'category' && (
-            <div className="h-12 w-40 animate-shimmer rounded"></div>
+            <div className="h-12 w-40 animate-shimmer"></div>
           )}
           
           {variant === 'detail' && (
             <>
-              <div className="h-8 w-32 animate-shimmer rounded mb-[31px]"></div>
+              <div className="h-8 w-32 animate-shimmer mb-[31px]"></div>
               <div className="flex gap-4">
-                <div className="h-12 w-32 animate-shimmer rounded"></div>
-                <div className="h-12 w-40 animate-shimmer rounded"></div>
+                <div className="h-12 w-32 animate-shimmer"></div>
+                <div className="h-12 w-40 animate-shimmer"></div>
               </div>
             </>
           )}
