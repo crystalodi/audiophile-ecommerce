@@ -1,13 +1,12 @@
 "use client";
 
-import { RefObject, useEffect, useState } from "react";
+import { RefObject } from "react";
 import Image from "next/image";
 import Dialog from "./Dialog";
 import { useCartStore, useCartWithProductDetail } from "@/store/cartStore";
 import QuantitySelector from "./QuantitySelector";
 import { CustomImageType } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
-import Link from "next/link";
 
 type CartDialogProps = {
   open: boolean;
@@ -150,7 +149,10 @@ function CartDialog({open, onClose, anchorRef}: CartDialogProps) {
   const total = itemsWithPrices.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const totalItems = isLoading ? 0 : itemsWithPrices.length;
 
-  const removeAllCartItems = () => clearCart();
+  const removeAllCartItems = () => {
+    onClose();
+    clearCart();
+  };
 
   const renderCartContent = () => {
     if (isLoading) {

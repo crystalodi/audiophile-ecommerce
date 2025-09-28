@@ -204,25 +204,25 @@ export type SanityImagePalette = {
 
 export type SanityImageDimensions = {
   _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+  height: number;
+  width: number;
+  aspectRatio: number;
 };
 
 export type SanityImageHotspot = {
   _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type SanityImageCrop = {
   _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 };
 
 export type SanityFileAsset = {
@@ -381,9 +381,9 @@ export type PRODUCT_BY_ID_QUERYResult = {
   price: number;
 } | null;
 // Variable: PRODUCTS_BY_SLUG_IDS_QUERY
-// Query: *[_type == "product" && slug.current in $slugs] {      "image": image.mobile.asset->url,      price,      shortName,      productName,      "maxQuantity": stock,      "slug": slug.current    }
+// Query: *[_type == "product" && slug.current in $slugs] {      image,      price,      shortName,      productName,      "maxQuantity": stock,      "slug": slug.current    }
 export type PRODUCTS_BY_SLUG_IDS_QUERYResult = Array<{
-  image: string | null;
+  image: CustomImageType;
   price: number;
   shortName: string | null;
   productName: string;
@@ -397,6 +397,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "\n    *[\n        _type == \"product\"\n        && references(*[_type == \"category\" && slug.current == $categorySlug]._id)\n    ] {\n      _id,\n      \"mediaImage\": categoryImage,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      isNewProduct\n    }\n  ": PRODUCTS_BY_CATEGORY_QUERYResult;
     "\n    *[\n        _type == \"product\"\n        && slug.current == $slug\n    ] [0] {\n      \"mediaImage\": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, \"mediaImage\":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price\n    }\n  ": PRODUCT_BY_ID_QUERYResult;
-    "\n    *[_type == \"product\" && slug.current in $slugs] {\n      \"image\": image.mobile.asset->url,\n      price,\n      shortName,\n      productName,\n      \"maxQuantity\": stock,\n      \"slug\": slug.current\n    }\n  ": PRODUCTS_BY_SLUG_IDS_QUERYResult;
+    "\n    *[_type == \"product\" && slug.current in $slugs] {\n      image,\n      price,\n      shortName,\n      productName,\n      \"maxQuantity\": stock,\n      \"slug\": slug.current\n    }\n  ": PRODUCTS_BY_SLUG_IDS_QUERYResult;
   }
 }

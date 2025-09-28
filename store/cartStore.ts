@@ -17,6 +17,7 @@ interface CartStore {
   deleteCartItem: (slug: string) => void;
   updateQuantity: (item: CartItem) => void;
   clearCart: () => void;
+  getTotalItems: () => number;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -27,6 +28,11 @@ export const useCartStore = create<CartStore>()(
       
       setHasHydrated: (state: boolean) => {
         set({ hasHydrated: state })
+      },
+
+      getTotalItems: () => {
+        const cartItems = get().cartItems;
+        return Array.from(cartItems.values()).reduce((sum, item) => sum + item.quantity, 0); 
       },
       
       getCartItemsArray: () => Array.from(get().cartItems.values()),
