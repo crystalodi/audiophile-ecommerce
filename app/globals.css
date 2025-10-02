@@ -66,10 +66,6 @@
     @apply text-[13px] font-bold tracking-[1px] leading-[25px] uppercase;
   }
 
-  .main-container {
-    @apply w-full px-[24px] md:pl-[39px] md:pr-[40px] xl:px-[165px];
-  }
-
   @media (min-width: 768px) {
     .gallery-image-grid {
       grid-template-areas:
@@ -152,5 +148,21 @@
   letter-spacing: 1.3px;
   font-size: 18px;
   line-height: 24px;
+}
+
+@utility main-container {
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  
+  @media (min-width: 768px) {
+    padding-left: 39px;
+    padding-right: 40px;
+  }
+  
+  @media (min-width: 1280px) {
+    padding-left: 165px;
+    padding-right: 165px;
+  }
 }
 

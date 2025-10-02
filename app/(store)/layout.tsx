@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google"
 import "../globals.css";
-import NavMenu from "@/components/NavMenu";
+import Header from "@/components/Header";
 import { SanityLive } from "@/sanity/lib/live";
 import ToastContainer from "@/components/Toast";
 
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={manrope.variable}>
       <body>
-        <NavMenu/>
+        <Header/>
         <main>
           {children}
         </main>
