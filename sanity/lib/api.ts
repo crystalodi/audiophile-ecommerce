@@ -2,7 +2,7 @@ import { sanityFetch } from "./live";
 import { defineQuery } from "next-sanity";
 
 async function getProductsByCategory(categorySlug: string) {
-  const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`
+	const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`
     *[
         _type == "product"
         && references(*[_type == "category" && slug.current == $categorySlug]._id)
@@ -16,24 +16,24 @@ async function getProductsByCategory(categorySlug: string) {
       category-> {categoryName},
       isNewProduct
     }
-  `)
+  `);
 
-  try {
-    const products = await sanityFetch({
-      query: PRODUCTS_BY_CATEGORY_QUERY,
-      params: {
-        categorySlug
-      }
-    })
-    return products.data || [];
-  } catch (error) {
-    console.error("Error fetching category");
-    return []
-  }
+	try {
+		const products = await sanityFetch({
+			query: PRODUCTS_BY_CATEGORY_QUERY,
+			params: {
+				categorySlug,
+			},
+		});
+		return products.data || [];
+	} catch (error) {
+		console.error("Error fetching category");
+		return [];
+	}
 }
 
 async function getProductDetail(slug: string) {
-  const PRODUCT_BY_ID_QUERY = defineQuery(`
+	const PRODUCT_BY_ID_QUERY = defineQuery(`
     *[
         _type == "product"
         && slug.current == $slug
@@ -52,24 +52,24 @@ async function getProductDetail(slug: string) {
       isNewProduct,
       price
     }
-  `)
+  `);
 
-  try {
-    const product = await sanityFetch({
-      query: PRODUCT_BY_ID_QUERY,
-      params: {
-        slug
-      }
-    })
-    return product.data || null
-  } catch (error) {
-    console.error("Error fetching product by ID:", error);
-    return null
-  }
+	try {
+		const product = await sanityFetch({
+			query: PRODUCT_BY_ID_QUERY,
+			params: {
+				slug,
+			},
+		});
+		return product.data || null;
+	} catch (error) {
+		console.error("Error fetching product by ID:", error);
+		return null;
+	}
 }
 
 async function getCartDetail(slugs: string[]) {
-  const PRODUCTS_BY_SLUG_IDS_QUERY = defineQuery(`
+	const PRODUCTS_BY_SLUG_IDS_QUERY = defineQuery(`
     *[_type == "product" && slug.current in $slugs] {
       image,
       price,
@@ -80,20 +80,16 @@ async function getCartDetail(slugs: string[]) {
     }
   `);
 
-  try {
-    const products = await sanityFetch({
-      query: PRODUCTS_BY_SLUG_IDS_QUERY,
-      params: { slugs }
-    });
-    return products.data || [];
-  } catch (error) {
-    console.error("Error fetching cart details:", error);
-    return [];
-  }
+	try {
+		const products = await sanityFetch({
+			query: PRODUCTS_BY_SLUG_IDS_QUERY,
+			params: { slugs },
+		});
+		return products.data || [];
+	} catch (error) {
+		console.error("Error fetching cart details:", error);
+		return [];
+	}
 }
 
-export {
-  getProductDetail,
-  getProductsByCategory,
-  getCartDetail
-}
+export { getProductDetail, getProductsByCategory, getCartDetail };
