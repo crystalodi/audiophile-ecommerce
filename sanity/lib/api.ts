@@ -92,4 +92,39 @@ async function getCartDetail(slugs: string[]) {
 	}
 }
 
-export { getProductDetail, getProductsByCategory, getCartDetail };
+async function getNavigationMenu(
+	menuType: "header" | "footer" | "mobile" | "content"
+) {
+	const NAVIGATION_MENU_QUERY = defineQuery(`
+    *[_type == "navigationMenu" && menuType == $menuType][0] {
+      menuType,
+      showLogo,
+      navigationItems[isActive == true] | order(order asc) {
+        title,
+        href,
+        image,
+        order
+      }
+    }
+  `);
+
+	try {
+		const navigationMenu = await sanityFetch({
+			query: NAVIGATION_MENU_QUERY,
+			params: {
+				menuType,
+			},
+		});
+		return navigationMenu.data || null;
+	} catch (error) {
+		console.error(`Error fetching ${menuType} navigation menu:`, error);
+		return null;
+	}
+}
+
+export {
+	getProductDetail,
+	getProductsByCategory,
+	getCartDetail,
+	getNavigationMenu,
+};

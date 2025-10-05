@@ -5,6 +5,7 @@ import { categoryType } from "./categoryType";
 import { customImageType } from "./customImageType";
 import { productType } from "./productType";
 import { customIncludesType } from "./customIncludesType";
+import { navigationMenuType } from "./navigationMenuType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
@@ -13,5 +14,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		customImageType,
 		productType,
 		customIncludesType,
+		navigationMenuType,
 	],
 };

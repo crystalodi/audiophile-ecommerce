@@ -35,7 +35,7 @@ export default function Header() {
 					</button>
 				</div>
 
-				<LogoNavMenu />
+				<LogoNavMenu menuType="header" />
 
 				{/* Cart */}
 				<div className="flex items-center justify-end flex-1">

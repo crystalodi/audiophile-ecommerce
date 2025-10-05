@@ -13,6 +13,38 @@
  */
 
 // Source: schema.json
+export type NavigationMenu = {
+	_id: string;
+	_type: "navigationMenu";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	menuType: "header" | "footer" | "mobile" | "content";
+	slug: Slug;
+	showLogo?: boolean;
+	navigationItems?: Array<{
+		title: string;
+		href: string;
+		image?: {
+			asset?: {
+				_ref: string;
+				_type: "reference";
+				_weak?: boolean;
+				[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+			};
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			alt: string;
+			_type: "image";
+		};
+		order: number;
+		isActive?: boolean;
+		_type: "navigationItemObject";
+		_key: string;
+	}>;
+};
+
 export type CustomIncludesType = {
 	_type: "customIncludesType";
 	quantity: number;
@@ -310,6 +342,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+	| NavigationMenu
 	| CustomIncludesType
 	| Product
 	| CustomImageType
@@ -419,6 +452,30 @@ export type PRODUCTS_BY_SLUG_IDS_QUERYResult = Array<{
 	maxQuantity: number;
 	slug: string;
 }>;
+// Variable: NAVIGATION_MENU_QUERY
+// Query: *[_type == "navigationMenu" && menuType == $menuType][0] {      menuType,      showLogo,      navigationItems[isActive == true] | order(order asc) {        title,        href,        image,        order      }    }
+export type NAVIGATION_MENU_QUERYResult = {
+	menuType: "content" | "footer" | "header" | "mobile";
+	showLogo: boolean | null;
+	navigationItems: Array<{
+		title: string;
+		href: string;
+		image: {
+			asset?: {
+				_ref: string;
+				_type: "reference";
+				_weak?: boolean;
+				[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+			};
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			alt: string;
+			_type: "image";
+		} | null;
+		order: number;
+	}> | null;
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -427,5 +484,6 @@ declare module "@sanity/client" {
 		'\n    *[\n        _type == "product"\n        && references(*[_type == "category" && slug.current == $categorySlug]._id)\n    ] {\n      _id,\n      "mediaImage": categoryImage,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      isNewProduct\n    }\n  ': PRODUCTS_BY_CATEGORY_QUERYResult;
 		'\n    *[\n        _type == "product"\n        && slug.current == $slug\n    ] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
 		'\n    *[_type == "product" && slug.current in $slugs] {\n      image,\n      price,\n      shortName,\n      productName,\n      "maxQuantity": stock,\n      "slug": slug.current\n    }\n  ': PRODUCTS_BY_SLUG_IDS_QUERYResult;
+		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 	}
 }
