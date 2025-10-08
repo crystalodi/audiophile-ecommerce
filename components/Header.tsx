@@ -15,7 +15,7 @@ export default function Header() {
 	return (
 		<header className="bg-audiophile-black relative z-3">
 			<div
-				className="flex items-center py-[32px] main-container gap-x-[42px] text-white"
+				className="flex items-center py-[32px] main-container gap-x-[42px]"
 				ref={navRef}
 			>
 				{/* Hamburger Menu - Mobile & Tablet only */}
@@ -78,9 +78,6 @@ export default function Header() {
 					onClose={() => setIsCartModalOpen(false)}
 					anchorRef={navRef}
 				/>
-			</div>
-			<div className="w-full md:main-container">
-				<div className="h-[1px] bg-audiophile-divider" aria-hidden="true" />
 			</div>
 		</header>
 	);

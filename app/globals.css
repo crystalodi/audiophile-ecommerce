@@ -1,6 +1,22 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	font-family: var(--font-manrope);
+	background-color: var(--color-white);
+}
+
+main {
+	flex: 1 0 auto;
+}
+
+footer {
+	flex-shrink: 0;
+}
+
 :root {
 	--color-audiophile-orange: oklch(0.6792 0.1309 48.59);
 	--color-audiophile-orange-light: oklch(0.8172 0.1055 49.7);
@@ -22,10 +38,6 @@
 }
 
 @layer base {
-	body {
-		@apply bg-white text-black font-manrope min-h-full;
-	}
-
 	button {
 		@apply hover:outline-0 hover:border-0;
 	}
