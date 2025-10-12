@@ -135,16 +135,18 @@ export default async function ProductPage({
 						</picture>
 					</div>
 				</section>
-				<section aria-label="products you might also like" className="mb-30">
+				<section aria-label="Related Products" className="mb-30">
 					<div className="text-center w-full">
 						<h2 className="mb-10 md:mb-13 xl:mb-16 heading-5 md:heading-3">
 							you may also like
 						</h2>
-						<div className="flex flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px]">
+						<ul className="flex flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px] list-none">
 							{others?.map(other => (
-								<RelatedProduct key={other.slug.current} {...other} />
+								<li key={other.slug.current} className="flex-1">
+									<RelatedProduct {...other} />
+								</li>
 							))}
-						</div>
+						</ul>
 					</div>
 				</section>
 			</div>

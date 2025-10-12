@@ -9,7 +9,7 @@ export default function PreFooter() {
 		<section aria-label="Product Categories and Store Information">
 			<div className="main-container">
 				{!isHomePage && (
-					<div className="flex mb-30 pt-15">
+					<div className="flex">
 						<LogoNavMenu menuType="content" />
 					</div>
 				)}

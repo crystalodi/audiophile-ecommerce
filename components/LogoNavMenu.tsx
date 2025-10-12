@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Logo from "../public/logo.svg";
+import RightArrowIcon from "../public/icon-arrow-right.svg";
 import { useEffect, useState } from "react";
-import { urlFor } from "@/sanity/lib/image";
-import Image from "next/image";
 
 type LogoNavMenuProps = {
 	menuType: "header" | "footer" | "mobile" | "content";
@@ -23,17 +22,25 @@ type NavigationCardProps = {
 };
 
 function NavigationCard({ item }: NavigationCardProps) {
-	const img = urlFor(item.image.asset).url();
 	return (
-		<div className="relative bg-transparent flex flex-col">
-			<img
-				src={img}
-				alt={item.image.alt}
-				width={205}
-				height={205}
-				className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-[38%] w-40"
-			/>
-			<div className="bg-audiophile-gray rounded-lg flex flex-col justify-center items-center h-[165px]"></div>
+		<div className="relative flex flex-col">
+			<div className="flex-1 p-6.5 md:p-6.25 xl:p-10"></div>
+			<div className="bg-audiophile-gray rounded-lg flex justify-center h-41.25 xl:h-51">
+				<div className="flex flex-col justify-end items-center">
+					<h3 className="text-[15px] text-black tracking-[1.07px] font-bold uppercase mb-[17px]">
+						{item.title}
+					</h3>
+					<div className="flex items-center mb-[22px] xl:mb-[30px]">
+						<p className="subtitle-text text-black/50 mr-[13.32px] group-hover:text-audiophile-orange">
+							shop
+						</p>
+						<RightArrowIcon
+							className="fill-audiophile-orange"
+							aria-hidden="true"
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -85,8 +92,13 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 	});
 	const navigationULClasses = cn("flex list-none", {
 		"subtitle-text gap-[34px]": menuType === "header" || menuType === "footer",
-		"flex-col gap-[30px] md:flex-row md:gap-[10px] xl:gap-[30px]":
+		"flex-col gap-4 md:flex-row md:gap-[10px] xl:gap-[30px]":
 			menuType === "content",
+	});
+
+	const listItemClasses = cn({
+		"flex-1": menuType === "content",
+		"text-white": menuType === "footer" || menuType === "header",
 	});
 
 	const menuAriaLabel = `${menuType} navigation menu`;
@@ -111,22 +123,21 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 					{navigationItems?.map((item: any, index: number) => (
 						<li
 							key={`${index}-${menuType}-${item.title}`}
-							className={cn({
-								"flex-1 mb-4": menuType === "content",
-								"text-white": menuType === "footer" || menuType === "header",
-							})}
+							className={listItemClasses}
 						>
 							<Link
 								href={item.href}
-								className={cn({
-									"hover:text-audiophile-orange":
-										menuType === "footer" || menuType === "header",
-								})}
+								className={cn(
+									{
+										group: menuType === "mobile" || menuType === "content",
+									},
+									"hover:text-audiophile-orange"
+								)}
 							>
 								{menuType === "content" || menuType === "mobile" ? (
 									<NavigationCard item={item} />
 								) : (
-									item.title
+									<span>{item.title}</span>
 								)}
 							</Link>
 						</li>
