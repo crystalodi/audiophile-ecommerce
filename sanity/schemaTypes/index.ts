@@ -6,6 +6,8 @@ import { customImageType } from "./customImageType";
 import { productType } from "./productType";
 import { customIncludesType } from "./customIncludesType";
 import { navigationMenuType } from "./navigationMenuType";
+import { preFooterContentType } from "./preFooterContentType";
+import { footerContentType } from "./footerContentType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
@@ -15,5 +17,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		productType,
 		customIncludesType,
 		navigationMenuType,
+		preFooterContentType,
+		footerContentType,
 	],
 };

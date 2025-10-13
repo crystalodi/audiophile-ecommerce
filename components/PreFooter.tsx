@@ -6,14 +6,16 @@ export default function PreFooter() {
 	const pathName = usePathname();
 	const isHomePage = pathName === "/";
 	return (
-		<section aria-label="Product Categories and Store Information">
-			<div className="main-container">
-				{!isHomePage && (
-					<div className="flex">
-						<LogoNavMenu menuType="content" />
-					</div>
-				)}
-			</div>
-		</section>
+		<div className="main-container">
+			<section aria-label="Product Categories and Store Information">
+				<div className="flex flex-col gap-30 mb-30">
+					{!isHomePage && (
+						<div className="flex">
+							<LogoNavMenu menuType="content" />
+						</div>
+					)}
+				</div>
+			</section>
+		</div>
 	);
 }

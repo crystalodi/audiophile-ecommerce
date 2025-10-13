@@ -54,6 +54,18 @@ export const blockContentType = defineType({
 							},
 						],
 					},
+					{
+						title: "Text Color",
+						name: "textColor",
+						type: "object",
+						fields: [
+							{
+								title: "Color",
+								name: "value",
+								type: "color", // This will now work with the plugin
+							},
+						],
+					},
 				],
 			},
 		}),
