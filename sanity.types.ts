@@ -607,6 +607,68 @@ export type NAVIGATION_MENU_QUERYResult = {
 		order: number;
 	}> | null;
 } | null;
+// Variable: PRE_FOOTER_CONTENT_QUERY
+// Query: *[_type == "preFooterContent"][0] {      name,      slug,      image,      title,      description    }
+export type PRE_FOOTER_CONTENT_QUERYResult = {
+	name: string;
+	slug: Slug;
+	image: CustomImageType;
+	title: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>;
+					text?: string;
+					_type: "span";
+					_key: string;
+				}>;
+				style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "normal";
+				listItem?: "bullet";
+				markDefs?: Array<
+					| {
+							href?: string;
+							_type: "link";
+							_key: string;
+					  }
+					| {
+							value?: Color;
+							_type: "textColor";
+							_key: string;
+					  }
+				>;
+				level?: number;
+				_type: "block";
+				_key: string;
+		  }
+		| {
+				asset?: {
+					_ref: string;
+					_type: "reference";
+					_weak?: boolean;
+					[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+				};
+				media?: unknown;
+				hotspot?: SanityImageHotspot;
+				crop?: SanityImageCrop;
+				alt?: string;
+				_type: "image";
+				_key: string;
+		  }
+	>;
+	description: string;
+} | null;
+// Variable: FOOTER_CONTENT_QUERY
+// Query: *[_type == "footerContent"][0] {      name,      slug,      footerText,      socialMediaLinks[] {        platform,        url,        icon      },      copyrightText    }
+export type FOOTER_CONTENT_QUERYResult = {
+	name: string;
+	slug: Slug;
+	footerText: string;
+	socialMediaLinks: Array<{
+		platform: string;
+		url: string;
+		icon: "facebook" | "instagram" | "twitter";
+	}>;
+	copyrightText: string;
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -616,5 +678,7 @@ declare module "@sanity/client" {
 		'\n    *[\n        _type == "product"\n        && slug.current == $slug\n    ] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
 		'\n    *[_type == "product" && slug.current in $slugs] {\n      image,\n      price,\n      shortName,\n      productName,\n      "maxQuantity": stock,\n      "slug": slug.current\n    }\n  ': PRODUCTS_BY_SLUG_IDS_QUERYResult;
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
+		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
+		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
 	}
 }

@@ -85,15 +85,19 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 
 	const navigationItems = navigationData?.navigationItems ?? fallbackNavItems;
 
-	const logoClasses = cn("flex items-center flex-1");
+	const logoClasses = cn("flex items-center", {
+		"flex-1": menuType === "header",
+	});
 	const navigationMenuClasses = cn({
 		"hidden xl:flex xl:flex-1 xl:items-center": menuType === "header",
 		"w-full": menuType === "content",
 	});
 	const navigationULClasses = cn("flex list-none", {
-		"subtitle-text gap-[34px]": menuType === "header" || menuType === "footer",
+		"subtitle-text gap-[34px]": menuType === "header",
 		"flex-col gap-4 md:flex-row md:gap-[10px] xl:gap-[30px]":
 			menuType === "content",
+		"subtitle-text flex-col items-center gap-4 md:flex-row md:gap-[34px]":
+			menuType === "footer",
 	});
 
 	const listItemClasses = cn({

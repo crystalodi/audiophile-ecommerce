@@ -122,9 +122,59 @@ async function getNavigationMenu(
 	}
 }
 
+async function getPreFooterContent() {
+	const PRE_FOOTER_CONTENT_QUERY = defineQuery(`
+    *[_type == "preFooterContent"][0] {
+      name,
+      slug,
+      image,
+      title,
+      description
+    }
+  `);
+
+	try {
+		const preFooterContent = await sanityFetch({
+			query: PRE_FOOTER_CONTENT_QUERY,
+		});
+		return preFooterContent.data || null;
+	} catch (error) {
+		console.error("Error fetching pre-footer content:", error);
+		return null;
+	}
+}
+
+async function getFooterContent() {
+	const FOOTER_CONTENT_QUERY = defineQuery(`
+    *[_type == "footerContent"][0] {
+      name,
+      slug,
+      footerText,
+      socialMediaLinks[] {
+        platform,
+        url,
+        icon
+      },
+      copyrightText
+    }
+  `);
+
+	try {
+		const footerContent = await sanityFetch({
+			query: FOOTER_CONTENT_QUERY,
+		});
+		return footerContent.data || null;
+	} catch (error) {
+		console.error("Error fetching footer content:", error);
+		return null;
+	}
+}
+
 export {
 	getProductDetail,
 	getProductsByCategory,
 	getCartDetail,
 	getNavigationMenu,
+	getPreFooterContent,
+	getFooterContent,
 };
