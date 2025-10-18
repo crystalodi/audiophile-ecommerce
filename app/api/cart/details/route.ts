@@ -1,7 +1,6 @@
 // app/api/cart/details/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getCartDetail } from "@/sanity/lib/api";
-import { PRODUCTS_BY_SLUG_IDS_QUERYResult } from "@/sanity.types";
 
 export async function POST(request: NextRequest) {
 	try {
@@ -16,7 +15,7 @@ export async function POST(request: NextRequest) {
 
 		const products = await getCartDetail(slugs);
 
-		return NextResponse.json<PRODUCTS_BY_SLUG_IDS_QUERYResult>(products);
+		return NextResponse.json(products);
 	} catch (error) {
 		console.error("Error fetching cart details:", error);
 		return NextResponse.json(

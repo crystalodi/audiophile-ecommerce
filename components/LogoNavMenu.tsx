@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Logo from "../public/logo.svg";
 import RightArrowIcon from "../public/icon-arrow-right.svg";
 import { useEffect, useState } from "react";
+import { NAVIGATION_MENU_QUERYResult } from "@/sanity.types";
 
 type LogoNavMenuProps = {
 	menuType: "header" | "footer" | "mobile" | "content";
@@ -14,7 +15,7 @@ type NavigationCardProps = {
 	item: {
 		title: string;
 		href: string;
-		image: {
+		image?: {
 			asset: { url: string };
 			alt: string;
 		};
@@ -46,7 +47,8 @@ function NavigationCard({ item }: NavigationCardProps) {
 }
 
 export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
-	const [navigationData, setNavigationData] = useState<any>(null);
+	const [navigationData, setNavigationData] =
+		useState<NAVIGATION_MENU_QUERYResult>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -124,7 +126,7 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 
 			<nav className={navigationMenuClasses} aria-label={menuAriaLabel}>
 				<ul className={navigationULClasses}>
-					{navigationItems?.map((item: any, index: number) => (
+					{navigationItems?.map((item, index: number) => (
 						<li
 							key={`${index}-${menuType}-${item.title}`}
 							className={listItemClasses}

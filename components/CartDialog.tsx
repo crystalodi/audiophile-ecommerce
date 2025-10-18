@@ -3,7 +3,11 @@
 import { RefObject } from "react";
 import Image from "next/image";
 import Dialog from "./Dialog";
-import { useCartStore, useCartWithProductDetail } from "@/store/cartStore";
+import {
+	CartItem,
+	useCartStore,
+	useCartWithProductDetail,
+} from "@/store/cartStore";
 import QuantitySelector from "./QuantitySelector";
 import { CustomImageType } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
@@ -144,8 +148,14 @@ function CartDialogFooter({
 }: {
 	isLoading: boolean;
 	total: number;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	itemsWithPrices: any[];
+	itemsWithPrices: Array<
+		CartItem & {
+			price: number;
+			productName: string;
+			image: CustomImageType;
+			maxQuantity: number;
+		}
+	>;
 }) {
 	if (!isLoading && itemsWithPrices.length === 0) {
 		return <></>;

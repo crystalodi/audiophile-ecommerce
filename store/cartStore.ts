@@ -1,4 +1,7 @@
-import { CustomImageType } from "@/sanity.types";
+import {
+	CustomImageType,
+	PRODUCTS_BY_SLUG_IDS_QUERYResult,
+} from "@/sanity.types";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -155,21 +158,34 @@ export function useCartWithProductDetail() {
 				});
 
 				if (!response.ok) throw new Error("Failed to fetch cart details");
-				const products = await response.json();
-				const itemsWithDetails = items.map(cartItem => {
-					const product = products.find(
-						(prod: any) => prod.slug === cartItem.slug
-					);
-					return {
-						...cartItem,
-						price: product?.price,
-						productName: product?.shortName
-							? product?.shortName
-							: product?.productName,
-						image: product?.image,
-						maxQuantity: product?.maxQuantity,
-					};
-				});
+				const products =
+					(await response.json()) as PRODUCTS_BY_SLUG_IDS_QUERYResult;
+				const itemsWithDetails = items
+					.map(cartItem => {
+						const product = products.find(
+							(prod: PRODUCTS_BY_SLUG_IDS_QUERYResult[0]) =>
+								prod.slug === cartItem.slug
+						);
+
+						if (!product) {
+							console.warn(`Product not found for slug: ${cartItem.slug}`);
+							return null;
+						}
+
+						return {
+							...cartItem,
+							price: product.price,
+							productName: product.shortName || product.productName,
+							image: product.image,
+							maxQuantity: product.maxQuantity,
+						};
+					})
+					.filter(Boolean) as (CartItem & {
+					price: number;
+					productName: string;
+					image: CustomImageType;
+					maxQuantity: number;
+				})[];
 				setItemsWithPrices(itemsWithDetails);
 			} catch (error) {
 				console.error("Failed to fetch cart details:", error);
