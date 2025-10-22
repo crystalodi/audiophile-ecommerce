@@ -25,6 +25,9 @@ footer {
 	--color-audiophile-divider: oklch(1 0 0 / 10.9%);
 	--color-audiophile-black: oklch(0.2134 0 0);
 	--product-gallery-grid-columns-md: 40% 1fr;
+	--mobile-hero-bg: url("/images/home/mobile/image-header.jpg");
+	--tablet-hero-bg: url("/images/home/tablet/image-header.jpg");
+	--desktop-hero-bg: url("/images/home/desktop/image-header.jpg");
 }
 
 @theme inline {
@@ -45,7 +48,7 @@ footer {
 
 @layer components {
 	.btn {
-		@apply flex justify-center items-center text-[13px] uppercase text-center tracking-[1px] pt-[15px] pb-[15px] pr-[29.5px] pl-[31.5px] leading-none font-bold inset-ring-1 inset-ring-black h-[48px] not-disabled:hover:cursor-pointer disabled:hover:cursor-auto;
+		@apply inline-flex justify-center items-center text-[13px] uppercase text-center tracking-[1px] pt-[15px] pb-[15px] pr-[29.5px] pl-[31.5px] leading-none font-bold inset-ring-1 inset-ring-black h-[48px] not-disabled:hover:cursor-pointer disabled:hover:cursor-auto;
 	}
 
 	.btn-accent {

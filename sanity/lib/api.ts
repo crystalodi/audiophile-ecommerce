@@ -170,6 +170,26 @@ async function getFooterContent() {
 	}
 }
 
+async function getHeroContent() {
+	const HERO_CONTENT_QUERY = defineQuery(`
+		*[_type == "heroContent"][0] {
+			heroBackgroundImage,
+			featuredProduct-> {productName, slug, category-> {categoryName}, isNewProduct},
+			featuredProductDescription
+		}
+	`);
+
+	try {
+		const heroContent = await sanityFetch({
+			query: HERO_CONTENT_QUERY,
+		});
+		return heroContent.data || null;
+	} catch (error) {
+		console.error("Error fetching hero content", error);
+		return null;
+	}
+}
+
 export {
 	getProductDetail,
 	getProductsByCategory,
@@ -177,4 +197,5 @@ export {
 	getNavigationMenu,
 	getPreFooterContent,
 	getFooterContent,
+	getHeroContent,
 };

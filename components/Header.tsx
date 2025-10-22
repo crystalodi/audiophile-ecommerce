@@ -13,7 +13,7 @@ export default function Header() {
 	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	return (
-		<header className="bg-audiophile-black relative z-3">
+		<header className="bg-audiophile-black relative z-10">
 			<div
 				className="flex items-center py-[32px] main-container gap-x-[42px]"
 				ref={navRef}

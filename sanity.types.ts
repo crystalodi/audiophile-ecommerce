@@ -13,6 +13,22 @@
  */
 
 // Source: schema.json
+export type HeroContent = {
+	_id: string;
+	_type: "heroContent";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	heroBackgroundImage: CustomImageType;
+	featuredProduct: {
+		_ref: string;
+		_type: "reference";
+		_weak?: boolean;
+		[internalGroqTypeReferenceTo]?: "product";
+	};
+	featuredProductDescription: string;
+};
+
 export type FooterContent = {
 	_id: string;
 	_type: "footerContent";
@@ -460,6 +476,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+	| HeroContent
 	| FooterContent
 	| PreFooterContent
 	| NavigationMenu
@@ -669,6 +686,20 @@ export type FOOTER_CONTENT_QUERYResult = {
 	}>;
 	copyrightText: string;
 } | null;
+// Variable: HERO_CONTENT_QUERY
+// Query: *[_type == "heroContent"][0] {			heroBackgroundImage,			featuredProduct-> {productName, slug, category-> {categoryName}, isNewProduct},			featuredProductDescription		}
+export type HERO_CONTENT_QUERYResult = {
+	heroBackgroundImage: CustomImageType;
+	featuredProduct: {
+		productName: string;
+		slug: Slug;
+		category: {
+			categoryName: string;
+		};
+		isNewProduct: boolean | null;
+	};
+	featuredProductDescription: string;
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -680,5 +711,6 @@ declare module "@sanity/client" {
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
+		'\n\t\t*[_type == "heroContent"][0] {\n\t\t\theroBackgroundImage,\n\t\t\tfeaturedProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n\t\t\tfeaturedProductDescription\n\t\t}\n\t': HERO_CONTENT_QUERYResult;
 	}
 }

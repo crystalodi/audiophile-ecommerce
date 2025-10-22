@@ -8,6 +8,7 @@ import { customIncludesType } from "./customIncludesType";
 import { navigationMenuType } from "./navigationMenuType";
 import { preFooterContentType } from "./preFooterContentType";
 import { footerContentType } from "./footerContentType";
+import { heroContentType } from "./heroContentType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
@@ -19,5 +20,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		navigationMenuType,
 		preFooterContentType,
 		footerContentType,
+		heroContentType,
 	],
 };
