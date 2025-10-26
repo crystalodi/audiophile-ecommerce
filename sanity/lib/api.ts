@@ -190,6 +190,35 @@ async function getHeroContent() {
 	}
 }
 
+async function getHomePageContent() {
+	const HOME_PAGE_CONTENT_QUERY = defineQuery(`
+		*[_type == "homePageContent"][0] {
+			featuredProducts[] {
+				product->{productName, shortName, slug, category->{categoryName}},
+				description,
+				layoutType,
+				backgroundType,
+				heroBitmapBackgroundImage,
+				heroSVGBackgroundImage,
+				featuredProductImage,
+				ctaType,
+				textAlignment,
+				height
+			}
+		}
+	`);
+
+	try {
+		const homePageContent = await sanityFetch({
+			query: HOME_PAGE_CONTENT_QUERY,
+		});
+		return homePageContent.data || null;
+	} catch (error) {
+		console.error("Error fetching Home Page Content", error);
+		return null;
+	}
+}
+
 export {
 	getProductDetail,
 	getProductsByCategory,
@@ -198,4 +227,5 @@ export {
 	getPreFooterContent,
 	getFooterContent,
 	getHeroContent,
+	getHomePageContent,
 };
