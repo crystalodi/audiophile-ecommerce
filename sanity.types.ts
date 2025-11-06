@@ -746,7 +746,7 @@ export type HERO_CONTENT_QUERYResult = {
 	featuredProductDescription: string;
 } | null;
 // Variable: HOME_PAGE_CONTENT_QUERY
-// Query: *[_type == "homePageContent"][0] {			featuredProducts[] {				product->{productName, shortName, slug, category->{categoryName}},				description,				layoutType,				backgroundType,				heroBitmapBackgroundImage,				heroSVGBackgroundImage,				featuredProductImage,				ctaType,				textAlignment,				height			}		}
+// Query: *[_type == "homePageContent"][0] {			featuredProducts[] {				product->{productName, shortName, slug, category->{categoryName}},				description,				layoutType,				backgroundType,				heroBitmapBackgroundImage,				"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,				featuredProductImage,				ctaType,				textAlignment,				height			}		}
 export type HOME_PAGE_CONTENT_QUERYResult = {
 	featuredProducts: Array<{
 		product: {
@@ -761,16 +761,7 @@ export type HOME_PAGE_CONTENT_QUERYResult = {
 		layoutType: "grid" | "hero";
 		backgroundType: "bitmap" | "svg" | null;
 		heroBitmapBackgroundImage: CustomImageType | null;
-		heroSVGBackgroundImage: {
-			asset?: {
-				_ref: string;
-				_type: "reference";
-				_weak?: boolean;
-				[internalGroqTypeReferenceTo]?: "sanity.fileAsset";
-			};
-			media?: unknown;
-			_type: "file";
-		} | null;
+		heroSVGBackgroundImage: string | null;
 		featuredProductImage: CustomImageType | null;
 		ctaType: "blackButton" | "transparentButton";
 		textAlignment: {
@@ -797,6 +788,6 @@ declare module "@sanity/client" {
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
 		'\n\t\t*[_type == "heroContent"][0] {\n\t\t\theroBackgroundImage,\n\t\t\tfeaturedProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n\t\t\tfeaturedProductDescription\n\t\t}\n\t': HERO_CONTENT_QUERYResult;
-		'\n\t\t*[_type == "homePageContent"][0] {\n\t\t\tfeaturedProducts[] {\n\t\t\t\tproduct->{productName, shortName, slug, category->{categoryName}},\n\t\t\t\tdescription,\n\t\t\t\tlayoutType,\n\t\t\t\tbackgroundType,\n\t\t\t\theroBitmapBackgroundImage,\n\t\t\t\theroSVGBackgroundImage,\n\t\t\t\tfeaturedProductImage,\n\t\t\t\tctaType,\n\t\t\t\ttextAlignment,\n\t\t\t\theight\n\t\t\t}\n\t\t}\n\t': HOME_PAGE_CONTENT_QUERYResult;
+		'\n\t\t*[_type == "homePageContent"][0] {\n\t\t\tfeaturedProducts[] {\n\t\t\t\tproduct->{productName, shortName, slug, category->{categoryName}},\n\t\t\t\tdescription,\n\t\t\t\tlayoutType,\n\t\t\t\tbackgroundType,\n\t\t\t\theroBitmapBackgroundImage,\n\t\t\t\t"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,\n\t\t\t\tfeaturedProductImage,\n\t\t\t\tctaType,\n\t\t\t\ttextAlignment,\n\t\t\t\theight\n\t\t\t}\n\t\t}\n\t': HOME_PAGE_CONTENT_QUERYResult;
 	}
 }

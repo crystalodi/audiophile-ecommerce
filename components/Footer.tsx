@@ -43,7 +43,7 @@ export default async function Footer() {
 										target="_blank"
 										href={link.url}
 										rel="noopener noreferrer"
-										key={`${link.platform}-${index}`}
+										key={link.platform}
 										aria-label={`Visit our ${link.platform} page`}
 										className="text-white hover:text-audiophile-orange transition-colors duration-200"
 									>

@@ -49,7 +49,7 @@ function NavigationCard({ item }: NavigationCardProps) {
 export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 	const [navigationData, setNavigationData] =
 		useState<NAVIGATION_MENU_QUERYResult>(null);
-	const [loading, setLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		async function fetchNavigation() {
@@ -62,7 +62,7 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 			} catch (error) {
 				console.error("Failed to fetch navigation:", error);
 			} finally {
-				setLoading(false);
+				setIsLoading(false);
 			}
 		}
 
@@ -77,7 +77,7 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 		{ title: "Earphones", href: "/earphones" },
 	];
 
-	if (loading) {
+	if (isLoading) {
 		return null; // or a loading skeleton
 	}
 

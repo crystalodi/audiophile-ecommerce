@@ -199,7 +199,7 @@ async function getHomePageContent() {
 				layoutType,
 				backgroundType,
 				heroBitmapBackgroundImage,
-				heroSVGBackgroundImage,
+				"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,
 				featuredProductImage,
 				ctaType,
 				textAlignment,

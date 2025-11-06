@@ -64,7 +64,11 @@ footer {
 	}
 
 	.btn-transparent {
-		@apply bg-transparent;
+		@apply bg-transparent hover:bg-black hover:text-white;
+	}
+
+	.btn-black {
+		@apply bg-black hover:bg-[#4C4C4C] text-white inset-0 inset-ring-0;
 	}
 }
 
