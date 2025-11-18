@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject } from "react";
+import { RefObject, useMemo } from "react";
 import Image from "next/image";
 import Dialog from "./Dialog";
 import {
@@ -15,7 +15,7 @@ import { urlFor } from "@/sanity/lib/image";
 type CartDialogProps = {
 	open: boolean;
 	onClose: () => void;
-	anchorRef: RefObject<HTMLElement | null>;
+	anchorRef?: RefObject<HTMLElement | null>;
 };
 
 function CartProduct({
@@ -200,6 +200,7 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 		0
 	);
 	const totalItems = isLoading ? 0 : itemsWithPrices.length;
+	const offsetMemo = useMemo(() => ({ x: 0, y: 24 }), []);
 
 	const removeAllCartItems = () => {
 		onClose();
@@ -237,10 +238,7 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 			placement="bottom-right"
 			positionStrategy="anchor"
 			useParentHorizontalPaddingAsOffset
-			offset={{
-				x: 0,
-				y: 24,
-			}}
+			offset={offsetMemo}
 		>
 			<div className="py-[31px] pl-[33px] pr-[31px]">
 				<div className="flex flex-col">

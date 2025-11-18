@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import CartDialog from "./CartDialog";
+import NavMenuModal from "./NavMenuModal";
 import { useCartStore } from "@/store/cartStore";
 import LogoNavMenu from "./LogoNavMenu";
 import HamburgerIcon from "../public/icon-hamburger.svg";
@@ -8,12 +9,32 @@ import CartIcon from "../public/icon-cart.svg";
 
 export default function Header() {
 	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 	const navRef = useRef<HTMLDivElement>(null);
+	const headerRef = useRef<HTMLElement>(null);
 	const totalItems = useCartStore(state => state.getTotalItems());
 	const hasHydrated = useCartStore(state => state.hasHydrated);
 
+	const openNavModal = () => {
+		setIsCartModalOpen(false); // Close cart when opening nav
+		setIsNavModalOpen(true);
+	};
+
+	const openCartModal = () => {
+		setIsNavModalOpen(false); // Close nav when opening cart
+		setIsCartModalOpen(true);
+	};
+
+	const closeCartModal = () => {
+		setIsCartModalOpen(false);
+	};
+
+	const closeNavModal = () => {
+		setIsNavModalOpen(false);
+	};
+
 	return (
-		<header className="bg-audiophile-black relative z-10">
+		<header className="bg-audiophile-black relative z-10" ref={headerRef}>
 			<div
 				className="flex items-center py-[32px] main-container gap-x-[42px]"
 				ref={navRef}
@@ -23,8 +44,13 @@ export default function Header() {
 					<button
 						className="cursor-pointer"
 						aria-label="Open mobile menu"
-						aria-expanded="false"
+						aria-expanded={isNavModalOpen}
 						aria-controls="mobile-navigation"
+						onClick={e => {
+							e.preventDefault();
+							e.stopPropagation();
+							openNavModal();
+						}}
 					>
 						<HamburgerIcon
 							width={16}
@@ -43,7 +69,11 @@ export default function Header() {
 						<button
 							aria-label={`Open shopping cart with ${totalItems} items`}
 							className="cursor-pointer relative"
-							onClick={() => setIsCartModalOpen(true)}
+							onClick={e => {
+								e.preventDefault();
+								e.stopPropagation();
+								openCartModal();
+							}}
 						>
 							<CartIcon
 								width={23}
@@ -72,12 +102,19 @@ export default function Header() {
 						</button>
 					)}
 				</div>
-
-				<CartDialog
-					open={isCartModalOpen}
-					onClose={() => setIsCartModalOpen(false)}
-					anchorRef={navRef}
-				/>
+			</div>
+			<CartDialog
+				open={isCartModalOpen}
+				onClose={closeCartModal}
+				anchorRef={navRef}
+			/>
+			<NavMenuModal
+				open={isNavModalOpen}
+				onClose={closeNavModal}
+				anchorRef={headerRef}
+			/>
+			<div className="w-full md:main-container">
+				<div className="h-[1px] bg-audiophile-divider" aria-hidden="true" />
 			</div>
 		</header>
 	);

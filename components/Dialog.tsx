@@ -1,16 +1,30 @@
 import { cn } from "@/lib/utils";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, {
+	useLayoutEffect,
+	useRef,
+	useState,
+	useCallback,
+	useMemo,
+} from "react";
 
 type PositionStrategy = "center" | "anchor";
+type Placement = "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
 type DialogProps = {
-	anchorRef?: React.RefObject<HTMLElement | HTMLButtonElement | null>;
+	anchorRef?: React.RefObject<
+		HTMLElement | HTMLButtonElement | HTMLDivElement | null
+	>;
 	onClose: () => void;
 	positionStrategy?: PositionStrategy;
 	offset?: { x: number; y: number };
-	placement?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+	placement?: Placement;
 	useParentHorizontalPaddingAsOffset?: boolean;
+	modal?: boolean;
+	forceAnchorPositioning?: boolean;
 } & React.ComponentPropsWithoutRef<"dialog">;
+
+const BREAKPOINT_MD = 768;
+const Z_INDEX = { backdrop: 40, dialog: 50 };
 
 const Dialog: React.FC<DialogProps> = ({
 	children,
@@ -21,45 +35,138 @@ const Dialog: React.FC<DialogProps> = ({
 	positionStrategy = "center",
 	offset = { x: 0, y: 0 },
 	placement = "bottom-right",
-	useParentHorizontalPaddingAsOffset = false, // New prop
+	useParentHorizontalPaddingAsOffset = false,
+	modal = true,
+	forceAnchorPositioning = false,
+	...dialogProps
 }) => {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [position, setPosition] = useState<{
 		top: number;
 		left: number;
-	} | null>(positionStrategy === "anchor" ? null : { top: 0, left: 0 });
+	} | null>(null);
 	const [isMdScreen, setIsMdScreen] = useState(false);
+	const memoizedOffset = useMemo(() => offset, [offset.x, offset.y]);
 
 	useLayoutEffect(() => {
-		const checkScreenSize = () => {
-			setIsMdScreen(window.innerWidth >= 768);
-		};
+		const updateScreenSize = () =>
+			setIsMdScreen(window.innerWidth >= BREAKPOINT_MD);
 
-		checkScreenSize();
-		window.addEventListener("resize", checkScreenSize);
-
-		return () => {
-			window.removeEventListener("resize", checkScreenSize);
-		};
+		updateScreenSize();
+		window.addEventListener("resize", updateScreenSize);
+		return () => window.removeEventListener("resize", updateScreenSize);
 	}, []);
+
+	// Position calculation
+	const updatePosition = useCallback(() => {
+		if (
+			positionStrategy !== "anchor" ||
+			!anchorRef?.current ||
+			!dialogRef.current ||
+			(!isMdScreen && !forceAnchorPositioning)
+		)
+			return;
+
+		const anchorRect = anchorRef.current.getBoundingClientRect();
+		const dialogRect = dialogRef.current.getBoundingClientRect();
+		const {
+			innerWidth: viewportWidth,
+			innerHeight: viewportHeight,
+			scrollY,
+			scrollX,
+		} = window;
+
+		// Calculate horizontal padding offset
+		const getHorizontalPadding = () => {
+			if (!useParentHorizontalPaddingAsOffset || !anchorRef.current) return 0;
+
+			const computedStyle = getComputedStyle(anchorRef.current);
+			if (placement.includes("right")) {
+				return parseFloat(computedStyle.paddingRight) || 0;
+			}
+			if (placement.includes("left")) {
+				return parseFloat(computedStyle.paddingLeft) || 0;
+			}
+			return 0;
+		};
+
+		const effectiveOffset = {
+			x: memoizedOffset.x + getHorizontalPadding(),
+			y: memoizedOffset.y,
+		};
+		console.log(anchorRect);
+		const getInitialPosition = (): { top: number; left: number } => {
+			const positions = {
+				"bottom-right": {
+					top: anchorRect.bottom + scrollY + effectiveOffset.y,
+					left:
+						anchorRect.right + scrollX - dialogRect.width - effectiveOffset.x,
+				},
+				"bottom-left": {
+					top: anchorRect.bottom + scrollY + effectiveOffset.y,
+					left: anchorRect.left + scrollX + effectiveOffset.x,
+				},
+				"top-right": {
+					top: anchorRect.top + scrollY - dialogRect.height - effectiveOffset.y,
+					left:
+						anchorRect.right + scrollX - dialogRect.width - effectiveOffset.x,
+				},
+				"top-left": {
+					top: anchorRect.top + scrollY - dialogRect.height - effectiveOffset.y,
+					left: anchorRect.left + scrollX + effectiveOffset.x,
+				},
+			};
+			return positions[placement];
+		};
+
+		let { top, left } = getInitialPosition();
+
+		const getParentPaddingRight = () => {
+			if (!anchorRef.current?.parentElement) return 0;
+			const computedStyle = getComputedStyle(anchorRef.current.parentElement);
+			return parseFloat(computedStyle.paddingRight) || 0;
+		};
+
+		const bounds = {
+			minLeft: scrollX,
+			maxLeft:
+				scrollX + viewportWidth - dialogRect.width - getParentPaddingRight(),
+			minTop: scrollY,
+			maxTop: scrollY + viewportHeight - dialogRect.height,
+		};
+
+		left = Math.max(bounds.minLeft, Math.min(left, bounds.maxLeft));
+		top = Math.max(bounds.minTop, Math.min(top, bounds.maxTop));
+		console.log(top);
+		setPosition({ top, left });
+	}, [
+		anchorRef,
+		placement,
+		useParentHorizontalPaddingAsOffset,
+		positionStrategy,
+		isMdScreen,
+		memoizedOffset,
+		forceAnchorPositioning,
+	]);
 
 	useLayoutEffect(() => {
 		const dialog = dialogRef.current;
 		if (!dialog) return;
 
-		const handleClose = () => {
-			onClose?.();
-		};
+		const handleClose = () => onClose?.();
 
 		if (open) {
-			dialog.showModal();
+			modal ? dialog.showModal() : dialog.show();
 			dialog.addEventListener("close", handleClose);
-			window.document.body.classList.add("overflow-hidden");
 
-			if (positionStrategy === "anchor" && anchorRef?.current && isMdScreen) {
-				requestAnimationFrame(() => {
-					updatePosition();
-				});
+			document.body.classList.add("overflow-hidden");
+
+			if (
+				positionStrategy === "anchor" &&
+				anchorRef?.current &&
+				(isMdScreen || forceAnchorPositioning)
+			) {
+				requestAnimationFrame(updatePosition);
 			}
 		} else {
 			dialog.close();
@@ -68,99 +175,29 @@ const Dialog: React.FC<DialogProps> = ({
 
 		return () => {
 			dialog.removeEventListener("close", handleClose);
-			window.document.body.classList.remove("overflow-hidden");
+			document.body.classList.remove("overflow-hidden");
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [open, onClose, isMdScreen, positionStrategy]);
+	}, [
+		open,
+		modal,
+		positionStrategy,
+		anchorRef,
+		isMdScreen,
+		updatePosition,
+		onClose,
+		forceAnchorPositioning,
+	]);
 
-	const updatePosition = () => {
-		if (
-			positionStrategy !== "anchor" ||
-			!anchorRef?.current ||
-			!dialogRef.current ||
-			!isMdScreen
-		)
-			return;
-
-		const anchorRect = anchorRef.current.getBoundingClientRect();
-		const dialogRect = dialogRef.current.getBoundingClientRect();
-		const viewportWidth = window.innerWidth;
-		const viewportHeight = window.innerHeight;
-		const scrollY = window.scrollY;
-		const scrollX = window.scrollX;
-
-		let horizontalPadding = 0;
-		if (useParentHorizontalPaddingAsOffset && anchorRef.current) {
-			const computedStyle = getComputedStyle(anchorRef.current);
-			if (placement.includes("right")) {
-				horizontalPadding = parseFloat(computedStyle.paddingRight) || 0;
-			} else if (placement.includes("left")) {
-				horizontalPadding = parseFloat(computedStyle.paddingLeft) || 0;
-			}
-		}
-
-		// Add horizontal padding to the offset
-		const effectiveOffset = {
-			x: offset.x + horizontalPadding,
-			y: offset.y,
-		};
-
-		let top: number;
-		let left: number;
-
-		// Calculate position based on placement using effectiveOffset
-		switch (placement) {
-			case "bottom-right":
-				top = anchorRect.bottom + scrollY + effectiveOffset.y;
-				left =
-					anchorRect.right + scrollX - dialogRect.width - effectiveOffset.x;
-				break;
-			case "bottom-left":
-				top = anchorRect.bottom + scrollY + effectiveOffset.y;
-				left = anchorRect.left + scrollX + effectiveOffset.x;
-				break;
-			case "top-right":
-				top = anchorRect.top + scrollY - dialogRect.height - effectiveOffset.y;
-				left =
-					anchorRect.right + scrollX - dialogRect.width - effectiveOffset.x;
-				break;
-			case "top-left":
-				top = anchorRect.top + scrollY - dialogRect.height - effectiveOffset.y;
-				left = anchorRect.left + scrollX + effectiveOffset.x;
-				break;
-			default:
-				top = anchorRect.bottom + scrollY + effectiveOffset.y;
-				left =
-					anchorRect.right + scrollX - dialogRect.width - effectiveOffset.x;
-		}
-
-		// Keep existing boundary checks with original parentPaddingRight logic
-		let parentPaddingRight = 0;
-		if (anchorRef.current?.parentElement) {
-			const computedStyle = getComputedStyle(anchorRef.current.parentElement);
-			parentPaddingRight = parseFloat(computedStyle.paddingRight) || 0;
-		}
-
-		const minLeft = scrollX;
-		const maxLeft =
-			scrollX + viewportWidth - dialogRect.width - parentPaddingRight;
-		left = Math.max(minLeft, Math.min(left, maxLeft));
-
-		const minTop = scrollY;
-		const maxTop = scrollY + viewportHeight - dialogRect.height;
-		top = Math.max(minTop, Math.min(top, maxTop));
-
-		setPosition({ top, left });
-	};
-
+	// Position update listeners
 	useLayoutEffect(() => {
 		if (
 			!open ||
 			positionStrategy !== "anchor" ||
 			!anchorRef?.current ||
-			!isMdScreen
-		)
+			(!isMdScreen && !forceAnchorPositioning)
+		) {
 			return;
+		}
 
 		window.addEventListener("resize", updatePosition);
 		window.addEventListener("scroll", updatePosition);
@@ -169,47 +206,110 @@ const Dialog: React.FC<DialogProps> = ({
 			window.removeEventListener("resize", updatePosition);
 			window.removeEventListener("scroll", updatePosition);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [open, anchorRef, isMdScreen, positionStrategy]);
+	}, [
+		open,
+		anchorRef,
+		isMdScreen,
+		positionStrategy,
+		updatePosition,
+		forceAnchorPositioning,
+	]);
 
-	const shouldUsePositioning =
+	useLayoutEffect(() => {
+		if (!open || modal) return;
+
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				onClose?.();
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [open, modal, onClose]);
+
+	const getBackdropStyle = useCallback(() => {
+		if (positionStrategy !== "anchor" || !anchorRef?.current || !isMdScreen) {
+			return {};
+		}
+
+		const anchorRect = anchorRef.current.getBoundingClientRect();
+		return {
+			top: anchorRect.bottom + window.scrollY,
+			left: 0,
+			right: 0,
+			bottom: 0,
+		};
+	}, [positionStrategy, anchorRef, isMdScreen]);
+
+	const shouldUsePositioning = Boolean(
 		position &&
-		anchorRef?.current &&
-		isMdScreen &&
-		positionStrategy === "anchor";
-	const shouldCenter = !isMdScreen || positionStrategy === "center";
+			anchorRef?.current &&
+			(isMdScreen || forceAnchorPositioning) &&
+			positionStrategy === "anchor"
+	);
+	const shouldCenter =
+		(!isMdScreen && !forceAnchorPositioning) || positionStrategy === "center";
+	const showAnchoredBackdrop =
+		open && !modal && positionStrategy === "anchor" && isMdScreen;
+	const showCenteredBackdrop =
+		open && !modal && (positionStrategy === "center" || !isMdScreen);
 
 	const dialogClasses = cn(
-		"bg-white overflow-hidden backdrop:bg-black/40",
+		"bg-white",
 		{
+			"backdrop:bg-black/40": modal,
 			absolute: shouldUsePositioning,
 			fixed: !shouldUsePositioning,
 			"left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2": shouldCenter,
 			invisible: positionStrategy === "anchor" && isMdScreen && !position,
 		},
-		[className]
+		className
 	);
-	return (
-		<dialog
-			ref={dialogRef}
-			className={dialogClasses}
-			style={
-				shouldUsePositioning
-					? {
-							top: position.top,
-							left: position.left,
-							margin: 0,
-						}
-					: undefined
+
+	const dialogStyle = shouldUsePositioning
+		? {
+				top: position!.top,
+				left: position!.left,
+				margin: 0,
+				zIndex: Z_INDEX.dialog,
 			}
-			onClick={e => {
-				if (e.target === e.currentTarget) {
-					onClose?.();
-				}
-			}}
-		>
-			{children}
-		</dialog>
+		: { zIndex: Z_INDEX.dialog };
+
+	return (
+		<>
+			{showAnchoredBackdrop && (
+				<div
+					className="fixed bg-black/40"
+					style={{ ...getBackdropStyle(), zIndex: Z_INDEX.backdrop }}
+					onClick={onClose}
+				/>
+			)}
+
+			{showCenteredBackdrop && (
+				<div
+					className="fixed inset-0 bg-black/40"
+					style={{ zIndex: Z_INDEX.backdrop }}
+					onClick={onClose}
+				/>
+			)}
+
+			<dialog
+				ref={dialogRef}
+				className={dialogClasses}
+				style={dialogStyle}
+				onClick={e => {
+					if (modal && e.target === e.currentTarget) {
+						onClose?.();
+					}
+				}}
+				{...dialogProps}
+			>
+				{children}
+			</dialog>
+		</>
 	);
 };
 
