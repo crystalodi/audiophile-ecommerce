@@ -10,6 +10,7 @@ import { urlFor } from "@/sanity/lib/image";
 
 type LogoNavMenuProps = {
 	menuType: "header" | "footer" | "mobile" | "content";
+	onNavigate?: () => void;
 };
 
 type NavigationCardPropsBase = NonNullable<
@@ -21,7 +22,12 @@ type NavigationCardProps = Partial<NavigationCardPropsBase> & {
 	href: string;
 };
 
-function NavigationCard({ title, image, href }: NavigationCardProps) {
+function NavigationCard({
+	title,
+	image,
+	href,
+	onNavigate,
+}: NavigationCardProps & { onNavigate?: () => void }) {
 	return (
 		<div className="relative flex flex-col">
 			{image && (
@@ -36,6 +42,7 @@ function NavigationCard({ title, image, href }: NavigationCardProps) {
 				className="bg-audiophile-gray rounded-lg flex justify-center h-41.25 xl:h-51 group"
 				href={href}
 				aria-label={`Navigation to ${title} products`}
+				onClick={() => onNavigate?.()}
 			>
 				<div className="flex flex-col justify-end items-center">
 					<h3 className="text-[15px] text-black tracking-[1.07px] font-bold uppercase mb-[17px]">
@@ -56,7 +63,10 @@ function NavigationCard({ title, image, href }: NavigationCardProps) {
 	);
 }
 
-export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
+export default function LogoNavMenu({
+	menuType,
+	onNavigate,
+}: LogoNavMenuProps) {
 	const [navigationData, setNavigationData] =
 		useState<NAVIGATION_MENU_QUERYResult>(null);
 	const [isLoading, setIsLoading] = useState(true);
@@ -143,7 +153,7 @@ export default function LogoNavMenu({ menuType }: LogoNavMenuProps) {
 							className={listItemClasses}
 						>
 							{isNavMenuCard ? (
-								<NavigationCard {...item} />
+								<NavigationCard {...item} onNavigate={onNavigate} />
 							) : (
 								<Link href={item.href} className="hover:text-audiophile-orange">
 									{item.title}

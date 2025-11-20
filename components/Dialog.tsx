@@ -19,12 +19,10 @@ type DialogProps = {
 	offset?: { x: number; y: number };
 	placement?: Placement;
 	useParentHorizontalPaddingAsOffset?: boolean;
-	modal?: boolean;
-	forceAnchorPositioning?: boolean;
 } & React.ComponentPropsWithoutRef<"dialog">;
 
 const BREAKPOINT_MD = 768;
-const Z_INDEX = { backdrop: 40, dialog: 50 };
+const Z_INDEX = { dialog: 50 };
 
 const Dialog: React.FC<DialogProps> = ({
 	children,
@@ -36,8 +34,6 @@ const Dialog: React.FC<DialogProps> = ({
 	offset = { x: 0, y: 0 },
 	placement = "bottom-right",
 	useParentHorizontalPaddingAsOffset = false,
-	modal = true,
-	forceAnchorPositioning = false,
 	...dialogProps
 }) => {
 	const dialogRef = useRef<HTMLDialogElement>(null);
@@ -63,7 +59,7 @@ const Dialog: React.FC<DialogProps> = ({
 			positionStrategy !== "anchor" ||
 			!anchorRef?.current ||
 			!dialogRef.current ||
-			(!isMdScreen && !forceAnchorPositioning)
+			!isMdScreen
 		)
 			return;
 
@@ -94,7 +90,7 @@ const Dialog: React.FC<DialogProps> = ({
 			x: memoizedOffset.x + getHorizontalPadding(),
 			y: memoizedOffset.y,
 		};
-		console.log(anchorRect);
+
 		const getInitialPosition = (): { top: number; left: number } => {
 			const positions = {
 				"bottom-right": {
@@ -137,7 +133,7 @@ const Dialog: React.FC<DialogProps> = ({
 
 		left = Math.max(bounds.minLeft, Math.min(left, bounds.maxLeft));
 		top = Math.max(bounds.minTop, Math.min(top, bounds.maxTop));
-		console.log(top);
+
 		setPosition({ top, left });
 	}, [
 		anchorRef,
@@ -146,7 +142,6 @@ const Dialog: React.FC<DialogProps> = ({
 		positionStrategy,
 		isMdScreen,
 		memoizedOffset,
-		forceAnchorPositioning,
 	]);
 
 	useLayoutEffect(() => {
@@ -156,16 +151,12 @@ const Dialog: React.FC<DialogProps> = ({
 		const handleClose = () => onClose?.();
 
 		if (open) {
-			modal ? dialog.showModal() : dialog.show();
+			dialog.showModal(); // Always use showModal - simpler
 			dialog.addEventListener("close", handleClose);
 
 			document.body.classList.add("overflow-hidden");
 
-			if (
-				positionStrategy === "anchor" &&
-				anchorRef?.current &&
-				(isMdScreen || forceAnchorPositioning)
-			) {
+			if (positionStrategy === "anchor" && anchorRef?.current && isMdScreen) {
 				requestAnimationFrame(updatePosition);
 			}
 		} else {
@@ -177,16 +168,7 @@ const Dialog: React.FC<DialogProps> = ({
 			dialog.removeEventListener("close", handleClose);
 			document.body.classList.remove("overflow-hidden");
 		};
-	}, [
-		open,
-		modal,
-		positionStrategy,
-		anchorRef,
-		isMdScreen,
-		updatePosition,
-		onClose,
-		forceAnchorPositioning,
-	]);
+	}, [open, positionStrategy, anchorRef, isMdScreen, updatePosition, onClose]);
 
 	// Position update listeners
 	useLayoutEffect(() => {
@@ -194,7 +176,7 @@ const Dialog: React.FC<DialogProps> = ({
 			!open ||
 			positionStrategy !== "anchor" ||
 			!anchorRef?.current ||
-			(!isMdScreen && !forceAnchorPositioning)
+			!isMdScreen
 		) {
 			return;
 		}
@@ -206,61 +188,20 @@ const Dialog: React.FC<DialogProps> = ({
 			window.removeEventListener("resize", updatePosition);
 			window.removeEventListener("scroll", updatePosition);
 		};
-	}, [
-		open,
-		anchorRef,
-		isMdScreen,
-		positionStrategy,
-		updatePosition,
-		forceAnchorPositioning,
-	]);
-
-	useLayoutEffect(() => {
-		if (!open || modal) return;
-
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape") {
-				onClose?.();
-			}
-		};
-
-		document.addEventListener("keydown", handleKeyDown);
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [open, modal, onClose]);
-
-	const getBackdropStyle = useCallback(() => {
-		if (positionStrategy !== "anchor" || !anchorRef?.current || !isMdScreen) {
-			return {};
-		}
-
-		const anchorRect = anchorRef.current.getBoundingClientRect();
-		return {
-			top: anchorRect.bottom + window.scrollY,
-			left: 0,
-			right: 0,
-			bottom: 0,
-		};
-	}, [positionStrategy, anchorRef, isMdScreen]);
+	}, [open, anchorRef, isMdScreen, positionStrategy, updatePosition]);
 
 	const shouldUsePositioning = Boolean(
 		position &&
 			anchorRef?.current &&
-			(isMdScreen || forceAnchorPositioning) &&
+			isMdScreen &&
 			positionStrategy === "anchor"
 	);
-	const shouldCenter =
-		(!isMdScreen && !forceAnchorPositioning) || positionStrategy === "center";
-	const showAnchoredBackdrop =
-		open && !modal && positionStrategy === "anchor" && isMdScreen;
-	const showCenteredBackdrop =
-		open && !modal && (positionStrategy === "center" || !isMdScreen);
+	const shouldCenter = !isMdScreen || positionStrategy === "center";
 
 	const dialogClasses = cn(
-		"bg-white",
+		"bg-white overflow-hidden",
 		{
-			"backdrop:bg-black/40": modal,
+			"backdrop:bg-black/40": true, // Always use native backdrop
 			absolute: shouldUsePositioning,
 			fixed: !shouldUsePositioning,
 			"left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2": shouldCenter,
@@ -279,37 +220,19 @@ const Dialog: React.FC<DialogProps> = ({
 		: { zIndex: Z_INDEX.dialog };
 
 	return (
-		<>
-			{showAnchoredBackdrop && (
-				<div
-					className="fixed bg-black/40"
-					style={{ ...getBackdropStyle(), zIndex: Z_INDEX.backdrop }}
-					onClick={onClose}
-				/>
-			)}
-
-			{showCenteredBackdrop && (
-				<div
-					className="fixed inset-0 bg-black/40"
-					style={{ zIndex: Z_INDEX.backdrop }}
-					onClick={onClose}
-				/>
-			)}
-
-			<dialog
-				ref={dialogRef}
-				className={dialogClasses}
-				style={dialogStyle}
-				onClick={e => {
-					if (modal && e.target === e.currentTarget) {
-						onClose?.();
-					}
-				}}
-				{...dialogProps}
-			>
-				{children}
-			</dialog>
-		</>
+		<dialog
+			ref={dialogRef}
+			className={dialogClasses}
+			style={dialogStyle}
+			onClick={e => {
+				if (e.target === e.currentTarget) {
+					onClose?.();
+				}
+			}}
+			{...dialogProps}
+		>
+			{children}
+		</dialog>
 	);
 };
 

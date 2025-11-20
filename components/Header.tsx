@@ -1,27 +1,29 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import CartDialog from "./CartDialog";
-import NavMenuModal from "./NavMenuModal";
 import { useCartStore } from "@/store/cartStore";
 import LogoNavMenu from "./LogoNavMenu";
 import HamburgerIcon from "../public/icon-hamburger.svg";
 import CartIcon from "../public/icon-cart.svg";
 
+const BREAKPOINT_XL = 1280;
 export default function Header() {
 	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 	const navRef = useRef<HTMLDivElement>(null);
-	const headerRef = useRef<HTMLElement>(null);
+	const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
+	const navContainerRef = useRef<HTMLDivElement>(null);
 	const totalItems = useCartStore(state => state.getTotalItems());
 	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	const openNavModal = () => {
-		setIsCartModalOpen(false); // Close cart when opening nav
+		setIsCartModalOpen(false);
 		setIsNavModalOpen(true);
 	};
 
 	const openCartModal = () => {
-		setIsNavModalOpen(false); // Close nav when opening cart
+		setIsNavModalOpen(false);
 		setIsCartModalOpen(true);
 	};
 
@@ -31,91 +33,207 @@ export default function Header() {
 
 	const closeNavModal = () => {
 		setIsNavModalOpen(false);
+		hamburgerButtonRef.current?.focus();
 	};
 
+	// Combine both useEffects into one
+	useEffect(() => {
+		const mainElement = document.querySelector("main");
+		const footerElement = document.querySelector("footer");
+
+		if (!isNavModalOpen || !navContainerRef.current) {
+			// Cleanup when nav is closed
+			if (mainElement) {
+				mainElement.removeAttribute("inert");
+				mainElement.removeAttribute("aria-hidden");
+				mainElement.style.pointerEvents = "";
+			}
+			if (footerElement) {
+				footerElement.removeAttribute("inert");
+				footerElement.removeAttribute("aria-hidden");
+				footerElement.style.pointerEvents = "";
+			}
+			document.body.style.overflow = "";
+			return;
+		}
+
+		const container = navContainerRef.current;
+
+		if (mainElement) {
+			mainElement.setAttribute("inert", "");
+			mainElement.setAttribute("aria-hidden", "true");
+			mainElement.style.pointerEvents = "none";
+		}
+		if (footerElement) {
+			footerElement.setAttribute("inert", "");
+			footerElement.setAttribute("aria-hidden", "true");
+			footerElement.style.pointerEvents = "none";
+		}
+
+		const focusableElements = container.querySelectorAll(
+			'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+		);
+		const firstElement = focusableElements[0] as HTMLElement;
+		const lastElement = focusableElements[
+			focusableElements.length - 1
+		] as HTMLElement;
+
+		const handleTab = (e: KeyboardEvent) => {
+			if (e.key !== "Tab") return;
+
+			if (e.shiftKey) {
+				if (document.activeElement === firstElement) {
+					e.preventDefault();
+					lastElement?.focus();
+				}
+			} else {
+				if (document.activeElement === lastElement) {
+					e.preventDefault();
+					firstElement?.focus();
+				}
+			}
+		};
+
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				closeNavModal();
+			}
+		};
+
+		firstElement?.focus();
+
+		document.addEventListener("keydown", handleTab);
+		document.addEventListener("keydown", handleEscape);
+
+		return () => {
+			document.removeEventListener("keydown", handleTab);
+			document.removeEventListener("keydown", handleEscape);
+
+			if (mainElement) {
+				mainElement.removeAttribute("inert");
+				mainElement.removeAttribute("aria-hidden");
+				mainElement.style.pointerEvents = "";
+			}
+			if (footerElement) {
+				footerElement.removeAttribute("inert");
+				footerElement.removeAttribute("aria-hidden");
+				footerElement.style.pointerEvents = "";
+			}
+		};
+	}, [isNavModalOpen]);
+
+	useLayoutEffect(() => {
+		const handleScreenResize = () => {
+			if (window.innerWidth >= BREAKPOINT_XL && isNavModalOpen) {
+				setIsNavModalOpen(false);
+			}
+		};
+		window.addEventListener("resize", handleScreenResize);
+		return () => window.removeEventListener("resize", handleScreenResize);
+	}, [isNavModalOpen]);
+
 	return (
-		<header className="bg-audiophile-black relative z-10" ref={headerRef}>
-			<div
-				className="flex items-center py-[32px] main-container gap-x-[42px]"
-				ref={navRef}
-			>
-				{/* Hamburger Menu - Mobile & Tablet only */}
-				<div className="flex items-center flex-1 md:flex-[initial] xl:hidden">
-					<button
-						className="cursor-pointer"
-						aria-label="Open mobile menu"
-						aria-expanded={isNavModalOpen}
-						aria-controls="mobile-navigation"
-						onClick={e => {
-							e.preventDefault();
-							e.stopPropagation();
-							openNavModal();
-						}}
-					>
-						<HamburgerIcon
-							width={16}
-							height={15}
-							className="fill-current"
+		<>
+			<header className="bg-audiophile-black relative z-50">
+				<div
+					className="flex items-center py-[32px] main-container gap-x-[42px]"
+					ref={navRef}
+				>
+					<div className="flex items-center flex-1 md:flex-[initial] xl:hidden">
+						<button
+							ref={hamburgerButtonRef}
+							className="cursor-pointer"
+							aria-label="Open mobile menu"
+							aria-expanded={isNavModalOpen}
+							aria-controls="mobile-navigation"
+							aria-haspopup="menu"
+							onClick={openNavModal}
+						>
+							<HamburgerIcon
+								width={16}
+								height={15}
+								className="fill-current"
+								aria-hidden="true"
+							/>
+						</button>
+					</div>
+
+					<LogoNavMenu menuType="header" />
+
+					<div className="flex items-center justify-end flex-1">
+						{hasHydrated && totalItems > 0 ? (
+							<button
+								aria-label={`Open shopping cart with ${totalItems} items`}
+								aria-haspopup="dialog"
+								aria-expanded={isCartModalOpen}
+								className="cursor-pointer relative"
+								onClick={openCartModal}
+							>
+								<CartIcon
+									width={23}
+									height={20}
+									className="fill-current"
+									aria-hidden="true"
+								/>
+								<span
+									className="absolute -top-2 -right-2 bg-audiophile-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+									aria-label={`${totalItems} items in cart`}
+								>
+									{totalItems > 99 ? "99+" : totalItems}
+								</span>
+							</button>
+						) : (
+							<button
+								aria-label="Shopping cart is empty"
+								aria-haspopup="dialog"
+								aria-expanded={isCartModalOpen}
+								className="cursor-pointer"
+								onClick={openCartModal}
+							>
+								<CartIcon
+									width={23}
+									height={20}
+									className="fill-current"
+									aria-hidden="true"
+								/>
+							</button>
+						)}
+					</div>
+				</div>
+				<CartDialog
+					open={isCartModalOpen}
+					onClose={closeCartModal}
+					anchorRef={navRef}
+				/>
+				<div className="w-full md:main-container">
+					<div className="h-[1px] bg-audiophile-divider" aria-hidden="true" />
+				</div>
+			</header>
+
+			{isNavModalOpen &&
+				typeof document !== "undefined" &&
+				createPortal(
+					<>
+						<div
+							className="fixed inset-0 bg-black/40 z-30"
+							onClick={closeNavModal}
 							aria-hidden="true"
 						/>
-					</button>
-				</div>
-
-				<LogoNavMenu menuType="header" />
-
-				{/* Cart */}
-				<div className="flex items-center justify-end flex-1">
-					{hasHydrated && totalItems > 0 ? (
-						<button
-							aria-label={`Open shopping cart with ${totalItems} items`}
-							className="cursor-pointer relative"
-							onClick={e => {
-								e.preventDefault();
-								e.stopPropagation();
-								openCartModal();
-							}}
+						<div
+							ref={navContainerRef}
+							className="w-full absolute top-[90px] left-0 bg-white rounded-b-lg z-50 px-6 pt-8 pb-[35px]"
+							role="menu"
+							aria-labelledby="mobile-nav-label"
+							id="mobile-navigation"
 						>
-							<CartIcon
-								width={23}
-								height={20}
-								className="fill-current"
-								aria-hidden="true"
-							/>
-							<span
-								className="absolute -top-2 -right-2 bg-audiophile-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
-								aria-label={`${totalItems} items in cart`}
-							>
-								{totalItems > 99 ? "99+" : totalItems}
-							</span>
-						</button>
-					) : (
-						<button
-							aria-label="Shopping cart is empty"
-							className="cursor-default"
-						>
-							<CartIcon
-								width={23}
-								height={20}
-								className="fill-current"
-								aria-hidden="true"
-							/>
-						</button>
-					)}
-				</div>
-			</div>
-			<CartDialog
-				open={isCartModalOpen}
-				onClose={closeCartModal}
-				anchorRef={navRef}
-			/>
-			<NavMenuModal
-				open={isNavModalOpen}
-				onClose={closeNavModal}
-				anchorRef={headerRef}
-			/>
-			<div className="w-full md:main-container">
-				<div className="h-[1px] bg-audiophile-divider" aria-hidden="true" />
-			</div>
-		</header>
+							<div id="mobile-nav-label" className="sr-only">
+								Mobile Navigation Menu
+							</div>
+							<LogoNavMenu menuType="content" onNavigate={closeNavModal} />
+						</div>
+					</>,
+					document.body
+				)}
+		</>
 	);
 }
