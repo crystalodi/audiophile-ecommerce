@@ -9,8 +9,8 @@ export default function RelatedProduct(props: RelatedProductType) {
 
 	return (
 		<article className="flex flex-col gap-y-10 md:flex-1">
-			<div className="flex bg-audiophile-gray rounded-[8px] h-30 md:h-79.5 justify-center items-center overflow-hidden">
-				<div className="transform scale-125 md:scale-150">
+			<div className="bg-audiophile-gray flex h-30 items-center justify-center overflow-hidden rounded-[8px] md:h-79.5">
+				<div className="scale-125 transform md:scale-150">
 					<picture>
 						<source
 							srcSet={imageUrl(mediaImage.desktop.asset).url()}
@@ -24,13 +24,13 @@ export default function RelatedProduct(props: RelatedProductType) {
 							src={imageUrl(mediaImage.mobile.asset).url()}
 							alt={productName}
 							loading="lazy"
-							className="min-h-[83px] max-h-[96px] md:min-h-[172px] md:max-h-[199px] object-cover object-center"
+							className="max-h-[96px] min-h-[83px] object-cover object-center md:max-h-[199px] md:min-h-[172px]"
 						/>
 					</picture>
 				</div>
 			</div>
-			<div className="flex flex-col justify-center items-center">
-				<h3 className="text-black mb-8 heading-5">
+			<div className="flex flex-col items-center justify-center">
+				<h3 className="heading-5 mb-8 text-black">
 					{shortName ? shortName : productName}
 				</h3>
 				<Link

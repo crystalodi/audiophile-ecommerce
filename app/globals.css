@@ -42,13 +42,13 @@ footer {
 
 @layer base {
 	button {
-		@apply hover:outline-0 hover:border-0;
+		@apply hover:border-0 hover:outline-0;
 	}
 }
 
 @layer components {
 	.btn {
-		@apply inline-flex justify-center items-center text-[13px] uppercase text-center tracking-[1px] pt-[15px] pb-[15px] pr-[29.5px] pl-[31.5px] leading-none font-bold inset-ring-1 inset-ring-black h-[48px] not-disabled:hover:cursor-pointer disabled:hover:cursor-auto;
+		@apply inline-flex h-[48px] items-center justify-center pt-[15px] pr-[29.5px] pb-[15px] pl-[31.5px] text-center text-[13px] leading-none font-bold tracking-[1px] uppercase inset-ring-1 inset-ring-black not-disabled:hover:cursor-pointer disabled:hover:cursor-auto;
 	}
 
 	.btn-accent {
@@ -56,7 +56,7 @@ footer {
 	}
 
 	.btn-orange {
-		@apply bg-audiophile-orange text-white inset-ring-0 not-disabled:hover:bg-audiophile-orange-light disabled:bg-audiophile-orange-light;
+		@apply bg-audiophile-orange not-disabled:hover:bg-audiophile-orange-light disabled:bg-audiophile-orange-light text-white inset-ring-0;
 	}
 
 	.btn-white {
@@ -68,21 +68,21 @@ footer {
 	}
 
 	.btn-black {
-		@apply bg-black hover:bg-[#4C4C4C] text-white inset-0 inset-ring-0;
+		@apply inset-0 bg-black text-white inset-ring-0 hover:bg-[#4C4C4C];
 	}
 }
 
 @layer utilities {
 	.body-text {
-		@apply text-[15px] font-medium tracking-[0px] leading-[25px];
+		@apply text-[15px] leading-[25px] font-medium tracking-[0px];
 	}
 
 	.overline-text {
-		@apply uppercase leading-[19px] text-[14px] tracking-[10px] font-normal;
+		@apply text-[14px] leading-[19px] font-normal tracking-[10px] uppercase;
 	}
 
 	.subtitle-text {
-		@apply text-[13px] font-bold tracking-[1px] leading-[25px] uppercase;
+		@apply text-[13px] leading-[25px] font-bold tracking-[1px] uppercase;
 	}
 
 	@media (min-width: 768px) {

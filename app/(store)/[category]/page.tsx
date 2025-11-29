@@ -16,12 +16,12 @@ async function CategoryPage({
 
 	return (
 		<>
-			<header className="flex justify-center py-8 bg-audiophile-black md:pt-[105px] md:pb-[97px] xl:pt-[98px] xl:pb-[97px]">
-				<h1 className="text-white heading-4 md:heading-2">{category}</h1>
+			<header className="bg-audiophile-black flex justify-center py-8 md:pt-[105px] md:pb-[97px] xl:pt-[98px] xl:pb-[97px]">
+				<h1 className="heading-4 md:heading-2 text-white">{category}</h1>
 			</header>
 			<div className="main-container">
 				<section
-					className="flex flex-col mt-16 md:mt-30 xl:mt-40 justify-center items-center gap-y-30 mb-30"
+					className="mt-16 mb-30 flex flex-col items-center justify-center gap-y-30 md:mt-30 xl:mt-40"
 					aria-label={`${category} products`}
 				>
 					{products.length > 0 ? (

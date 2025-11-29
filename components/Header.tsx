@@ -136,10 +136,10 @@ export default function Header() {
 		<>
 			<header className="bg-audiophile-black relative z-50">
 				<div
-					className="flex items-center py-[32px] main-container gap-x-[42px]"
+					className="main-container flex items-center gap-x-[42px] py-[32px]"
 					ref={navRef}
 				>
-					<div className="flex items-center flex-1 md:flex-[initial] xl:hidden">
+					<div className="flex flex-1 items-center md:flex-[initial] xl:hidden">
 						<button
 							ref={hamburgerButtonRef}
 							className="cursor-pointer"
@@ -160,13 +160,13 @@ export default function Header() {
 
 					<LogoNavMenu menuType="header" />
 
-					<div className="flex items-center justify-end flex-1">
+					<div className="flex flex-1 items-center justify-end">
 						{hasHydrated && totalItems > 0 ? (
 							<button
 								aria-label={`Open shopping cart with ${totalItems} items`}
 								aria-haspopup="dialog"
 								aria-expanded={isCartModalOpen}
-								className="cursor-pointer relative"
+								className="relative cursor-pointer"
 								onClick={openCartModal}
 							>
 								<CartIcon
@@ -176,7 +176,7 @@ export default function Header() {
 									aria-hidden="true"
 								/>
 								<span
-									className="absolute -top-2 -right-2 bg-audiophile-orange text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+									className="bg-audiophile-orange absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
 									aria-label={`${totalItems} items in cart`}
 								>
 									{totalItems > 99 ? "99+" : totalItems}
@@ -205,8 +205,8 @@ export default function Header() {
 					onClose={closeCartModal}
 					anchorRef={navRef}
 				/>
-				<div className="w-full md:main-container">
-					<div className="h-[1px] bg-audiophile-divider" aria-hidden="true" />
+				<div className="md:main-container w-full">
+					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />
 				</div>
 			</header>
 
@@ -215,13 +215,13 @@ export default function Header() {
 				createPortal(
 					<>
 						<div
-							className="fixed inset-0 bg-black/40 z-30"
+							className="fixed inset-0 z-30 bg-black/40"
 							onClick={closeNavModal}
 							aria-hidden="true"
 						/>
 						<div
 							ref={navContainerRef}
-							className="w-full absolute top-[90px] left-0 bg-white rounded-b-lg z-50 px-6 pt-8 pb-[35px]"
+							className="absolute top-[90px] left-0 z-50 w-full rounded-b-lg bg-white px-6 pt-8 pb-[35px]"
 							role="menu"
 							aria-labelledby="mobile-nav-label"
 							id="mobile-navigation"

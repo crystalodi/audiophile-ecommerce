@@ -26,25 +26,25 @@ export default async function HeroSection() {
 
 	return (
 		<section
-			className="relative z-0 h-127.5 md:h-160 overflow-hidden bg-audiophile-black flex items-center justify-center xl:justify-start"
+			className="bg-audiophile-black relative z-0 flex h-127.5 items-center justify-center overflow-hidden md:h-160 xl:justify-start"
 			aria-labelledby="hero-heading"
 		>
-			<div className="absolute w-screen h-[600px] md:h-[729px] top-0 left-0 -translate-y-[89px]">
+			<div className="absolute top-0 left-0 h-[600px] w-screen -translate-y-[89px] md:h-[729px]">
 				<picture className="absolute inset-0 -z-20">
 					<source srcSet={desktopImage} media="(min-width: 1280px)" />
 					<source srcSet={tabletImage} media="(min-width: 768px)" />
 					<img
 						src={mobileImage}
 						alt={`${productName} headphones product image`}
-						className="w-full h-full object-contain object-center mix-blend-hard-light"
+						className="h-full w-full object-contain object-center mix-blend-hard-light"
 					/>
 				</picture>
 			</div>
-			<div className="pl-[23px] pr-6 flex justify-center z-1 md:p-0 xl:justify-start xl:pl-[165px]">
-				<div className="flex flex-col justify-center items-center text-center max-w-82 md:max-w-[379px] xl:justify-start xl:items-start xl:text-left">
+			<div className="z-1 flex justify-center pr-6 pl-[23px] md:p-0 xl:justify-start xl:pl-[165px]">
+				<div className="flex max-w-82 flex-col items-center justify-center text-center md:max-w-[379px] xl:items-start xl:justify-start xl:text-left">
 					{isNewProduct && (
 						<p
-							className="text-white/49 text-[14px] font-normal uppercase tracking-[10px] mb-[10px] md:mb-6"
+							className="mb-[10px] text-[14px] font-normal tracking-[10px] text-white/49 uppercase md:mb-6"
 							aria-label="New product announcement"
 						>
 							new product
@@ -52,11 +52,11 @@ export default async function HeroSection() {
 					)}
 					<h1
 						id="hero-heading"
-						className="text-[36px] font-bold text-white tracking-[1.29px] leading-10 uppercase mb-6 md:text-[56px] md:tracking-[2px] md:leading-[58px] md:mb-6"
+						className="mb-6 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:mb-6 md:text-[56px] md:leading-[58px] md:tracking-[2px]"
 					>
 						{productName}
 					</h1>
-					<p className="body-text text-white/75 mb-7 md:max-w-[349px] md:mb-10">
+					<p className="body-text mb-7 text-white/75 md:mb-10 md:max-w-[349px]">
 						{featuredProductDescription}
 					</p>
 					<Link

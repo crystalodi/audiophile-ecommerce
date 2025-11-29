@@ -34,22 +34,22 @@ function NavigationCard({
 				<img
 					src={urlFor(image?.asset as unknown as string).url()}
 					aria-hidden
-					className="w-[147px] object-cover absolute top-1/10 left-1/2 -translate-y-1/10 -translate-x-1/2 xl:w-[178px] xl:top-1/5 xl:-translate-y-1/5"
+					className="absolute top-1/10 left-1/2 w-[147px] -translate-x-1/2 -translate-y-1/10 object-cover xl:top-1/5 xl:w-[178px] xl:-translate-y-1/5"
 				/>
 			)}
 			<div className="flex-1 p-6.5 md:p-6.25 xl:p-10"></div>
 			<Link
-				className="bg-audiophile-gray rounded-lg flex justify-center h-41.25 xl:h-51 group"
+				className="bg-audiophile-gray group flex h-41.25 justify-center rounded-lg xl:h-51"
 				href={href}
 				aria-label={`Navigation to ${title} products`}
 				onClick={() => onNavigate?.()}
 			>
-				<div className="flex flex-col justify-end items-center">
-					<h3 className="text-[15px] text-black tracking-[1.07px] font-bold uppercase mb-[17px]">
+				<div className="flex flex-col items-center justify-end">
+					<h3 className="mb-[17px] text-[15px] font-bold tracking-[1.07px] text-black uppercase">
 						{title}
 					</h3>
-					<div className="flex items-center mb-[22px] xl:mb-[30px]">
-						<p className="subtitle-text text-black/50 mr-[13.32px] group-hover:text-audiophile-orange">
+					<div className="mb-[22px] flex items-center xl:mb-[30px]">
+						<p className="subtitle-text group-hover:text-audiophile-orange mr-[13.32px] text-black/50">
 							shop
 						</p>
 						<RightArrowIcon

@@ -1,9 +1,9 @@
 import React from "react";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
-import { clsx } from "clsx";
 import { CategoryProductType, DetailProductType } from "@/lib/custom.types";
 import AddToCart from "./AddToCart";
+import { cn } from "@/lib/utils";
 
 type ProductCardProps = {
 	variant: "category" | "detail";
@@ -21,7 +21,7 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 		? `/${product.category.categoryName.toLowerCase()}/${slug.current}`
 		: "";
 
-	const articleClasses = clsx("flex flex-col", {
+	const articleClasses = cn("flex flex-col", {
 		"gap-y-8 md:gap-y-[52px] xl:gap-y-0 xl:gap-x-31.25 xl:flex-row xl:even:flex-row-reverse":
 			variant === "category",
 		"gap-y-8": variant === "detail" && isNewProduct,
@@ -30,45 +30,45 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 			variant === "detail",
 	});
 
-	const pictureWrapperClasses = clsx({
+	const pictureWrapperClasses = cn({
 		"flex flex-col items-center justify-center xl:flex-1":
 			variant === "category",
 		"flex flex-col rounded-lg md:flex-1 md:w-2/5 xl:w-1/2":
 			variant === "detail",
 	});
 
-	const pictureClasses = clsx({
+	const pictureClasses = cn({
 		"flex flex-col items-center justify-center xl:flex-1":
 			variant === "category",
 		"md:max-h-[481px] xl:max-h-[initial]": variant === "detail",
 	});
 
-	const imgClasses = clsx("rounded-lg", {
+	const imgClasses = cn("rounded-lg", {
 		"": variant === "category",
 		"h-full w-full md:object-cover": variant === "detail",
 	});
 
-	const contentWrapperClasses = clsx({
+	const contentWrapperClasses = cn({
 		"flex items-center justify-center xl:flex-1": variant === "category",
 		"flex flex-col items-center justify-center flex-1": variant === "detail",
 	});
 
-	const contentClasses = clsx("flex flex-col", {
+	const contentClasses = cn("flex flex-col", {
 		"items-center justify-center text-center md:max-w-[83%] xl:text-left xl:items-start xl:max-w-[initial]":
 			variant === "category",
 	});
 
-	const newProductClasses = clsx("overline-text text-audiophile-orange", {
+	const newProductClasses = cn("overline-text text-audiophile-orange", {
 		"mb-4": variant === "category",
 		"mb-6 md:mb-[17px]": variant === "detail",
 	});
 
-	const titleClasses = clsx({
+	const titleClasses = cn({
 		"mb-4 md:mb-8 heading-4 md:heading-2": variant === "category",
 		"heading-4 mb-6 md:mb-8 xl:heading-2": variant === "detail",
 	});
 
-	const descriptionClasses = clsx("body-text opacity-50", {
+	const descriptionClasses = cn("body-text opacity-50", {
 		"text-black mb-4 md:mb-6": variant === "category",
 		"mb-6 md:mb-8": variant === "detail",
 	});
@@ -118,7 +118,7 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 
 					{variant === "detail" && hasPrice && hasStock && (
 						<>
-							<div className="font-bold mb-[31px]">
+							<div className="mb-[31px] font-bold">
 								{`$ ${(product as DetailProductType).price.toLocaleString("en-US")}`}
 							</div>
 							<div>

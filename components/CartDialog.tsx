@@ -47,7 +47,7 @@ function CartProduct({
 
 	return (
 		<div className="flex items-center justify-between">
-			<div className="h-16 w-16 bg-audiophile-gray mr-4 rounded-lg">
+			<div className="bg-audiophile-gray mr-4 h-16 w-16 rounded-lg">
 				{imageUrl ? (
 					<Image
 						src={imageUrl}
@@ -59,12 +59,12 @@ function CartProduct({
 						className="rounded-lg"
 					/>
 				) : (
-					<div className="w-full h-full rounded-lg" />
+					<div className="h-full w-full rounded-lg" />
 				)}
 			</div>
 			<div className="flex flex-col justify-center">
-				<div className="body-text uppercase font-bold!">{productName}</div>
-				<div className="text-black/50 text-[14px] font-bold">{`$ ${price.toLocaleString("en-US")}`}</div>
+				<div className="body-text font-bold! uppercase">{productName}</div>
+				<div className="text-[14px] font-bold text-black/50">{`$ ${price.toLocaleString("en-US")}`}</div>
 			</div>
 			<div className="ml-auto">
 				<QuantitySelector
@@ -82,13 +82,13 @@ function CartProduct({
 function CartProductSkeleton() {
 	return (
 		<div className="flex items-center justify-between">
-			<div className="h-16 w-16 rounded-lg animate-shimmer mr-4"></div>
+			<div className="animate-shimmer mr-4 h-16 w-16 rounded-lg"></div>
 			<div className="flex flex-col justify-center gap-1">
-				<div className="h-4 w-24 animate-shimmer" />
-				<div className="h-4 w-16 animate-shimmer" />
+				<div className="animate-shimmer h-4 w-24" />
+				<div className="animate-shimmer h-4 w-16" />
 			</div>
 			<div className="ml-auto">
-				<div className="h-8 w-20 animate-shimmer" />
+				<div className="animate-shimmer h-8 w-20" />
 			</div>
 		</div>
 	);
@@ -118,18 +118,18 @@ function CartDialogHeader({
 	}
 
 	return (
-		<div className="flex justify-between items-center mb-[31px]">
+		<div className="mb-[31px] flex items-center justify-between">
 			{isLoading ? (
 				<>
-					<div className="h-6 w-20 animate-shimmer" />
-					<div className="h-4 w-16 animate-shimmer" />
+					<div className="animate-shimmer h-6 w-20" />
+					<div className="animate-shimmer h-4 w-16" />
 				</>
 			) : (
 				<>
 					<h1 className="heading-6">cart {`(${totalItems})`}</h1>
 					{totalItems > 0 && (
 						<button
-							className="btn-transparent body-text text-black/50 cursor-pointer underline"
+							className="btn-transparent body-text cursor-pointer text-black/50 underline"
 							onClick={onRemoveAll}
 						>
 							Remove All
@@ -163,15 +163,15 @@ function CartDialogFooter({
 
 	return (
 		<>
-			<div className="flex mt-8">
+			<div className="mt-8 flex">
 				{isLoading ? (
 					<>
-						<div className="h-4 w-12 animate-shimmer mr-auto" />
-						<div className="h-4 w-16 animate-shimmer" />
+						<div className="animate-shimmer mr-auto h-4 w-12" />
+						<div className="animate-shimmer h-4 w-16" />
 					</>
 				) : (
 					<>
-						<div className="body-text text-black/50 uppercase mr-auto">
+						<div className="body-text mr-auto text-black/50 uppercase">
 							total
 						</div>
 						<div className="font-bold">${total.toLocaleString("en-US")}</div>
@@ -180,7 +180,7 @@ function CartDialogFooter({
 			</div>
 			<div className="mt-6">
 				{isLoading ? (
-					<div className="h-12 w-full animate-shimmer" />
+					<div className="animate-shimmer h-12 w-full" />
 				) : (
 					itemsWithPrices.length > 0 && (
 						<button className="btn btn-orange w-full">checkout</button>
@@ -233,14 +233,14 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 		<Dialog
 			open={open}
 			onClose={onClose}
-			className="w-[87.2%] md:w-[377px] rounded-lg max-h-[488px]"
+			className="max-h-[488px] w-[87.2%] rounded-lg md:w-[377px]"
 			anchorRef={anchorRef}
 			placement="bottom-right"
 			positionStrategy="anchor"
 			useParentHorizontalPaddingAsOffset
 			offset={offsetMemo}
 		>
-			<div className="py-[31px] pl-[33px] pr-[31px]">
+			<div className="py-[31px] pr-[31px] pl-[33px]">
 				<div className="flex flex-col">
 					<CartDialogHeader
 						isLoading={isLoading}

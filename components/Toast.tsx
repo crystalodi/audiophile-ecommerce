@@ -57,7 +57,7 @@ const ToastItem = ({ id, message, type, onRemove }: ToastItemProps) => {
 			</div>
 			<button
 				onClick={handleClose}
-				className="ml-4 text-lg hover:opacity-70 transition-opacity"
+				className="ml-4 text-lg transition-opacity hover:opacity-70"
 			>
 				✕
 			</button>

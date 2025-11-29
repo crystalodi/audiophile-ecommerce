@@ -26,9 +26,9 @@ function FeaturedProduct({
 	const renderHeroBitMapBackgroundImage = () => {
 		return (
 			<>
-				<div className="absolute top-0 left-0 w-full h-full">
+				<div className="absolute top-0 left-0 h-full w-full">
 					{heroBitmapBackgroundImage && (
-						<picture className="inset-0 absolute -z-1">
+						<picture className="absolute inset-0 -z-1">
 							<source
 								srcSet={imageUrl(heroBitmapBackgroundImage.desktop.asset).url()}
 								media="(min-width: 1024px)"
@@ -40,7 +40,7 @@ function FeaturedProduct({
 							<img
 								src={imageUrl(heroBitmapBackgroundImage.mobile.asset).url()}
 								alt={product.productName}
-								className="w-full h-full object-cover object-center"
+								className="h-full w-full object-cover object-center"
 								loading="lazy"
 							/>
 						</picture>
@@ -65,7 +65,7 @@ function FeaturedProduct({
 	const renderFeaturedProductGrid = () => {
 		return (
 			<>
-				<div className="rounded-lg overflow-hidden">
+				<div className="overflow-hidden rounded-lg">
 					{featuredProductImage && (
 						<picture className="block h-full">
 							<source
@@ -79,13 +79,13 @@ function FeaturedProduct({
 							<img
 								src={imageUrl(featuredProductImage.mobile.asset).url()}
 								alt={product.productName}
-								className="w-full h-full object-cover"
+								className="h-full w-full object-cover"
 								loading="lazy"
 							/>
 						</picture>
 					)}
 				</div>
-				<div className="bg-[#f1f1f1] rounded-lg py-[41px] px-6 md:py-[101px] md:pl-[41px] md:pr-[51px] lg:pl-[95px]">
+				<div className="rounded-lg bg-[#f1f1f1] px-6 py-[41px] md:py-[101px] md:pr-[51px] md:pl-[41px] lg:pl-[95px]">
 					<h4 className="heading-4 mb-8">{productName}</h4>
 					<div>
 						<Link
@@ -103,7 +103,7 @@ function FeaturedProduct({
 
 	const renderHeroSVGContent = () => {
 		return (
-			<div className="flex flex-col text-center items-center justify-center lg:flex lg:flex-row lg:items-start lg:justify-center lg:gap-x-[138px] w-full">
+			<div className="flex w-full flex-col items-center justify-center text-center lg:flex lg:flex-row lg:items-start lg:justify-center lg:gap-x-[138px]">
 				{featuredProductImage && (
 					<div className="mb-8 md:mb-16 lg:mb-0">
 						<picture>
@@ -118,14 +118,14 @@ function FeaturedProduct({
 							<img
 								src={imageUrl(featuredProductImage.mobile.asset).url()}
 								alt={product.productName}
-								className="w-auto h-[207px] object-cover md:h-[237px] lg:h-[493px] relative lg:top-4"
+								className="relative h-[207px] w-auto object-cover md:h-[237px] lg:top-4 lg:h-[493px]"
 								loading="lazy"
 							/>
 						</picture>
 					</div>
 				)}
-				<div className="flex flex-col gap-6 items-center justify-center md:max-w-[349px]  lg:text-left lg:items-start lg:pt-10">
-					<h3 className="font-bold text-[36px] text-white leading-10 tracking-[1.29px] uppercase max-w-45 md:max-w-[349px] md:heading-1">
+				<div className="flex flex-col items-center justify-center gap-6 md:max-w-[349px] lg:items-start lg:pt-10 lg:text-left">
+					<h3 className="md:heading-1 max-w-45 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:max-w-[349px]">
 						{productName}
 					</h3>
 					<p className="body-text text-white/75">{description}</p>
@@ -145,12 +145,12 @@ function FeaturedProduct({
 
 	return (
 		<div
-			className={cn("rounded-lg relative overflow-hidden", {
-				"bg-[#D87D4A] flex flex-col bg-cover bg-no-repeat [background-position:center_-125px] md:[background-position:center_-180px] py-[55px] pl-[23px] pr-6 items-center justify-center md:pt-[55px] md:pb-16 lg:pb-0 lg:items-start lg:justify-start lg:pt-[67px]":
+			className={cn("relative overflow-hidden rounded-lg", {
+				"flex flex-col items-center justify-center bg-[#D87D4A] bg-cover [background-position:center_-125px] bg-no-repeat py-[55px] pr-6 pl-[23px] md:[background-position:center_-180px] md:pt-[55px] md:pb-16 lg:items-start lg:justify-start lg:pt-[67px] lg:pb-0":
 					isHeroWithSVG && !isHeroWithBitmapImage,
-				"h-80 flex items-center pl-6 md:pl-[62px] lg:pl-[95px]":
+				"flex h-80 items-center pl-6 md:pl-[62px] lg:pl-[95px]":
 					isHeroWithBitmapImage && !isHeroWithSVG,
-				"h-106 md:h-80 grid grid-rows-2 gap-6 md:grid-rows-1 md:grid-cols-2 md:gap-[11px] lg:gap-[30px]":
+				"grid h-106 grid-rows-2 gap-6 md:h-80 md:grid-cols-2 md:grid-rows-1 md:gap-[11px] lg:gap-[30px]":
 					layoutType === "grid",
 			})}
 			style={{

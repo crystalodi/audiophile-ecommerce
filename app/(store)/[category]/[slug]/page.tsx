@@ -43,7 +43,7 @@ export default async function ProductPage({
 
 	return (
 		<div className="main-container">
-			<div className="mt-4 md:mt-[33px] xl:mt-[79px] flex flex-col">
+			<div className="mt-4 flex flex-col md:mt-[33px] xl:mt-[79px]">
 				<div className="mb-6 xl:mb-[52px]">
 					<Link
 						href={`/${category.categoryName}`}
@@ -60,20 +60,20 @@ export default async function ProductPage({
 					className="mb-[121px] xl:mb-40"
 				>
 					<div className="flex flex-col xl:flex-row xl:gap-x-[125px]">
-						<div className="flex flex-col mb-22 md:mb-30 xl:flex-1/3 xl:mb-0">
-							<h2 className="mb-6 md:mb-8 heading-5 md:heading-3">Features</h2>
-							<div className="opacity-50 prose max-w-none body-text">
+						<div className="mb-22 flex flex-col md:mb-30 xl:mb-0 xl:flex-1/3">
+							<h2 className="heading-5 md:heading-3 mb-6 md:mb-8">Features</h2>
+							<div className="prose body-text max-w-none opacity-50">
 								{Array.isArray(features) && <PortableText value={features} />}
 							</div>
 						</div>
-						<div className="flex flex-col md:flex-row md:gap-x-[11px] w-full xl:flex-1 xl:flex-col">
-							<h2 className="md:flex-1 mb-6 xl:flex-[initial] heading-5 md:heading-3">
+						<div className="flex w-full flex-col md:flex-row md:gap-x-[11px] xl:flex-1 xl:flex-col">
+							<h2 className="heading-5 md:heading-3 mb-6 md:flex-1 xl:flex-[initial]">
 								in the box
 							</h2>
-							<ul className="list-none flex flex-col gap-y-2 body-text capitalize md:flex-1 xl:flex-[initial]">
+							<ul className="body-text flex list-none flex-col gap-y-2 capitalize md:flex-1 xl:flex-[initial]">
 								{includes?.map(item => (
 									<li key={item._key} className="flex gap-x-[21px]">
-										<div className="text-audiophile-orange font-bold basis-[18px]">
+										<div className="text-audiophile-orange basis-[18px] font-bold">
 											{item.quantity}x
 										</div>
 										<div className="opacity-50">{item.item}</div>
@@ -84,7 +84,7 @@ export default async function ProductPage({
 					</div>
 				</section>
 				<section aria-label={`${productName} image gallery`} className="mb-30">
-					<div className="grid grid-cols-1 md:grid-cols-(--product-gallery-grid-columns-md) gallery-image-grid gap-y-5 md:gap-x-[18px] xl:gap-y-8 xl:gap-x-[30px]">
+					<div className="gallery-image-grid grid grid-cols-1 gap-y-5 md:grid-cols-(--product-gallery-grid-columns-md) md:gap-x-[18px] xl:gap-x-[30px] xl:gap-y-8">
 						<picture className="flex flex-col md:[grid-area:one]">
 							<source
 								srcSet={imageUrl(first.desktop.asset).url()}
@@ -97,7 +97,7 @@ export default async function ProductPage({
 							<img
 								src={imageUrl(first.mobile.asset).url()}
 								alt={productName}
-								className="rounded-lg h-full"
+								className="h-full rounded-lg"
 								loading="lazy"
 							/>
 						</picture>
@@ -113,7 +113,7 @@ export default async function ProductPage({
 							<img
 								src={imageUrl(second.mobile.asset).url()}
 								alt={productName}
-								className="rounded-lg h-full"
+								className="h-full rounded-lg"
 								loading="lazy"
 							/>
 						</picture>
@@ -129,18 +129,18 @@ export default async function ProductPage({
 							<img
 								src={imageUrl(third.mobile.asset).url()}
 								alt={productName}
-								className="rounded-lg h-full"
+								className="h-full rounded-lg"
 								loading="lazy"
 							/>
 						</picture>
 					</div>
 				</section>
 				<section aria-label="Related Products" className="mb-30">
-					<div className="text-center w-full">
-						<h2 className="mb-10 md:mb-13 xl:mb-16 heading-5 md:heading-3">
+					<div className="w-full text-center">
+						<h2 className="heading-5 md:heading-3 mb-10 md:mb-13 xl:mb-16">
 							you may also like
 						</h2>
-						<ul className="flex flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px] list-none">
+						<ul className="flex list-none flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px]">
 							{others?.map(other => (
 								<li key={other.slug.current} className="flex-1">
 									<RelatedProduct {...other} />

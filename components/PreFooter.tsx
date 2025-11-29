@@ -57,7 +57,7 @@ export default function PreFooter() {
 		},
 		block: {
 			normal: props => (
-				<h2 className="heading-4 max-w-[573px] mb-8 text-center md:heading-2 xl:text-left">
+				<h2 className="heading-4 md:heading-2 mb-8 max-w-[573px] text-center xl:text-left">
 					{props.children}
 				</h2>
 			),
@@ -67,14 +67,14 @@ export default function PreFooter() {
 	return (
 		<div className="main-container">
 			<section aria-label="Product Categories and Store Information">
-				<div className="flex flex-col gap-30 mb-30">
+				<div className="mb-30 flex flex-col gap-30">
 					{!isHomePage && (
 						<div className="flex">
 							<LogoNavMenu menuType="content" />
 						</div>
 					)}
 					{!!prefooterData && (
-						<div className="flex flex-col gap-10 md:gap-[63px] xl:gap-31.25 items-center justify-center xl:flex-row-reverse">
+						<div className="flex flex-col items-center justify-center gap-10 md:gap-[63px] xl:flex-row-reverse xl:gap-31.25">
 							<div className="xl:flex-1">
 								<picture>
 									<source
@@ -88,7 +88,7 @@ export default function PreFooter() {
 									<img
 										src={imageUrl(prefooterData.image.mobile.asset).url()}
 										alt="man wearing x99 mark two headphones listening to music"
-										className="rounded-lg h-full w-full"
+										className="h-full w-full rounded-lg"
 										loading="lazy"
 									/>
 								</picture>
@@ -100,7 +100,7 @@ export default function PreFooter() {
 										components={portableTextComponents}
 									/>
 								)}
-								<p className="body-text text-black/50 text-center xl:text-left">
+								<p className="body-text text-center text-black/50 xl:text-left">
 									{prefooterData.description}
 								</p>
 							</div>
