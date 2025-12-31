@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "../globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
 import { SanityLive } from "@/sanity/lib/live";
-import ToastContainer from "@/components/Toast";
-import Footer from "@/components/Footer";
-import PreFooter from "@/components/PreFooter";
+import ToastContainer from "@/components/ui/Toast";
+import Footer from "@/components/layout/Footer";
+import PreFooter from "@/components/layout/PreFooter";
+import PriceInitializer from "@/components/providers/PriceInitializer";
 
 export const metadata: Metadata = {
 	title: "Audiophile",
@@ -25,6 +26,7 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={manrope.variable}>
 			<body>
+				<PriceInitializer />
 				<Header />
 				<main>
 					{children}

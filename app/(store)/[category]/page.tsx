@@ -1,4 +1,4 @@
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/product/ProductCard/ProductCard";
 import { getStaticPaths } from "@/lib/getStaticPaths";
 import { getProductsByCategory } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";

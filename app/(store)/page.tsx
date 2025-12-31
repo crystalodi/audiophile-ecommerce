@@ -1,5 +1,5 @@
-import HeroSection from "@/components/HeroSection";
-import LogoNavMenu from "@/components/LogoNavMenu";
+import HeroSection from "@/components/home/HeroSection";
+import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
 import { getHomePageContent } from "@/sanity/lib/api";
 import { FeaturedProductType } from "@/lib/custom.types";
 import { cn } from "@/lib/utils";

@@ -1,6 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
-import LogoNavMenu from "./LogoNavMenu";
+import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
 import { useEffect, useState } from "react";
 import { imageUrl } from "@/lib/imageUrl";
 import { PRE_FOOTER_CONTENT_QUERYResult } from "@/sanity.types";

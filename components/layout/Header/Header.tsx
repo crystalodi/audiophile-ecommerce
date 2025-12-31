@@ -1,9 +1,9 @@
 "use client";
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import CartDialog from "./CartDialog";
+import CartDialog from "@/components/cart/CartDialog/CartDialog";
 import { useCartStore } from "@/store/cartStore";
-import LogoNavMenu from "./LogoNavMenu";
+import LogoNavMenu from "@/components/layout/Navigation";
 import HamburgerIcon from "../public/icon-hamburger.svg";
 import CartIcon from "../public/icon-cart.svg";
 
@@ -14,7 +14,7 @@ export default function Header() {
 	const navRef = useRef<HTMLDivElement>(null);
 	const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 	const navContainerRef = useRef<HTMLDivElement>(null);
-	const totalItems = useCartStore(state => state.getTotalItems());
+	const totalItems = useCartStore(state => state.totalItems);
 	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	const openNavModal = () => {
@@ -53,7 +53,6 @@ export default function Header() {
 				footerElement.removeAttribute("aria-hidden");
 				footerElement.style.pointerEvents = "";
 			}
-			document.body.style.overflow = "";
 			return;
 		}
 
@@ -187,8 +186,7 @@ export default function Header() {
 								aria-label="Shopping cart is empty"
 								aria-haspopup="dialog"
 								aria-expanded={isCartModalOpen}
-								className="cursor-pointer"
-								onClick={openCartModal}
+								className="cursor-default"
 							>
 								<CartIcon
 									width={23}

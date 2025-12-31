@@ -1,8 +1,3 @@
-import {
-	CustomImageType,
-	PRODUCTS_BY_SLUG_IDS_QUERYResult,
-} from "@/sanity.types";
-import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -13,6 +8,7 @@ export type CartItem = {
 
 interface CartStore {
 	cartItems: Map<string, CartItem>;
+	totalItems: number;
 	hasHydrated: boolean;
 	setHasHydrated: (state: boolean) => void;
 	getCartItemsArray: () => CartItem[];
@@ -20,25 +16,17 @@ interface CartStore {
 	deleteCartItem: (slug: string) => void;
 	updateQuantity: (item: CartItem) => void;
 	clearCart: () => void;
-	getTotalItems: () => number;
 }
 
 export const useCartStore = create<CartStore>()(
 	persist(
 		(set, get) => ({
 			cartItems: new Map(),
+			totalItems: 0, // Initialize as 0, not computed
 			hasHydrated: false,
 
 			setHasHydrated: (state: boolean) => {
 				set({ hasHydrated: state });
-			},
-
-			getTotalItems: () => {
-				const cartItems = get().cartItems;
-				return Array.from(cartItems.values()).reduce(
-					(sum, item) => sum + item.quantity,
-					0
-				);
 			},
 
 			getCartItemsArray: () => Array.from(get().cartItems.values()),
@@ -46,28 +34,40 @@ export const useCartStore = create<CartStore>()(
 			addCartItem: (item: CartItem) => {
 				const { cartItems } = get();
 				const existingItem = cartItems.get(item.slug);
+				let newCartItems: Map<string, CartItem>;
 
 				if (existingItem) {
-					// Update existing item
-					const newCartItems = new Map(cartItems);
+					newCartItems = new Map(cartItems);
 					newCartItems.set(item.slug, {
 						...existingItem,
 						quantity: existingItem.quantity + item.quantity,
 					});
-					set({ cartItems: newCartItems });
 				} else {
-					// Add new item
-					const newCartItems = new Map(cartItems);
+					newCartItems = new Map(cartItems);
 					newCartItems.set(item.slug, item);
-					set({ cartItems: newCartItems });
 				}
+
+				// Calculate totalItems
+				const totalItems = Array.from(newCartItems.values()).reduce(
+					(sum, item) => sum + item.quantity,
+					0
+				);
+
+				set({ cartItems: newCartItems, totalItems });
 			},
 
 			deleteCartItem: (slug: string) => {
 				set(state => {
 					const newCartItems = new Map(state.cartItems);
 					newCartItems.delete(slug);
-					return { cartItems: newCartItems };
+
+					// Recalculate totalItems
+					const totalItems = Array.from(newCartItems.values()).reduce(
+						(sum, item) => sum + item.quantity,
+						0
+					);
+
+					return { cartItems: newCartItems, totalItems };
 				});
 			},
 
@@ -83,12 +83,18 @@ export const useCartStore = create<CartStore>()(
 						});
 					}
 
-					return { cartItems: newCartItems };
+					// Recalculate totalItems
+					const totalItems = Array.from(newCartItems.values()).reduce(
+						(sum, item) => sum + item.quantity,
+						0
+					);
+
+					return { cartItems: newCartItems, totalItems };
 				});
 			},
 
 			clearCart: () => {
-				set({ cartItems: new Map() });
+				set({ cartItems: new Map(), totalItems: 0 });
 			},
 		}),
 		{
@@ -102,10 +108,21 @@ export const useCartStore = create<CartStore>()(
 					if (!str) return null;
 
 					const { state } = JSON.parse(str);
+					const cartItems: Map<string, CartItem> = new Map(
+						state.cartItems || []
+					);
+
+					// Recalculate totalItems on hydration
+					const totalItems = Array.from(cartItems.values()).reduce(
+						(sum, item) => sum + item.quantity,
+						0
+					);
+
 					return {
 						state: {
 							...state,
-							cartItems: new Map(state.cartItems || []),
+							cartItems,
+							totalItems,
 						},
 					};
 				},
@@ -124,77 +141,3 @@ export const useCartStore = create<CartStore>()(
 		}
 	)
 );
-
-export function useCartWithProductDetail() {
-	const cartItems = useCartStore(state => state.cartItems);
-	const hasHydrated = useCartStore(state => state.hasHydrated);
-	const [itemsWithPrices, setItemsWithPrices] = useState<
-		(CartItem & {
-			price: number;
-			productName: string;
-			image: CustomImageType;
-			maxQuantity: number;
-		})[]
-	>([]);
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		if (!hasHydrated) return;
-		const fetchCartWithProductDetail = async () => {
-			const items = Array.from(cartItems.values());
-			const slugs = items.map(items => items.slug);
-			if (slugs.length === 0) {
-				setItemsWithPrices([]);
-				setIsLoading(false);
-				return;
-			}
-
-			try {
-				setIsLoading(true);
-				const response = await fetch("/api/cart/details", {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ slugs }),
-				});
-
-				if (!response.ok) throw new Error("Failed to fetch cart details");
-				const products =
-					(await response.json()) as PRODUCTS_BY_SLUG_IDS_QUERYResult;
-				const itemsWithDetails = items
-					.map(cartItem => {
-						const product = products.find(
-							(prod: PRODUCTS_BY_SLUG_IDS_QUERYResult[0]) =>
-								prod.slug === cartItem.slug
-						);
-
-						if (!product) {
-							console.warn(`Product not found for slug: ${cartItem.slug}`);
-							return null;
-						}
-
-						return {
-							...cartItem,
-							price: product.price,
-							productName: product.shortName || product.productName,
-							image: product.image,
-							maxQuantity: product.maxQuantity,
-						};
-					})
-					.filter(Boolean) as (CartItem & {
-					price: number;
-					productName: string;
-					image: CustomImageType;
-					maxQuantity: number;
-				})[];
-				setItemsWithPrices(itemsWithDetails);
-			} catch (error) {
-				console.error("Failed to fetch cart details:", error);
-				setItemsWithPrices([]);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-		fetchCartWithProductDetail();
-	}, [hasHydrated, cartItems]);
-	return { itemsWithPrices, isLoading };
-}

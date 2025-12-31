@@ -2,9 +2,9 @@ import { getProductDetail } from "@/sanity/lib/api";
 import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
 import { imageUrl } from "@/lib/imageUrl";
-import RelatedProduct from "@/components/RelatedProduct";
+import RelatedProduct from "@/components/product/RelatedProduct";
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 
 export default async function ProductPage({
 	params,

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import QuantitySelector from "./QuantitySelector";
+import QuantitySelector from "@/components/cart/QuantitySelector";
 import { Slug } from "@/sanity.types";
 import { useCartStore } from "@/store/cartStore";
 import { useToastStore } from "@/store/toastStore";

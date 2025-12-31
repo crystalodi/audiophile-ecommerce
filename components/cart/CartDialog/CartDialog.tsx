@@ -2,13 +2,10 @@
 
 import { RefObject, useMemo } from "react";
 import Image from "next/image";
-import Dialog from "./Dialog";
-import {
-	CartItem,
-	useCartStore,
-	useCartWithProductDetail,
-} from "@/store/cartStore";
-import QuantitySelector from "./QuantitySelector";
+import Dialog from "@/components/ui/Dialog";
+import { CartItem, useCartStore } from "@/store/cartStore";
+import { useProductStore } from "@/store/productStore";
+import QuantitySelector from "@/components/cart/QuantitySelector";
 import { CustomImageType } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 
@@ -25,6 +22,7 @@ function CartProduct({
 	price,
 	image,
 	maxQuantity,
+	onClose,
 }: {
 	slug: string;
 	quantity: number;
@@ -32,6 +30,7 @@ function CartProduct({
 	price: number;
 	image: CustomImageType;
 	maxQuantity: number;
+	onClose: () => void;
 }) {
 	const imageUrl = urlFor(image.mobile.asset).url();
 	const updateQuantity = useCartStore(state => state.updateQuantity);
@@ -40,6 +39,12 @@ function CartProduct({
 	const onQuantityChange = (newQuantity: number) => {
 		if (newQuantity === 0) {
 			deleteCartItem(slug);
+			setTimeout(() => {
+				const updatedTotalItems = useCartStore.getState().totalItems;
+				if (updatedTotalItems === 0) {
+					onClose();
+				}
+			}, 0);
 		} else {
 			updateQuantity({ slug, quantity: newQuantity });
 		}
@@ -79,63 +84,23 @@ function CartProduct({
 	);
 }
 
-function CartProductSkeleton() {
-	return (
-		<div className="flex items-center justify-between">
-			<div className="animate-shimmer mr-4 h-16 w-16 rounded-lg"></div>
-			<div className="flex flex-col justify-center gap-1">
-				<div className="animate-shimmer h-4 w-24" />
-				<div className="animate-shimmer h-4 w-16" />
-			</div>
-			<div className="ml-auto">
-				<div className="animate-shimmer h-8 w-20" />
-			</div>
-		</div>
-	);
-}
-
-function CartDialogSkeleton() {
-	return (
-		<>
-			{Array.from({ length: 3 }).map((_, index) => (
-				<CartProductSkeleton key={index} />
-			))}
-		</>
-	);
-}
-
 function CartDialogHeader({
-	isLoading,
 	totalItems,
 	onRemoveAll,
 }: {
-	isLoading: boolean;
 	totalItems: number;
 	onRemoveAll: () => void;
 }) {
-	if (!isLoading && totalItems === 0) {
-		return <></>;
-	}
-
 	return (
 		<div className="mb-[31px] flex items-center justify-between">
-			{isLoading ? (
-				<>
-					<div className="animate-shimmer h-6 w-20" />
-					<div className="animate-shimmer h-4 w-16" />
-				</>
-			) : (
-				<>
-					<h1 className="heading-6">cart {`(${totalItems})`}</h1>
-					{totalItems > 0 && (
-						<button
-							className="btn-transparent body-text cursor-pointer text-black/50 underline"
-							onClick={onRemoveAll}
-						>
-							Remove All
-						</button>
-					)}
-				</>
+			<h1 className="heading-6">cart {`(${totalItems})`}</h1>
+			{totalItems > 0 && (
+				<button
+					className="body-text cursor-pointer bg-transparent text-black/50 underline"
+					onClick={onRemoveAll}
+				>
+					Remove All
+				</button>
 			)}
 		</div>
 	);
@@ -193,13 +158,12 @@ function CartDialogFooter({
 
 function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 	const clearCart = useCartStore(state => state.clearCart);
-	const { itemsWithPrices, isLoading } = useCartWithProductDetail();
+	const totalItems = useCartStore(state => state.totalItems);
+	const cartItems = useCartStore(state => state.cartItems);
+	const productPrices = useProductStore(state => state.prices);
 
-	const total = itemsWithPrices.reduce(
-		(sum, item) => sum + item.price * item.quantity,
-		0
-	);
-	const totalItems = isLoading ? 0 : itemsWithPrices.length;
+	const itemsWithPrices = [];
+
 	const offsetMemo = useMemo(() => ({ x: 0, y: 24 }), []);
 
 	const removeAllCartItems = () => {
@@ -207,27 +171,24 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 		clearCart();
 	};
 
-	const renderCartContent = () => {
-		if (isLoading) {
-			return <CartDialogSkeleton />;
-		}
+	// const renderCartContent = () => {
+	// 	if (itemsWithPrices.length === 0) {
+	// 		return <div></div>;
+	// 	}
 
-		if (itemsWithPrices.length === 0) {
-			return <div></div>;
-		}
-
-		return itemsWithPrices.map(item => (
-			<CartProduct
-				key={item.slug}
-				slug={item.slug}
-				quantity={item.quantity}
-				productName={item.productName}
-				price={item.price}
-				image={item.image}
-				maxQuantity={item.maxQuantity}
-			/>
-		));
-	};
+	// 	return itemsWithPrices.map(item => (
+	// 		<CartProduct
+	// 			key={item.slug}
+	// 			slug={item.slug}
+	// 			quantity={item.quantity}
+	// 			productName={item.productName}
+	// 			price={item.price}
+	// 			image={item.image}
+	// 			maxQuantity={item.maxQuantity}
+	// 			onClose={onClose}
+	// 		/>
+	// 	));
+	// };
 
 	return (
 		<Dialog
@@ -243,16 +204,17 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 			<div className="py-[31px] pr-[31px] pl-[33px]">
 				<div className="flex flex-col">
 					<CartDialogHeader
-						isLoading={isLoading}
 						totalItems={totalItems}
 						onRemoveAll={removeAllCartItems}
 					/>
-					<div className="flex flex-col gap-y-3.5">{renderCartContent()}</div>
-					<CartDialogFooter
+					<div className="flex flex-col gap-y-3.5">
+						render itemsWithPrices here
+					</div>
+					{/* <CartDialogFooter
 						isLoading={isLoading}
 						total={total}
 						itemsWithPrices={itemsWithPrices}
-					/>
+					/> */}
 				</div>
 			</div>
 		</Dialog>

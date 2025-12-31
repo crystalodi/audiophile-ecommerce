@@ -219,6 +219,32 @@ async function getHomePageContent() {
 	}
 }
 
+async function getAllProductPrices() {
+	/*
+		TODO: Fetch All These Fields
+		price: number;
+		productName: string; // also could be a short name
+		image: CustomImageType; // or cart image
+		maxQuantity: number; // quantity configured for product
+	*/
+	const ALL_PRODUCT_PRICES_QUERY = defineQuery(`
+		*[_type == "product"] {
+				"slug": slug.current,
+				price
+		}
+  `);
+
+	try {
+		const productPrices = await sanityFetch({
+			query: ALL_PRODUCT_PRICES_QUERY,
+		});
+		return productPrices.data || [];
+	} catch (error) {
+		console.error("Error fetching product prices:", error);
+		return [];
+	}
+}
+
 export {
 	getProductDetail,
 	getProductsByCategory,
@@ -228,4 +254,5 @@ export {
 	getFooterContent,
 	getHeroContent,
 	getHomePageContent,
+	getAllProductPrices,
 };

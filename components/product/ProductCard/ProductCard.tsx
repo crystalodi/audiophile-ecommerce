@@ -2,7 +2,7 @@ import React from "react";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
 import { CategoryProductType, DetailProductType } from "@/lib/custom.types";
-import AddToCart from "./AddToCart";
+import AddToCart from "@/components/cart/AddToCart";
 import { cn } from "@/lib/utils";
 
 type ProductCardProps = {

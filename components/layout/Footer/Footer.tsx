@@ -1,5 +1,5 @@
 import { getFooterContent } from "@/sanity/lib/api";
-import LogoNavMenu from "./LogoNavMenu";
+import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
 import FacebookIcon from "../public/icon-facebook.svg";
 import InstagramIcon from "../public/icon-instagram.svg";
 import TwitterIcon from "../public/icon-twitter.svg";

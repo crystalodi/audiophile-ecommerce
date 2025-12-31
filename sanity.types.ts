@@ -776,6 +776,12 @@ export type HOME_PAGE_CONTENT_QUERYResult = {
 		};
 	}> | null;
 } | null;
+// Variable: ALL_PRODUCT_PRICES_QUERY
+// Query: *[_type == "product"] {				"slug": slug.current,				price		}
+export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
+	slug: string;
+	price: number;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -789,5 +795,6 @@ declare module "@sanity/client" {
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
 		'\n\t\t*[_type == "heroContent"][0] {\n\t\t\theroBackgroundImage,\n\t\t\tfeaturedProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n\t\t\tfeaturedProductDescription\n\t\t}\n\t': HERO_CONTENT_QUERYResult;
 		'\n\t\t*[_type == "homePageContent"][0] {\n\t\t\tfeaturedProducts[] {\n\t\t\t\tproduct->{productName, shortName, slug, category->{categoryName}},\n\t\t\t\tdescription,\n\t\t\t\tlayoutType,\n\t\t\t\tbackgroundType,\n\t\t\t\theroBitmapBackgroundImage,\n\t\t\t\t"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,\n\t\t\t\tfeaturedProductImage,\n\t\t\t\tctaType,\n\t\t\t\ttextAlignment,\n\t\t\t\theight\n\t\t\t}\n\t\t}\n\t': HOME_PAGE_CONTENT_QUERYResult;
+		'\n\t\t*[_type == "product"] {\n\t\t\t\t"slug": slug.current,\n\t\t\t\tprice\n\t\t}\n  ': ALL_PRODUCT_PRICES_QUERYResult;
 	}
 }
