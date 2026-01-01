@@ -11,7 +11,6 @@ interface CartStore {
 	totalItems: number;
 	hasHydrated: boolean;
 	setHasHydrated: (state: boolean) => void;
-	getCartItemsArray: () => CartItem[];
 	addCartItem: (item: CartItem) => void;
 	deleteCartItem: (slug: string) => void;
 	updateQuantity: (item: CartItem) => void;
@@ -28,8 +27,6 @@ export const useCartStore = create<CartStore>()(
 			setHasHydrated: (state: boolean) => {
 				set({ hasHydrated: state });
 			},
-
-			getCartItemsArray: () => Array.from(get().cartItems.values()),
 
 			addCartItem: (item: CartItem) => {
 				const { cartItems } = get();

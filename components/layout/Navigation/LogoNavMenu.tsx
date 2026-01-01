@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import Logo from "../public/logo.svg";
-import RightArrowIcon from "../public/icon-arrow-right.svg";
+import Logo from "@/public/logo.svg";
+import RightArrowIcon from "@/public/icon-arrow-right.svg";
 import { useEffect, useState } from "react";
 import { NAVIGATION_MENU_QUERYResult } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";

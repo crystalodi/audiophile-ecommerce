@@ -220,17 +220,13 @@ async function getHomePageContent() {
 }
 
 async function getAllProductPrices() {
-	/*
-		TODO: Fetch All These Fields
-		price: number;
-		productName: string; // also could be a short name
-		image: CustomImageType; // or cart image
-		maxQuantity: number; // quantity configured for product
-	*/
 	const ALL_PRODUCT_PRICES_QUERY = defineQuery(`
 		*[_type == "product"] {
 				"slug": slug.current,
-				price
+				price,
+				cartImage,
+      	"productName": coalesce(shortName, productName),
+      	"maxQuantity": stock
 		}
   `);
 

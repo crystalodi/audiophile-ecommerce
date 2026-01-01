@@ -1,11 +1,11 @@
 "use client";
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import CartDialog from "@/components/cart/CartDialog/CartDialog";
+import CartDialog from "@/components/cart/CartDialog";
 import { useCartStore } from "@/store/cartStore";
 import LogoNavMenu from "@/components/layout/Navigation";
-import HamburgerIcon from "../public/icon-hamburger.svg";
-import CartIcon from "../public/icon-cart.svg";
+import HamburgerIcon from "@/public/icon-hamburger.svg";
+import CartIcon from "@/public/icon-cart.svg";
 
 const BREAKPOINT_XL = 1280;
 export default function Header() {

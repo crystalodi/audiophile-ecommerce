@@ -45,6 +45,15 @@ export const productType = defineType({
 			type: "customImageType",
 		}),
 		defineField({
+			name: "cartImage",
+			type: "image",
+			options: {
+				hotspot: false,
+			},
+			description: "image to display when product is added to cart",
+			validation: Rule => Rule.required().assetRequired(),
+		}),
+		defineField({
 			name: "features",
 			type: "blockContent",
 			validation: Rule => Rule.required(),

@@ -1,8 +1,8 @@
 import { getFooterContent } from "@/sanity/lib/api";
 import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
-import FacebookIcon from "../public/icon-facebook.svg";
-import InstagramIcon from "../public/icon-instagram.svg";
-import TwitterIcon from "../public/icon-twitter.svg";
+import FacebookIcon from "@/public/icon-facebook.svg";
+import InstagramIcon from "@/public/icon-instagram.svg";
+import TwitterIcon from "@/public/icon-twitter.svg";
 import { cn } from "@/lib/utils";
 export default async function Footer() {
 	const footerData = await getFooterContent();

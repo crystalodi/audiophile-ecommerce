@@ -10,11 +10,11 @@ interface PriceInitializerClientProps {
 export default function PriceInitializerClient({
 	initialPrices,
 }: PriceInitializerClientProps) {
-	const initializePrices = useProductStore(state => state.initializePrices);
+	const initializeProducts = useProductStore(state => state.initializeProducts);
 
 	useEffect(() => {
 		if (initialPrices && initialPrices.length > 0) {
-			initializePrices(initialPrices);
+			initializeProducts(initialPrices);
 		}
 	}, [initialPrices]);
 	return null;
