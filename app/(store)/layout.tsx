@@ -5,8 +5,8 @@ import Header from "@/components/layout/Header";
 import { SanityLive } from "@/sanity/lib/live";
 import ToastContainer from "@/components/ui/Toast";
 import Footer from "@/components/layout/Footer";
-import PreFooter from "@/components/layout/PreFooter";
-import PriceInitializer from "@/components/providers/PriceInitializer";
+import ProductInitializer from "@/components/providers/ProductInitializer";
+import PreFooterWrapper from "@/components/layout/PreFooter";
 
 export const metadata: Metadata = {
 	title: "Audiophile",
@@ -26,11 +26,11 @@ export default function RootLayout({
 	return (
 		<html lang="en" className={manrope.variable}>
 			<body>
-				<PriceInitializer />
+				<ProductInitializer />
 				<Header />
 				<main>
 					{children}
-					<PreFooter />
+					<PreFooterWrapper />
 				</main>
 				<Footer />
 				<SanityLive />

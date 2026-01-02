@@ -1,9 +1,9 @@
 import { getFooterContent } from "@/sanity/lib/api";
-import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
 import FacebookIcon from "@/public/icon-facebook.svg";
 import InstagramIcon from "@/public/icon-instagram.svg";
 import TwitterIcon from "@/public/icon-twitter.svg";
 import { cn } from "@/lib/utils";
+import LogoNavMenuWrapper from "@/components/layout/Navigation";
 export default async function Footer() {
 	const footerData = await getFooterContent();
 	const currentYear = new Date().getFullYear();
@@ -28,7 +28,7 @@ export default async function Footer() {
 				<div className="pt-13 pb-[38px] md:pt-15 md:pb-[46px] xl:pt-[75px] xl:pb-12">
 					<div className="flex flex-col items-center gap-y-12 md:items-start md:gap-y-8 xl:gap-y-9">
 						<div className="flex flex-col items-center gap-y-12 md:items-start md:gap-y-8 xl:w-full xl:flex-row xl:justify-between xl:gap-y-0">
-							<LogoNavMenu menuType="footer" />
+							<LogoNavMenuWrapper menuType="footer" />
 						</div>
 						<div className="grid w-full grid-cols-1 place-items-center gap-y-12 md:grid-cols-2 md:place-items-start md:gap-y-20 md:[grid-template-areas:'text_text''copyright_social'] xl:grid-cols-2 xl:gap-y-14 xl:[grid-template-areas:'text_social''copyright_copyright']">
 							<p className="body-text text-center text-white/50 md:text-left md:[grid-area:text]">

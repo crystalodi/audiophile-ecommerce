@@ -1,1 +1,1 @@
-export { default } from "./PriceInitializer";
+export { default } from "./ProductInitializer";

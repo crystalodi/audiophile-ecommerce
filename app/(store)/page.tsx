@@ -1,10 +1,10 @@
 import HeroSection from "@/components/home/HeroSection";
-import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
 import { getHomePageContent } from "@/sanity/lib/api";
 import { FeaturedProductType } from "@/lib/custom.types";
 import { cn } from "@/lib/utils";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
+import LogoNavMenuWrapper from "@/components/layout/Navigation";
 
 function FeaturedProduct({
 	product,
@@ -181,7 +181,7 @@ export default async function Home() {
 			<div className="main-container mb-30 flex flex-col gap-y-30">
 				<section aria-label="Site Navigation">
 					<div className="flex">
-						<LogoNavMenu menuType="content" />
+						<LogoNavMenuWrapper menuType="content" />
 					</div>
 				</section>
 				<section aria-label="Featured Products">

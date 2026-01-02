@@ -1,45 +1,16 @@
-"use client";
-import { usePathname } from "next/navigation";
-import LogoNavMenu from "@/components/layout/Navigation/LogoNavMenu";
-import { useEffect, useState } from "react";
 import { imageUrl } from "@/lib/imageUrl";
-import { PRE_FOOTER_CONTENT_QUERYResult } from "@/sanity.types";
+import { getPreFooterContent } from "@/sanity/lib/api";
 import { PortableText } from "next-sanity";
 import { PortableTextComponents } from "next-sanity";
 import { ReactNode } from "react";
+import LogoNavMenuWrapper from "../Navigation";
 
-export default function PreFooter() {
-	const pathName = usePathname();
-	const isHomePage = pathName === "/";
-	const [prefooterData, setPreFooterData] =
-		useState<PRE_FOOTER_CONTENT_QUERYResult>();
+interface PreFooterProps {
+	hideNavigation: boolean;
+}
 
-	useEffect(() => {
-		async function fetchPreFooterContent() {
-			try {
-				const response = await fetch("/api/prefooter", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
-
-				if (response.ok) {
-					const data = await response.json();
-					setPreFooterData(data);
-				} else {
-					console.error(
-						"Failed to fetch pre-footer content:",
-						response.statusText
-					);
-				}
-			} catch (error) {
-				console.error("Failed to fetch pre-footer content:", error);
-			}
-		}
-
-		fetchPreFooterContent();
-	}, []);
+export default async function PreFooter({ hideNavigation }: PreFooterProps) {
+	const preFooterData = await getPreFooterContent();
 
 	const portableTextComponents: PortableTextComponents = {
 		marks: {
@@ -68,25 +39,25 @@ export default function PreFooter() {
 		<div className="main-container">
 			<section aria-label="Product Categories and Store Information">
 				<div className="mb-30 flex flex-col gap-30">
-					{!isHomePage && (
+					{!hideNavigation && (
 						<div className="flex">
-							<LogoNavMenu menuType="content" />
+							<LogoNavMenuWrapper menuType="content" />
 						</div>
 					)}
-					{!!prefooterData && (
+					{preFooterData && (
 						<div className="flex flex-col items-center justify-center gap-10 md:gap-[63px] xl:flex-row-reverse xl:gap-31.25">
 							<div className="xl:flex-1">
 								<picture>
 									<source
-										srcSet={imageUrl(prefooterData.image.desktop.asset).url()}
+										srcSet={imageUrl(preFooterData.image.desktop.asset).url()}
 										media="(min-width: 1280px)"
 									/>
 									<source
-										srcSet={imageUrl(prefooterData.image.tablet.asset).url()}
+										srcSet={imageUrl(preFooterData.image.tablet.asset).url()}
 										media="(min-width: 768px)"
 									/>
 									<img
-										src={imageUrl(prefooterData.image.mobile.asset).url()}
+										src={imageUrl(preFooterData.image.mobile.asset).url()}
 										alt="man wearing x99 mark two headphones listening to music"
 										className="h-full w-full rounded-lg"
 										loading="lazy"
@@ -94,14 +65,14 @@ export default function PreFooter() {
 								</picture>
 							</div>
 							<div className="flex flex-col items-center xl:flex-1">
-								{prefooterData?.title && (
+								{preFooterData?.title && (
 									<PortableText
-										value={prefooterData.title}
+										value={preFooterData.title}
 										components={portableTextComponents}
 									/>
 								)}
 								<p className="body-text text-center text-black/50 xl:text-left">
-									{prefooterData.description}
+									{preFooterData.description}
 								</p>
 							</div>
 						</div>

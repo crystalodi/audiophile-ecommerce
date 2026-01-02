@@ -3,9 +3,9 @@ import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import CartDialog from "@/components/cart/CartDialog";
 import { useCartStore } from "@/store/cartStore";
-import LogoNavMenu from "@/components/layout/Navigation";
 import HamburgerIcon from "@/public/icon-hamburger.svg";
 import CartIcon from "@/public/icon-cart.svg";
+import LogoNavMenuWrapper from "@/components/layout/Navigation";
 
 const BREAKPOINT_XL = 1280;
 export default function Header() {
@@ -157,7 +157,7 @@ export default function Header() {
 						</button>
 					</div>
 
-					<LogoNavMenu menuType="header" />
+					<LogoNavMenuWrapper menuType="header" />
 
 					<div className="flex flex-1 items-center justify-end">
 						{hasHydrated && totalItems > 0 ? (
@@ -227,7 +227,10 @@ export default function Header() {
 							<div id="mobile-nav-label" className="sr-only">
 								Mobile Navigation Menu
 							</div>
-							<LogoNavMenu menuType="content" onNavigate={closeNavModal} />
+							<LogoNavMenuWrapper
+								menuType="content"
+								onNavigate={closeNavModal}
+							/>
 						</div>
 					</>,
 					document.body

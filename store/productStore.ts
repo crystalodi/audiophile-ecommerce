@@ -11,16 +11,16 @@ export type ProductData = Omit<
 
 interface ProductStore {
 	products: Map<string, ProductData>;
-	initializeProducts: (prices: ALL_PRODUCT_PRICES_QUERYResult) => void;
+	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => void;
 	getProduct: (slug: string) => ProductData | undefined;
 }
 
 export const useProductStore = create<ProductStore>()((set, get) => ({
 	products: new Map(),
 
-	initializeProducts: (prices: ALL_PRODUCT_PRICES_QUERYResult) => {
+	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => {
 		const productsMap = new Map(
-			prices.map(product => [
+			products.map(product => [
 				product.slug,
 				{
 					slug: product.slug,

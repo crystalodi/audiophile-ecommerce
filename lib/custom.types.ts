@@ -22,3 +22,8 @@ export type CategoryProductType = Omit<
 export type FeaturedProductType = NonNullable<
 	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
 >[0];
+
+export type LogoNavMenuProps = {
+	menuType: "header" | "footer" | "mobile" | "content";
+	onNavigate?: () => void;
+};
