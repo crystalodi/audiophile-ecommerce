@@ -15,7 +15,10 @@ interface CartStore {
 	deleteCartItem: (slug: string) => void;
 	updateQuantity: (item: CartItem) => void;
 	clearCart: () => void;
+	timestamp: number;
 }
+
+const CART_TTL = 1000 * 60 * 60 * 24;
 
 export const useCartStore = create<CartStore>()(
 	persist(
@@ -23,6 +26,7 @@ export const useCartStore = create<CartStore>()(
 			cartItems: new Map(),
 			totalItems: 0, // Initialize as 0, not computed
 			hasHydrated: false,
+			timestamp: Date.now(),
 
 			setHasHydrated: (state: boolean) => {
 				set({ hasHydrated: state });
@@ -50,7 +54,7 @@ export const useCartStore = create<CartStore>()(
 					0
 				);
 
-				set({ cartItems: newCartItems, totalItems });
+				set({ cartItems: newCartItems, totalItems, timestamp: Date.now() });
 			},
 
 			deleteCartItem: (slug: string) => {
@@ -64,7 +68,7 @@ export const useCartStore = create<CartStore>()(
 						0
 					);
 
-					return { cartItems: newCartItems, totalItems };
+					return { cartItems: newCartItems, totalItems, timestamp: Date.now() };
 				});
 			},
 
@@ -86,18 +90,26 @@ export const useCartStore = create<CartStore>()(
 						0
 					);
 
-					return { cartItems: newCartItems, totalItems };
+					return { cartItems: newCartItems, totalItems, timestamp: Date.now() };
 				});
 			},
 
 			clearCart: () => {
-				set({ cartItems: new Map(), totalItems: 0 });
+				set({ cartItems: new Map(), totalItems: 0, timestamp: Date.now() });
 			},
 		}),
 		{
 			name: "audiophile-cart-storage",
 			onRehydrateStorage: () => state => {
-				state?.setHasHydrated(true);
+				if (state) {
+					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
+						state.totalItems = 0;
+						state.cartItems = new Map([]);
+						state.timestamp = Date.now();
+						useCartStore.persist.clearStorage();
+					}
+					state.setHasHydrated(true);
+				}
 			},
 			storage: {
 				getItem: name => {

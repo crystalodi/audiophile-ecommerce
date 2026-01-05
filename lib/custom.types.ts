@@ -23,7 +23,7 @@ export type FeaturedProductType = NonNullable<
 	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
 >[0];
 
-export type LogoNavMenuProps = {
+export type NavigationMenuProps = {
 	menuType: "header" | "footer" | "mobile" | "content";
 	onNavigate?: () => void;
 };

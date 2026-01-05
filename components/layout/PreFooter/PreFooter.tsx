@@ -3,14 +3,15 @@ import { getPreFooterContent } from "@/sanity/lib/api";
 import { PortableText } from "next-sanity";
 import { PortableTextComponents } from "next-sanity";
 import { ReactNode } from "react";
-import LogoNavMenuWrapper from "../Navigation";
+import { headers } from "next/headers";
+import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 
-interface PreFooterProps {
-	hideNavigation: boolean;
-}
-
-export default async function PreFooter({ hideNavigation }: PreFooterProps) {
+export default async function PreFooter() {
 	const preFooterData = await getPreFooterContent();
+	const headersList = await headers();
+	const pathname = headersList.get("x-pathname") || "/";
+	const homePath = "/";
+	const hideNavigation = pathname !== homePath;
 
 	const portableTextComponents: PortableTextComponents = {
 		marks: {
@@ -41,7 +42,7 @@ export default async function PreFooter({ hideNavigation }: PreFooterProps) {
 				<div className="mb-30 flex flex-col gap-30">
 					{!hideNavigation && (
 						<div className="flex">
-							<LogoNavMenuWrapper menuType="content" />
+							<NavigationMenu menuType="content" />
 						</div>
 					)}
 					{preFooterData && (

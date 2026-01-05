@@ -5,10 +5,16 @@ import CartDialog from "@/components/cart/CartDialog";
 import { useCartStore } from "@/store/cartStore";
 import HamburgerIcon from "@/public/icon-hamburger.svg";
 import CartIcon from "@/public/icon-cart.svg";
-import LogoNavMenuWrapper from "@/components/layout/Navigation";
+import NavigationList from "@/components/layout/Navigation/NavigationList";
 
 const BREAKPOINT_XL = 1280;
-export default function Header() {
+
+interface HeaderProps {
+	children: React.ReactNode;
+	navigationItems: Array<{ title: string; href: string; image?: string }>;
+}
+
+export default function Header({ children, navigationItems }: HeaderProps) {
 	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 	const navRef = useRef<HTMLDivElement>(null);
@@ -157,7 +163,7 @@ export default function Header() {
 						</button>
 					</div>
 
-					<LogoNavMenuWrapper menuType="header" />
+					{children}
 
 					<div className="flex flex-1 items-center justify-end">
 						{hasHydrated && totalItems > 0 ? (
@@ -227,9 +233,10 @@ export default function Header() {
 							<div id="mobile-nav-label" className="sr-only">
 								Mobile Navigation Menu
 							</div>
-							<LogoNavMenuWrapper
-								menuType="content"
+							<NavigationList
 								onNavigate={closeNavModal}
+								menuType="content"
+								navigationItems={navigationItems}
 							/>
 						</div>
 					</>,
