@@ -24,7 +24,7 @@ export const useCartStore = create<CartStore>()(
 	persist(
 		(set, get) => ({
 			cartItems: new Map(),
-			totalItems: 0, // Initialize as 0, not computed
+			totalItems: 0,
 			hasHydrated: false,
 			timestamp: Date.now(),
 
@@ -48,7 +48,6 @@ export const useCartStore = create<CartStore>()(
 					newCartItems.set(item.slug, item);
 				}
 
-				// Calculate totalItems
 				const totalItems = Array.from(newCartItems.values()).reduce(
 					(sum, item) => sum + item.quantity,
 					0
@@ -62,7 +61,6 @@ export const useCartStore = create<CartStore>()(
 					const newCartItems = new Map(state.cartItems);
 					newCartItems.delete(slug);
 
-					// Recalculate totalItems
 					const totalItems = Array.from(newCartItems.values()).reduce(
 						(sum, item) => sum + item.quantity,
 						0
@@ -102,12 +100,6 @@ export const useCartStore = create<CartStore>()(
 			name: "audiophile-cart-storage",
 			onRehydrateStorage: () => state => {
 				if (state) {
-					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
-						state.totalItems = 0;
-						state.cartItems = new Map([]);
-						state.timestamp = Date.now();
-						useCartStore.persist.clearStorage();
-					}
 					state.setHasHydrated(true);
 				}
 			},
@@ -117,6 +109,12 @@ export const useCartStore = create<CartStore>()(
 					if (!str) return null;
 
 					const { state } = JSON.parse(str);
+
+					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
+						localStorage.removeItem(name);
+						return null;
+					}
+
 					const cartItems: Map<string, CartItem> = new Map(
 						state.cartItems || []
 					);
