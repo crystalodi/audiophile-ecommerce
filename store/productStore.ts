@@ -12,7 +12,7 @@ export type ProductData = Omit<
 interface ProductStore {
 	products: Map<string, ProductData>;
 	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => void;
-	getProduct: (slug: string) => ProductData | undefined;
+	getProduct: (_id: string) => ProductData | undefined;
 }
 
 export const useProductStore = create<ProductStore>()((set, get) => ({
@@ -21,20 +21,21 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
 	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => {
 		const productsMap = new Map(
 			products.map(product => [
-				product.slug,
+				product._id,
 				{
 					slug: product.slug,
 					price: product.price,
 					maxQuantity: product.maxQuantity,
 					productName: product.productName,
 					cartImage: imageUrl(product.cartImage.asset).url(),
+					_id: product._id,
 				},
 			])
 		);
 		set({ products: productsMap });
 	},
 
-	getProduct: (slug: string) => {
-		return get().products.get(slug);
+	getProduct: (_id: string) => {
+		return get().products.get(_id);
 	},
 }));

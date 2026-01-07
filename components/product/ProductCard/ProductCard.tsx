@@ -11,7 +11,8 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ variant, product }: ProductCardProps) {
-	const { slug, mediaImage, productName, isNewProduct, description } = product;
+	const { slug, mediaImage, productName, isNewProduct, description, _id } =
+		product;
 
 	const hasCategory = "category" in product;
 	const hasPrice = "price" in product;
@@ -124,8 +125,8 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 							<div>
 								<AddToCart
 									stock={(product as DetailProductType).stock}
-									slug={slug}
 									productName={productName}
+									_id={_id}
 								/>
 							</div>
 						</>

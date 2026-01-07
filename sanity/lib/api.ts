@@ -50,7 +50,8 @@ async function getProductDetail(slug: string) {
       others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},
       stock,
       isNewProduct,
-      price
+      price,
+			_id
     }
   `);
 
@@ -65,30 +66,6 @@ async function getProductDetail(slug: string) {
 	} catch (error) {
 		console.error("Error fetching product by ID:", error);
 		return null;
-	}
-}
-
-async function getCartDetail(slugs: string[]) {
-	const PRODUCTS_BY_SLUG_IDS_QUERY = defineQuery(`
-    *[_type == "product" && slug.current in $slugs] {
-      image,
-      price,
-      shortName,
-      productName,
-      "maxQuantity": stock,
-      "slug": slug.current
-    }
-  `);
-
-	try {
-		const products = await sanityFetch({
-			query: PRODUCTS_BY_SLUG_IDS_QUERY,
-			params: { slugs },
-		});
-		return products.data || [];
-	} catch (error) {
-		console.error("Error fetching cart details:", error);
-		return [];
 	}
 }
 
@@ -226,7 +203,8 @@ async function getAllProductPrices() {
 				price,
 				cartImage,
       	"productName": coalesce(shortName, productName),
-      	"maxQuantity": stock
+      	"maxQuantity": stock,
+				_id
 		}
   `);
 
@@ -244,7 +222,6 @@ async function getAllProductPrices() {
 export {
 	getProductDetail,
 	getProductsByCategory,
-	getCartDetail,
 	getNavigationMenu,
 	getPreFooterContent,
 	getFooterContent,

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type CartItem = {
-	slug: string;
+	_id: string;
 	quantity: number;
 };
 
@@ -12,7 +12,7 @@ interface CartStore {
 	hasHydrated: boolean;
 	setHasHydrated: (state: boolean) => void;
 	addCartItem: (item: CartItem) => void;
-	deleteCartItem: (slug: string) => void;
+	deleteCartItem: (_id: string) => void;
 	updateQuantity: (item: CartItem) => void;
 	clearCart: () => void;
 	timestamp: number;
@@ -34,18 +34,18 @@ export const useCartStore = create<CartStore>()(
 
 			addCartItem: (item: CartItem) => {
 				const { cartItems } = get();
-				const existingItem = cartItems.get(item.slug);
+				const existingItem = cartItems.get(item._id);
 				let newCartItems: Map<string, CartItem>;
 
 				if (existingItem) {
 					newCartItems = new Map(cartItems);
-					newCartItems.set(item.slug, {
+					newCartItems.set(item._id, {
 						...existingItem,
 						quantity: existingItem.quantity + item.quantity,
 					});
 				} else {
 					newCartItems = new Map(cartItems);
-					newCartItems.set(item.slug, item);
+					newCartItems.set(item._id, item);
 				}
 
 				const totalItems = Array.from(newCartItems.values()).reduce(
@@ -73,10 +73,10 @@ export const useCartStore = create<CartStore>()(
 			updateQuantity: (item: CartItem) => {
 				set(state => {
 					const newCartItems = new Map(state.cartItems);
-					const existingItem = newCartItems.get(item.slug);
+					const existingItem = newCartItems.get(item._id);
 
 					if (existingItem) {
-						newCartItems.set(item.slug, {
+						newCartItems.set(item._id, {
 							...existingItem,
 							quantity: item.quantity,
 						});

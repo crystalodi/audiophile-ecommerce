@@ -27,6 +27,7 @@ export default async function ProductPage({
 		stock,
 		price,
 		others,
+		_id,
 		...restProps
 	} = detailProduct;
 
@@ -39,6 +40,7 @@ export default async function ProductPage({
 		stock,
 		price,
 		mediaImage,
+		_id,
 	};
 
 	return (

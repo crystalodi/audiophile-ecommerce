@@ -1,8 +1,12 @@
 import { urlFor } from "@/sanity/lib/image";
-import { NavigationMenuProps } from "@/lib/custom.types";
 import { getNavigationMenu } from "@/sanity/lib/api";
 import NavigationLogo from "@/components/layout/Navigation/NavigationLogo";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
+
+interface NavigationMenuProps {
+	menuType: "header" | "footer" | "mobile" | "content";
+	onNavigate?: () => void;
+}
 
 export default async function NavigationMenu({
 	menuType,

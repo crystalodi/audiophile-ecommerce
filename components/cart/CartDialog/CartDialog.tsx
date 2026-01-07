@@ -19,20 +19,20 @@ type CartProductProps = ProductData & {
 };
 
 function CartProduct({
-	slug,
 	quantity,
 	productName,
 	price,
 	cartImage,
 	maxQuantity,
 	onClose,
+	_id,
 }: CartProductProps) {
 	const updateQuantity = useCartStore(state => state.updateQuantity);
 	const deleteCartItem = useCartStore(state => state.deleteCartItem);
 
 	const onQuantityChange = (newQuantity: number) => {
 		if (newQuantity === 0) {
-			deleteCartItem(slug);
+			deleteCartItem(_id);
 			setTimeout(() => {
 				const updatedTotalItems = useCartStore.getState().totalItems;
 				if (updatedTotalItems === 0) {
@@ -40,7 +40,7 @@ function CartProduct({
 				}
 			}, 0);
 		} else {
-			updateQuantity({ slug, quantity: newQuantity });
+			updateQuantity({ _id, quantity: newQuantity });
 		}
 	};
 
@@ -136,7 +136,7 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 
 		return items
 			.map(cartItem => {
-				const product = getProduct(cartItem.slug);
+				const product = getProduct(cartItem._id);
 				if (!product) return null;
 
 				return {

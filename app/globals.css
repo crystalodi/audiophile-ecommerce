@@ -6,7 +6,7 @@ body {
 	flex-direction: column;
 	min-height: 100vh;
 	font-family: var(--font-manrope);
-	background-color: var(--color-white);
+	background-color: var(--color-app-bg);
 }
 
 main {
@@ -25,9 +25,7 @@ footer {
 	--color-audiophile-divider: oklch(1 0 0 / 10.9%);
 	--color-audiophile-black: oklch(0.2134 0 0);
 	--product-gallery-grid-columns-md: 40% 1fr;
-	--mobile-hero-bg: url("/images/home/mobile/image-header.jpg");
-	--tablet-hero-bg: url("/images/home/tablet/image-header.jpg");
-	--desktop-hero-bg: url("/images/home/desktop/image-header.jpg");
+	--color-app-bg: #fafafa;
 }
 
 @theme inline {

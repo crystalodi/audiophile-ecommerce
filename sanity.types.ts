@@ -573,7 +573,7 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
 	};
 }>;
 // Variable: PRODUCT_BY_ID_QUERY
-// Query: *[        _type == "product"        && slug.current == $slug    ] [0] {      "mediaImage": image,      isNewProduct,      productName,      description,      slug,      category-> {categoryName},      features,      includes,      gallery,      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},      stock,      isNewProduct,      price    }
+// Query: *[        _type == "product"        && slug.current == $slug    ] [0] {      "mediaImage": image,      isNewProduct,      productName,      description,      slug,      category-> {categoryName},      features,      includes,      gallery,      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},      stock,      isNewProduct,      price,			_id    }
 export type PRODUCT_BY_ID_QUERYResult = {
 	mediaImage: CustomImageType;
 	isNewProduct: boolean | null;
@@ -646,17 +646,8 @@ export type PRODUCT_BY_ID_QUERYResult = {
 	}> | null;
 	stock: number;
 	price: number;
+	_id: string;
 } | null;
-// Variable: PRODUCTS_BY_SLUG_IDS_QUERY
-// Query: *[_type == "product" && slug.current in $slugs] {      image,      price,      shortName,      productName,      "maxQuantity": stock,      "slug": slug.current    }
-export type PRODUCTS_BY_SLUG_IDS_QUERYResult = Array<{
-	image: CustomImageType;
-	price: number;
-	shortName: string | null;
-	productName: string;
-	maxQuantity: number;
-	slug: string;
-}>;
 // Variable: NAVIGATION_MENU_QUERY
 // Query: *[_type == "navigationMenu" && menuType == $menuType][0] {      menuType,      showLogo,      navigationItems[isActive == true] | order(order asc) {        title,        href,        image,        order      }    }
 export type NAVIGATION_MENU_QUERYResult = {
@@ -789,7 +780,7 @@ export type HOME_PAGE_CONTENT_QUERYResult = {
 	}> | null;
 } | null;
 // Variable: ALL_PRODUCT_PRICES_QUERY
-// Query: *[_type == "product"] {				"slug": slug.current,				price,				cartImage,      	"productName": coalesce(shortName, productName),      	"maxQuantity": stock		}
+// Query: *[_type == "product"] {				"slug": slug.current,				price,				cartImage,      	"productName": coalesce(shortName, productName),      	"maxQuantity": stock,				_id		}
 export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
 	slug: string;
 	price: number;
@@ -807,6 +798,7 @@ export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
 	};
 	productName: string;
 	maxQuantity: number;
+	_id: string;
 }>;
 
 // Query TypeMap
@@ -814,13 +806,12 @@ import "@sanity/client";
 declare module "@sanity/client" {
 	interface SanityQueries {
 		'\n    *[\n        _type == "product"\n        && references(*[_type == "category" && slug.current == $categorySlug]._id)\n    ] {\n      _id,\n      "mediaImage": categoryImage,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      isNewProduct\n    }\n  ': PRODUCTS_BY_CATEGORY_QUERYResult;
-		'\n    *[\n        _type == "product"\n        && slug.current == $slug\n    ] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
-		'\n    *[_type == "product" && slug.current in $slugs] {\n      image,\n      price,\n      shortName,\n      productName,\n      "maxQuantity": stock,\n      "slug": slug.current\n    }\n  ': PRODUCTS_BY_SLUG_IDS_QUERYResult;
+		'\n    *[\n        _type == "product"\n        && slug.current == $slug\n    ] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price,\n\t\t\t_id\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
 		'\n\t\t*[_type == "heroContent"][0] {\n\t\t\theroBackgroundImage,\n\t\t\tfeaturedProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n\t\t\tfeaturedProductDescription\n\t\t}\n\t': HERO_CONTENT_QUERYResult;
 		'\n\t\t*[_type == "homePageContent"][0] {\n\t\t\tfeaturedProducts[] {\n\t\t\t\tproduct->{productName, shortName, slug, category->{categoryName}},\n\t\t\t\tdescription,\n\t\t\t\tlayoutType,\n\t\t\t\tbackgroundType,\n\t\t\t\theroBitmapBackgroundImage,\n\t\t\t\t"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,\n\t\t\t\tfeaturedProductImage,\n\t\t\t\tctaType,\n\t\t\t\ttextAlignment,\n\t\t\t\theight\n\t\t\t}\n\t\t}\n\t': HOME_PAGE_CONTENT_QUERYResult;
-		'\n\t\t*[_type == "product"] {\n\t\t\t\t"slug": slug.current,\n\t\t\t\tprice,\n\t\t\t\tcartImage,\n      \t"productName": coalesce(shortName, productName),\n      \t"maxQuantity": stock\n\t\t}\n  ': ALL_PRODUCT_PRICES_QUERYResult;
+		'\n\t\t*[_type == "product"] {\n\t\t\t\t"slug": slug.current,\n\t\t\t\tprice,\n\t\t\t\tcartImage,\n      \t"productName": coalesce(shortName, productName),\n      \t"maxQuantity": stock,\n\t\t\t\t_id\n\t\t}\n  ': ALL_PRODUCT_PRICES_QUERYResult;
 	}
 }
