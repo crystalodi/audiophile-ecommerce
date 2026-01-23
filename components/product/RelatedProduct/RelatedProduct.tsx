@@ -1,8 +1,19 @@
-import { RelatedProductType } from "@/lib/custom.types";
+import { CustomImageType, Slug } from "@/sanity.types";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
 
-export default function RelatedProduct(props: RelatedProductType) {
+interface RelatedProductProps {
+	_id: string;
+	productName: string;
+	shortName: string | null;
+	mediaImage: CustomImageType;
+	slug: Slug;
+	category: {
+		categoryName: string;
+	};
+}
+
+export default function RelatedProduct(props: RelatedProductProps) {
 	const { productName, mediaImage, slug, category, shortName } = props;
 
 	const productHref = `/${category.categoryName.toLowerCase()}/${slug.current}`;

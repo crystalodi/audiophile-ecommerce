@@ -2,12 +2,12 @@
 import Link from "next/link";
 import RightArrowIcon from "@/public/icon-arrow-right.svg";
 
-type NavigationCardProps = {
+interface NavigationCardProps {
 	title: string;
 	href: string;
 	image?: string;
 	onNavigate?: () => void;
-};
+}
 
 export default function NavigationCard({
 	title,

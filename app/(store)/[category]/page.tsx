@@ -1,16 +1,17 @@
 import ProductCard from "@/components/product/ProductCard/ProductCard";
-import { getStaticPaths } from "@/lib/getStaticPaths";
 import { getProductsByCategory } from "@/sanity/lib/api";
 import { notFound } from "next/navigation";
 
+const VALID_CATEGORIES = ["headphones", "speakers", "earphones"];
 async function CategoryPage({
 	params,
 }: {
 	params: Promise<{ category: string }>;
 }) {
 	const { category } = await params;
-	const isValidRoute = await getStaticPaths(category);
-	if (!isValidRoute) return notFound();
+	if (!VALID_CATEGORIES.includes(category.toLowerCase())) {
+		notFound();
+	}
 
 	const products = await getProductsByCategory(category);
 

@@ -7,16 +7,16 @@ import { useCartStore } from "@/store/cartStore";
 import { ProductData, useProductStore } from "@/store/productStore";
 import QuantitySelector from "@/components/cart/QuantitySelector";
 
-type CartDialogProps = {
+interface CartDialogProps {
 	open: boolean;
 	onClose: () => void;
 	anchorRef?: RefObject<HTMLElement | null>;
-};
+}
 
-type CartProductProps = ProductData & {
+interface CartProductProps extends ProductData {
 	quantity: number;
 	onClose: () => void;
-};
+}
 
 function CartProduct({
 	quantity,

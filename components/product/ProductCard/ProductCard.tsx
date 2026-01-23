@@ -5,10 +5,10 @@ import { CategoryProductType, DetailProductType } from "@/lib/custom.types";
 import AddToCart from "@/components/cart/AddToCart";
 import { cn } from "@/lib/utils";
 
-type ProductCardProps = {
+interface ProductCardProps {
 	variant: "category" | "detail";
 	product: CategoryProductType | DetailProductType;
-};
+}
 
 export default function ProductCard({ variant, product }: ProductCardProps) {
 	const { slug, mediaImage, productName, isNewProduct, description, _id } =

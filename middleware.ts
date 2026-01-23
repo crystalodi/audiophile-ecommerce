@@ -1,23 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
+	const pathName = request.nextUrl.pathname;
+
+	const categoryMatch = pathName.match(
+		/^\/(headphones|speakers|earphones)(?:\/[^\/]+)?$/i
+	);
+
+	if (categoryMatch) {
+		const category = categoryMatch[1];
+		const categoryLower = category.toLowerCase();
+
+		if (category !== categoryLower) {
+			const newUrl = pathName.replace(`/${category}`, `/${categoryLower}`);
+			return NextResponse.redirect(new URL(newUrl, request.url));
+		}
+	}
+
 	const response = NextResponse.next();
-
-	// Set the pathname in a custom header
-	response.headers.set("x-pathname", request.nextUrl.pathname);
-
+	response.headers.set("x-pathname", pathName);
 	return response;
 }
 
 export const config = {
-	matcher: [
-		/*
-		 * Match all request paths except for the ones starting with:
-		 * - api (API routes)
-		 * - _next/static (static files)
-		 * - _next/image (image optimization files)
-		 * - favicon.ico (favicon file)
-		 */
-		"/((?!api|_next/static|_next/image|favicon.ico).*)",
-	],
+	matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

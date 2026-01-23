@@ -1,10 +1,10 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-type ProductCardSkeletonProps = {
+interface ProductCardSkeletonProps {
 	variant: "category" | "detail";
 	showNewProduct?: boolean;
-};
+}
 
 export default function ProductCardSkeleton({
 	variant,

@@ -1,14 +1,14 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-type QuantitySelectorProps = {
+interface QuantitySelectorProps {
 	maxQuantity: number;
 	quantity: number;
 	onQuantityChange: (quantity: number) => void;
 	disabled?: boolean;
 	minQuantity?: number;
 	variant?: "small" | "large";
-};
+}
 
 export default function QuantitySelector({
 	maxQuantity,

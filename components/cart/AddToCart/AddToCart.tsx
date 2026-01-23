@@ -4,15 +4,13 @@ import QuantitySelector from "@/components/cart/QuantitySelector";
 import { useCartStore } from "@/store/cartStore";
 import { useToastStore } from "@/store/toastStore";
 
-export default function AddToCart({
-	stock,
-	productName,
-	_id,
-}: {
+interface AddToCartProps {
 	stock: number;
 	productName: string;
 	_id: string;
-}) {
+}
+
+export default function AddToCart({ stock, productName, _id }: AddToCartProps) {
 	const [quantity, setQuantity] = useState(1);
 	const addCartItem = useCartStore(state => state.addCartItem);
 	const addToast = useToastStore(state => state.addToast);

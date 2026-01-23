@@ -6,7 +6,7 @@ import { SanityLive } from "@/sanity/lib/live";
 import ToastContainer from "@/components/ui/Toast";
 import Footer from "@/components/layout/Footer";
 import ProductInitializer from "@/components/providers/ProductInitializer";
-import PreFooter from "@/components/layout/PreFooter";
+import { PreFooterWrapper, PreFooter } from "@/components/layout/PreFooter";
 
 export const metadata: Metadata = {
 	title: "Audiophile",
@@ -30,7 +30,9 @@ export default function RootLayout({
 				<HeaderWrapper />
 				<main>
 					{children}
-					<PreFooter />
+					<PreFooterWrapper>
+						<PreFooter />
+					</PreFooterWrapper>
 				</main>
 				<Footer />
 				<SanityLive />
