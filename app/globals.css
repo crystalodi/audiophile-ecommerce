@@ -151,9 +151,9 @@ footer {
 @utility heading-4 {
 	font-weight: bold;
 	text-transform: uppercase;
-	letter-spacing: 2px;
+	letter-spacing: 1px;
 	font-size: 28px;
-	line-height: 38px;
+	line-height: 32px;
 }
 
 @utility heading-5 {

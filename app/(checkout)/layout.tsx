@@ -3,14 +3,13 @@ import { Manrope } from "next/font/google";
 import "../globals.css";
 import HeaderWrapper from "@/components/layout/Header";
 import { SanityLive } from "@/sanity/lib/live";
-import ToastContainer from "@/components/ui/Toast";
 import Footer from "@/components/layout/Footer";
 import ProductInitializer from "@/components/providers/ProductInitializer";
-import { PreFooterWrapper, PreFooter } from "@/components/layout/PreFooter";
 
 export const metadata: Metadata = {
-	title: "Audiophile",
-	description: "Ecommerce App",
+	title: "Checkout - Audiophile",
+	description: "Complete your audiophile equipment purchase securely",
+	robots: "noindex, nofollow",
 };
 
 const manrope = Manrope({
@@ -18,7 +17,7 @@ const manrope = Manrope({
 	variable: "--font-manrope",
 });
 
-export default function RootLayout({
+export default function CheckoutLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
@@ -29,15 +28,9 @@ export default function RootLayout({
 				<div className="flex min-h-screen flex-col">
 					<ProductInitializer />
 					<HeaderWrapper />
-					<main>
-						{children}
-						<PreFooterWrapper>
-							<PreFooter />
-						</PreFooterWrapper>
-					</main>
+					<main>{children}</main>
 					<Footer />
 					<SanityLive />
-					<ToastContainer />
 				</div>
 			</body>
 		</html>
