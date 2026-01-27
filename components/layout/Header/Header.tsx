@@ -6,6 +6,7 @@ import { useCartStore } from "@/store/cartStore";
 import HamburgerIcon from "@/public/icon-hamburger.svg";
 import CartIcon from "@/public/icon-cart.svg";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
+import { useRouter } from "next/navigation";
 
 const BREAKPOINT_XL = 1280;
 
@@ -22,6 +23,7 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 	const navContainerRef = useRef<HTMLDivElement>(null);
 	const totalItems = useCartStore(state => state.totalItems);
 	const hasHydrated = useCartStore(state => state.hasHydrated);
+	const router = useRouter();
 
 	const openNavModal = () => {
 		setIsCartModalOpen(false);
@@ -40,6 +42,11 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 	const closeNavModal = () => {
 		setIsNavModalOpen(false);
 		hamburgerButtonRef.current?.focus();
+	};
+
+	const onCheckoutCallback = () => {
+		closeCartModal();
+		router.push("/checkout");
 	};
 
 	// Combine both useEffects into one
@@ -208,6 +215,7 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 					open={isCartModalOpen}
 					onClose={closeCartModal}
 					anchorRef={navRef}
+					onCheckout={onCheckoutCallback}
 				/>
 				<div className="md:main-container w-full">
 					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />

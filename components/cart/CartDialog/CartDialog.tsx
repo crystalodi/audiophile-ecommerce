@@ -11,6 +11,7 @@ interface CartDialogProps {
 	open: boolean;
 	onClose: () => void;
 	anchorRef?: RefObject<HTMLElement | null>;
+	onCheckout: () => void;
 }
 
 interface CartProductProps extends ProductData {
@@ -103,9 +104,11 @@ function CartDialogHeader({
 function CartDialogFooter({
 	totalPrice,
 	totalItems,
+	onCheckout,
 }: {
 	totalPrice: number;
 	totalItems: number;
+	onCheckout: () => void;
 }) {
 	return (
 		<>
@@ -115,14 +118,16 @@ function CartDialogFooter({
 			</div>
 			<div className="mt-6">
 				{totalItems > 0 && (
-					<button className="btn btn-orange w-full">checkout</button>
+					<button className="btn btn-orange w-full" onClick={onCheckout}>
+						checkout
+					</button>
 				)}
 			</div>
 		</>
 	);
 }
 
-function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
+function CartDialog({ open, onClose, anchorRef, onCheckout }: CartDialogProps) {
 	const clearCart = useCartStore(state => state.clearCart);
 	const totalItems = useCartStore(state => state.totalItems);
 	const cartItems = useCartStore(state => state.cartItems);
@@ -184,7 +189,11 @@ function CartDialog({ open, onClose, anchorRef }: CartDialogProps) {
 							<CartProduct key={item.slug} {...item} onClose={onClose} />
 						))}
 					</div>
-					<CartDialogFooter totalPrice={totalPrice} totalItems={totalItems} />
+					<CartDialogFooter
+						totalPrice={totalPrice}
+						totalItems={totalItems}
+						onCheckout={onCheckout}
+					/>
 				</div>
 			</div>
 		</Dialog>

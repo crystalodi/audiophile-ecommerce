@@ -24,7 +24,7 @@ export default function CheckoutLayout({
 }>) {
 	return (
 		<html lang="en" className={manrope.variable}>
-			<body>
+			<body className="bg-app-background lg:bg-checkout-page-background">
 				<div className="flex min-h-screen flex-col">
 					<ProductInitializer />
 					<HeaderWrapper />

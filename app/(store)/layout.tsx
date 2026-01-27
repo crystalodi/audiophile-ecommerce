@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" className={manrope.variable}>
-			<body>
+			<body className="bg-app-background">
 				<div className="flex min-h-screen flex-col">
 					<ProductInitializer />
 					<HeaderWrapper />

@@ -1,3 +1,5 @@
+import CheckoutPageClient from "@/components/checkout/CheckoutPageClient";
+
 export default function CheckoutPage() {
-	return "Checkout Page";
+	return <CheckoutPageClient />;
 }
