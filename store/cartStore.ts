@@ -27,7 +27,6 @@ export const useCartStore = create<CartStore>()(
 			totalItems: 0,
 			hasHydrated: false,
 			timestamp: Date.now(),
-
 			setHasHydrated: (state: boolean) => {
 				set({ hasHydrated: state });
 			},

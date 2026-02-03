@@ -1,4 +1,5 @@
 "use client";
+
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import CartDialog from "@/components/cart/CartDialog";
@@ -18,12 +19,18 @@ interface HeaderProps {
 export default function Header({ children, navigationItems }: HeaderProps) {
 	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
+	const [isClient, setIsClient] = useState(false);
 	const navRef = useRef<HTMLDivElement>(null);
 	const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 	const navContainerRef = useRef<HTMLDivElement>(null);
+	const router = useRouter();
+
 	const totalItems = useCartStore(state => state.totalItems);
 	const hasHydrated = useCartStore(state => state.hasHydrated);
-	const router = useRouter();
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	const openNavModal = () => {
 		setIsCartModalOpen(false);
@@ -31,6 +38,7 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 	};
 
 	const openCartModal = () => {
+		if (!isClient) return;
 		setIsNavModalOpen(false);
 		setIsCartModalOpen(true);
 	};
@@ -49,37 +57,21 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 		router.push("/checkout");
 	};
 
-	// Combine both useEffects into one
 	useEffect(() => {
+		if (!isNavModalOpen || !isClient) return;
+
 		const mainElement = document.querySelector("main");
 		const footerElement = document.querySelector("footer");
-
-		if (!isNavModalOpen || !navContainerRef.current) {
-			// Cleanup when nav is closed
-			if (mainElement) {
-				mainElement.removeAttribute("inert");
-				mainElement.removeAttribute("aria-hidden");
-				mainElement.style.pointerEvents = "";
-			}
-			if (footerElement) {
-				footerElement.removeAttribute("inert");
-				footerElement.removeAttribute("aria-hidden");
-				footerElement.style.pointerEvents = "";
-			}
-			return;
-		}
-
 		const container = navContainerRef.current;
 
+		if (!container) return;
 		if (mainElement) {
 			mainElement.setAttribute("inert", "");
 			mainElement.setAttribute("aria-hidden", "true");
-			mainElement.style.pointerEvents = "none";
 		}
 		if (footerElement) {
 			footerElement.setAttribute("inert", "");
 			footerElement.setAttribute("aria-hidden", "true");
-			footerElement.style.pointerEvents = "none";
 		}
 
 		const focusableElements = container.querySelectorAll(
@@ -92,7 +84,6 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 
 		const handleTab = (e: KeyboardEvent) => {
 			if (e.key !== "Tab") return;
-
 			if (e.shiftKey) {
 				if (document.activeElement === firstElement) {
 					e.preventDefault();
@@ -124,17 +115,17 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 			if (mainElement) {
 				mainElement.removeAttribute("inert");
 				mainElement.removeAttribute("aria-hidden");
-				mainElement.style.pointerEvents = "";
 			}
 			if (footerElement) {
 				footerElement.removeAttribute("inert");
 				footerElement.removeAttribute("aria-hidden");
-				footerElement.style.pointerEvents = "";
 			}
 		};
-	}, [isNavModalOpen]);
+	}, [isNavModalOpen, isClient]);
 
 	useLayoutEffect(() => {
+		if (!isClient) return;
+
 		const handleScreenResize = () => {
 			if (window.innerWidth >= BREAKPOINT_XL && isNavModalOpen) {
 				setIsNavModalOpen(false);
@@ -142,7 +133,7 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 		};
 		window.addEventListener("resize", handleScreenResize);
 		return () => window.removeEventListener("resize", handleScreenResize);
-	}, [isNavModalOpen]);
+	}, [isNavModalOpen, isClient]);
 
 	return (
 		<>
@@ -173,57 +164,47 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 					{children}
 
 					<div className="flex flex-1 items-center justify-end">
-						{hasHydrated && totalItems > 0 ? (
-							<button
-								aria-label={`Open shopping cart with ${totalItems} items`}
-								aria-haspopup="dialog"
-								aria-expanded={isCartModalOpen}
-								className="relative cursor-pointer"
-								onClick={openCartModal}
-							>
-								<CartIcon
-									width={23}
-									height={20}
-									className="fill-current"
-									aria-hidden="true"
-								/>
+						<button
+							aria-label="Shopping cart"
+							aria-haspopup="dialog"
+							aria-expanded={isCartModalOpen}
+							className="relative cursor-pointer"
+							onClick={openCartModal}
+						>
+							<CartIcon
+								width={23}
+								height={20}
+								className="fill-current"
+								aria-hidden="true"
+							/>
+							{isClient && hasHydrated && totalItems > 0 && (
 								<span
 									className="bg-audiophile-orange absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white"
 									aria-label={`${totalItems} items in cart`}
 								>
 									{totalItems > 99 ? "99+" : totalItems}
 								</span>
-							</button>
-						) : (
-							<button
-								aria-label="Shopping cart is empty"
-								aria-haspopup="dialog"
-								aria-expanded={isCartModalOpen}
-								className="cursor-default"
-							>
-								<CartIcon
-									width={23}
-									height={20}
-									className="fill-current"
-									aria-hidden="true"
-								/>
-							</button>
-						)}
+							)}
+						</button>
 					</div>
 				</div>
-				<CartDialog
-					open={isCartModalOpen}
-					onClose={closeCartModal}
-					anchorRef={navRef}
-					onCheckout={onCheckoutCallback}
-				/>
+
+				{isClient && (
+					<CartDialog
+						open={isCartModalOpen}
+						onClose={closeCartModal}
+						anchorRef={navRef}
+						onCheckout={onCheckoutCallback}
+					/>
+				)}
+
 				<div className="md:main-container w-full">
 					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />
 				</div>
 			</header>
 
-			{isNavModalOpen &&
-				typeof document !== "undefined" &&
+			{isClient &&
+				isNavModalOpen &&
 				createPortal(
 					<>
 						<div

@@ -1,82 +1,17 @@
 "use client";
 
 import { RefObject, useMemo } from "react";
-import Image from "next/image";
 import Dialog from "@/components/ui/Dialog";
 import { useCartStore } from "@/store/cartStore";
-import { ProductData, useProductStore } from "@/store/productStore";
-import QuantitySelector from "@/components/cart/QuantitySelector";
+import { useProductStore } from "@/store/productStore";
+import CartProduct from "@/components/cart/CartProduct";
+import CartTotal from "@/components/cart/CartTotal";
 
 interface CartDialogProps {
 	open: boolean;
 	onClose: () => void;
 	anchorRef?: RefObject<HTMLElement | null>;
 	onCheckout: () => void;
-}
-
-interface CartProductProps extends ProductData {
-	quantity: number;
-	onClose: () => void;
-}
-
-function CartProduct({
-	quantity,
-	productName,
-	price,
-	cartImage,
-	maxQuantity,
-	onClose,
-	_id,
-}: CartProductProps) {
-	const updateQuantity = useCartStore(state => state.updateQuantity);
-	const deleteCartItem = useCartStore(state => state.deleteCartItem);
-
-	const onQuantityChange = (newQuantity: number) => {
-		if (newQuantity === 0) {
-			deleteCartItem(_id);
-			setTimeout(() => {
-				const updatedTotalItems = useCartStore.getState().totalItems;
-				if (updatedTotalItems === 0) {
-					onClose();
-				}
-			}, 0);
-		} else {
-			updateQuantity({ _id, quantity: newQuantity });
-		}
-	};
-
-	return (
-		<div className="flex items-center justify-between">
-			<div className="bg-audiophile-gray mr-4 h-16 w-16 rounded-lg">
-				{cartImage ? (
-					<Image
-						src={cartImage}
-						alt={`${productName} X ${quantity}`}
-						objectFit="contain"
-						objectPosition="center"
-						width={64}
-						height={64}
-						className="rounded-lg"
-					/>
-				) : (
-					<div className="h-full w-full rounded-lg" />
-				)}
-			</div>
-			<div className="flex flex-col justify-center">
-				<div className="body-text font-bold! uppercase">{productName}</div>
-				<div className="text-[14px] font-bold text-black/50">{`$ ${price.toLocaleString("en-US")}`}</div>
-			</div>
-			<div className="ml-auto">
-				<QuantitySelector
-					maxQuantity={maxQuantity}
-					quantity={quantity}
-					onQuantityChange={onQuantityChange}
-					minQuantity={0}
-					variant="small"
-				/>
-			</div>
-		</div>
-	);
 }
 
 function CartDialogHeader({
@@ -98,32 +33,6 @@ function CartDialogHeader({
 				</button>
 			)}
 		</div>
-	);
-}
-
-function CartDialogFooter({
-	totalPrice,
-	totalItems,
-	onCheckout,
-}: {
-	totalPrice: number;
-	totalItems: number;
-	onCheckout: () => void;
-}) {
-	return (
-		<>
-			<div className="mt-8 flex">
-				<div className="body-text mr-auto text-black/50 uppercase">total</div>
-				<div className="font-bold">${totalPrice.toLocaleString("en-US")}</div>
-			</div>
-			<div className="mt-6">
-				{totalItems > 0 && (
-					<button className="btn btn-orange w-full" onClick={onCheckout}>
-						checkout
-					</button>
-				)}
-			</div>
-		</>
 	);
 }
 
@@ -178,22 +87,36 @@ function CartDialog({ open, onClose, anchorRef, onCheckout }: CartDialogProps) {
 			useParentHorizontalPaddingAsOffset
 			offset={offsetMemo}
 		>
-			<div className="py-[31px] pr-[31px] pl-[33px]">
-				<div className="flex flex-col">
+			<div className="flex flex-col">
+				<div className="px-[31px] pt-[31px] pr-[31px] pl-[33px]">
 					<CartDialogHeader
 						totalItems={totalItems}
 						onRemoveAll={removeAllCartItems}
 					/>
+				</div>
+				<div className="max-h-60 overflow-y-auto px-[33px] pr-[31px]">
 					<div className="flex flex-col gap-y-3.5">
 						{itemsWithPrices.map(item => (
-							<CartProduct key={item.slug} {...item} onClose={onClose} />
+							<CartProduct
+								key={item.slug}
+								{...item}
+								onClose={onClose}
+								variant="cartDialog"
+							/>
 						))}
 					</div>
-					<CartDialogFooter
-						totalPrice={totalPrice}
-						totalItems={totalItems}
-						onCheckout={onCheckout}
-					/>
+				</div>
+				<div className="px-[31px] pr-[31px] pb-[31px] pl-[33px]">
+					<div className="mt-8">
+						<CartTotal variant="cartDialog" totalPrice={totalPrice} />
+					</div>
+					<div className="mt-6">
+						{totalItems > 0 && (
+							<button className="btn btn-orange w-full" onClick={onCheckout}>
+								checkout
+							</button>
+						)}
+					</div>
 				</div>
 			</div>
 		</Dialog>
