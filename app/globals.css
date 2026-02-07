@@ -29,6 +29,12 @@ footer {
 	--color-input-outline-active-color: var(--color-audiophile-orange);
 	--color-input-outline-error-color: oklch(0.5491 0.1568 29.23);
 	--color-checkout-page-background: var(--color-audiophile-gray);
+	--lg-container-max-width: 77%;
+	--md-container-max-width: 89.7%;
+	--sm-container-max-width: 87.2%;
+	--sm-container-margin: calc((100% - var(--sm-container-max-width)) / 2);
+	--md-container-margin: calc((100% - var(--md-container-max-width)) / 2);
+	--lg-container-margin: calc((100% - var(--lg-container-max-width)) / 2);
 }
 
 @theme inline {
@@ -185,17 +191,14 @@ footer {
 }
 
 @utility main-container {
-	width: 100%;
-	padding-left: 24px;
-	padding-right: 24px;
-
+	display: flex;
+	flex-direction: column;
+	margin-inline: auto;
+	width: var(--sm-container-max-width);
 	@media (min-width: 768px) {
-		padding-left: 39px;
-		padding-right: 40px;
+		width: var(--md-container-max-width);
 	}
-
-	@media (min-width: 1280px) {
-		padding-left: 165px;
-		padding-right: 165px;
+	@media (min-width: 1024px) {
+		width: var(--lg-container-max-width);
 	}
 }

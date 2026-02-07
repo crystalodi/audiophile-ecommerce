@@ -23,25 +23,26 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 		: "";
 
 	const articleClasses = cn("flex flex-col", {
-		"gap-y-8 md:gap-y-[52px] xl:gap-y-0 xl:gap-x-31.25 xl:flex-row xl:even:flex-row-reverse":
+		"gap-y-8 md:gap-y-[52px] lg:gap-y-0 lg:gap-x-31.25 lg:flex-row lg:even:flex-row-reverse":
 			variant === "category",
+		"md:flex-row md:gap-y-0 md:gap-x-[69px] lg:gap-x-[124.5px]":
+			variant === "detail",
 		"gap-y-8": variant === "detail" && isNewProduct,
 		"gap-y-10": variant === "detail" && !isNewProduct,
-		"md:flex-row md:gap-y-0 md:gap-x-[69px] xl:gap-x-[124.5px]":
-			variant === "detail",
 	});
 
-	const pictureWrapperClasses = cn({
-		"flex flex-col items-center justify-center xl:flex-1":
-			variant === "category",
-		"flex flex-col rounded-lg md:flex-1 md:w-2/5 xl:w-1/2":
-			variant === "detail",
-	});
+	const pictureWrapperClasses = cn(
+		"flex flex-col justify-center bg-audiophile-gray",
+		{
+			"items-center lg:flex-1": variant === "category",
+			"rounded-lg md:flex-1 md:w-2/5 lg:w-1/2": variant === "detail",
+		}
+	);
 
 	const pictureClasses = cn({
-		"flex flex-col items-center justify-center xl:flex-1":
+		"flex flex-col items-center justify-center lg:flex-1":
 			variant === "category",
-		"md:max-h-[481px] xl:max-h-[initial]": variant === "detail",
+		"md:max-h-[481px] lg:max-h-[initial]": variant === "detail",
 	});
 
 	const imgClasses = cn("rounded-lg", {
@@ -49,24 +50,24 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 		"h-full w-full md:object-cover": variant === "detail",
 	});
 
-	const contentWrapperClasses = cn({
-		"flex items-center justify-center xl:flex-1": variant === "category",
-		"flex flex-col items-center justify-center flex-1": variant === "detail",
+	const contentWrapperClasses = cn("flex items-center justify-center", {
+		"flex-row lg:flex-1": variant === "category",
+		"flex-col justify-center flex-1": variant === "detail",
 	});
 
 	const contentClasses = cn("flex flex-col", {
-		"items-center justify-center text-center md:max-w-[83%] xl:text-left xl:items-start xl:max-w-[initial]":
+		"items-center justify-center text-center md:max-w-[83%] lg:text-left lg:items-start lg:max-w-[initial]":
 			variant === "category",
 	});
 
-	const newProductClasses = cn("overline-text text-audiophile-orange", {
+	const newProductClasses = cn("overline-text text-audiophile-orange ", {
 		"mb-4": variant === "category",
 		"mb-6 md:mb-[17px]": variant === "detail",
 	});
 
-	const titleClasses = cn({
-		"mb-4 md:mb-8 heading-4 md:heading-2": variant === "category",
-		"heading-4 mb-6 md:mb-8 xl:heading-2": variant === "detail",
+	const titleClasses = cn("md:mb-8", {
+		"mb-4 heading-4 md:heading-2": variant === "category",
+		"heading-4 mb-6 lg:heading-2": variant === "detail",
 	});
 
 	const descriptionClasses = cn("body-text opacity-50", {
@@ -80,7 +81,7 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 				<picture className={pictureClasses}>
 					<source
 						srcSet={imageUrl(mediaImage.desktop.asset).url()}
-						media="(min-width: 1280px)"
+						media="(min-width: 1024px)"
 					/>
 					<source
 						srcSet={imageUrl(mediaImage.tablet.asset).url()}

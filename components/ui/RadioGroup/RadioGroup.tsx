@@ -41,13 +41,13 @@ export default function RadioGroup({
 		"box-content h-2.5 w-2.5 appearance-none rounded-full border-[5px] border-white bg-white bg-clip-padding ring-1 ring-input-outline-color outline-none checked:bg-audiophile-orange"
 	);
 	const errorClasses = cn(
-		"text-[12px] -tracking-[0.21px] text-input-outline-error-color font-medium"
+		"text-[12px] -tracking-[0.21px] text-input-outline-error-color font-medium md:flex md:flex-row-reverse"
 	);
 
 	return (
 		<div className="flex flex-col gap-y-2.5">
-			<fieldset>
-				<legend className={legendClasses}>{label}</legend>
+			<div role="group" className="grid grid-cols-1 md:grid-cols-2">
+				<div className={legendClasses}>{label}</div>
 				<div className="flex flex-col gap-y-4">
 					{options.map(({ value, label }) => (
 						<label className={radioButtonContainerClasses} key={value}>
@@ -66,7 +66,7 @@ export default function RadioGroup({
 						</label>
 					))}
 				</div>
-			</fieldset>
+			</div>
 			{showError && error && !selectedValue && (
 				<span className={errorClasses}>{error}</span>
 			)}

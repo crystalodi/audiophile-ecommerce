@@ -11,39 +11,37 @@ export default function ProductCardSkeleton({
 	showNewProduct = true,
 }: ProductCardSkeletonProps) {
 	const containerClasses = cn("flex flex-col", {
-		"gap-y-8 md:gap-y-[52px] xl:gap-y-0 xl:gap-x-31.25 xl:flex-row xl:even:flex-row-reverse":
+		"gap-y-8 md:gap-y-[52px] lg:gap-y-0 lg:gap-x-31.25 lg:flex-row lg:even:flex-row-reverse":
 			variant === "category",
 		"gap-y-8": variant === "detail" && showNewProduct,
 		"gap-y-10": variant === "detail" && !showNewProduct,
-		"md:flex-row md:gap-y-0 md:gap-x-[69px] xl:gap-x-[124.5px]":
+		"md:flex-row md:gap-y-0 md:gap-x-[69px] lg:gap-x-[124.5px]":
 			variant === "detail",
 	});
 
-	const pictureWrapperClasses = cn({
-		"flex flex-col items-center justify-center xl:flex-1":
-			variant === "category",
-		"flex flex-col rounded-lg md:flex-1 md:w-2/5 xl:w-1/2":
-			variant === "detail",
+	const pictureWrapperClasses = cn("flex flex-col", {
+		"items-center justify-center lg:flex-1": variant === "category",
+		"rounded-lg md:flex-1 md:w-2/5 lg:w-1/2": variant === "detail",
 	});
 
 	const pictureClasses = cn({
-		"flex flex-col items-center justify-center xl:flex-1":
+		"flex flex-col items-center justify-center lg:flex-1":
 			variant === "category",
-		"h-[327px] md:h-[480px] xl:h-[560px]": variant === "detail",
+		"h-[327px] md:h-[480px] lg:h-[560px]": variant === "detail",
 	});
 
 	const imgSkeletonClasses = cn("rounded-lg animate-shimmer", {
-		"w-full h-[327px] md:h-[352px] xl:h-[560px]": variant === "category",
+		"w-full h-[327px] md:h-[352px] lg:h-[560px]": variant === "category",
 		"w-full h-full md:object-cover": variant === "detail",
 	});
 
-	const contentWrapperClasses = cn({
-		"flex items-center justify-center xl:flex-1": variant === "category",
-		"flex flex-col items-center justify-center flex-1": variant === "detail",
+	const contentWrapperClasses = cn("flex items-center justify-center", {
+		"flex-row lg:flex-1": variant === "category",
+		"flex-col justify-center flex-1": variant === "detail",
 	});
 
 	const contentClasses = cn("flex flex-col", {
-		"items-center justify-center text-center md:max-w-[83%] xl:text-left xl:items-start xl:max-w-[initial]":
+		"items-center justify-center text-center md:max-w-[83%] lg:text-left lg:items-start lg:max-w-[initial]":
 			variant === "category",
 	});
 
@@ -52,9 +50,9 @@ export default function ProductCardSkeleton({
 		"mb-6 md:mb-[17px] w-32": variant === "detail",
 	});
 
-	const titleSkeletonClasses = cn("animate-shimmer", {
-		"mb-4 md:mb-8 h-10 md:h-12 w-3/4": variant === "category",
-		"mb-6 md:mb-8 h-10 md:h-12 xl:h-12 w-4/5": variant === "detail",
+	const titleSkeletonClasses = cn("animate-shimmer md:mb-8 h-10 md:h-12", {
+		"mb-4 w-3/4": variant === "category",
+		"mb-6 w-4/5": variant === "detail",
 	});
 
 	const descriptionSkeletonClasses = cn("flex flex-col gap-2", {

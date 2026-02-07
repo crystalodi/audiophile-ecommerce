@@ -21,12 +21,12 @@ export default function NavigationCard({
 				<img
 					src={image}
 					aria-hidden
-					className="absolute top-1/10 left-1/2 w-[147px] -translate-x-1/2 -translate-y-1/10 object-cover xl:top-1/5 xl:w-[178px] xl:-translate-y-1/5"
+					className="absolute top-1/10 left-1/2 w-[147px] -translate-x-1/2 -translate-y-1/10 object-cover lg:top-1/5 lg:w-[178px] lg:-translate-y-1/5"
 				/>
 			)}
-			<div className="flex-1 p-6.5 md:p-6.25 xl:p-10"></div>
+			<div className="flex-1 p-6.5 md:p-6.25 lg:p-10"></div>
 			<Link
-				className="bg-audiophile-gray group flex h-41.25 justify-center rounded-lg xl:h-51"
+				className="bg-audiophile-gray group flex h-41.25 justify-center rounded-lg lg:h-51"
 				href={href}
 				aria-label={`Navigation to ${title} products`}
 				onClick={() => onNavigate?.()}
@@ -35,7 +35,7 @@ export default function NavigationCard({
 					<h3 className="mb-[17px] text-[15px] font-bold tracking-[1.07px] text-black uppercase">
 						{title}
 					</h3>
-					<div className="mb-[22px] flex items-center xl:mb-[30px]">
+					<div className="mb-[22px] flex items-center lg:mb-[30px]">
 						<p className="subtitle-text group-hover:text-audiophile-orange mr-[13.32px] text-black/50">
 							shop
 						</p>

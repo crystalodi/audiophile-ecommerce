@@ -26,12 +26,12 @@ export default async function HeroSection() {
 
 	return (
 		<section
-			className="bg-audiophile-black relative z-0 flex h-127.5 items-center justify-center overflow-hidden md:h-160 xl:justify-start"
+			className="bg-audiophile-black relative z-0 flex h-127.5 items-center justify-center overflow-hidden md:h-160 lg:justify-start"
 			aria-labelledby="hero-heading"
 		>
 			<div className="absolute top-0 left-0 h-[600px] w-screen -translate-y-[89px] md:h-[729px]">
 				<picture className="absolute inset-0 -z-20">
-					<source srcSet={desktopImage} media="(min-width: 1280px)" />
+					<source srcSet={desktopImage} media="(min-width: 1024px)" />
 					<source srcSet={tabletImage} media="(min-width: 768px)" />
 					<img
 						src={mobileImage}
@@ -40,8 +40,8 @@ export default async function HeroSection() {
 					/>
 				</picture>
 			</div>
-			<div className="z-1 flex justify-center pr-6 pl-[23px] md:p-0 xl:justify-start xl:pl-[165px]">
-				<div className="flex max-w-82 flex-col items-center justify-center text-center md:max-w-[379px] xl:items-start xl:justify-start xl:text-left">
+			<div className="z-1 flex justify-center pr-6 pl-[var(--sm-container-margin)] md:p-0 lg:justify-start lg:pl-[var(--lg-container-margin)]">
+				<div className="flex max-w-82 flex-col items-center justify-center text-center md:max-w-[379px] lg:items-start lg:justify-start lg:text-left">
 					{isNewProduct && (
 						<p
 							className="mb-[10px] text-[14px] font-normal tracking-[10px] text-white/49 uppercase md:mb-6"
@@ -52,7 +52,7 @@ export default async function HeroSection() {
 					)}
 					<h1
 						id="hero-heading"
-						className="mb-6 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:mb-6 md:text-[56px] md:leading-[58px] md:tracking-[2px]"
+						className="mb-6 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:mb-6 md:text-[56px] md:leading-[58px] md:tracking-[2px] lg:text-[46px] lg:leading-12 xl:text-[56px] xl:leading-[58px]"
 					>
 						{productName}
 					</h1>

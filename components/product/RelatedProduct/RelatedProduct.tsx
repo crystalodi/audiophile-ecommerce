@@ -25,7 +25,7 @@ export default function RelatedProduct(props: RelatedProductProps) {
 					<picture>
 						<source
 							srcSet={imageUrl(mediaImage.desktop.asset).url()}
-							media="(min-width: 1280px)"
+							media="(min-width: 1024px)"
 						/>
 						<source
 							srcSet={imageUrl(mediaImage.tablet.asset).url()}

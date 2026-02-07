@@ -5,6 +5,7 @@ import RadioGroup from "@/components/ui/RadioGroup";
 import { cn } from "@/lib/utils";
 import { FormValidator } from "@/lib/validation";
 import { useMemo, useState } from "react";
+import CashOnDeliveryIcon from "@/public/icon-cash-on-delivery.svg";
 
 interface CheckoutFormProps {
 	ref?: React.Ref<HTMLFormElement>;
@@ -161,52 +162,46 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 			<div className="flex flex-col gap-y-8">
 				<fieldset>
 					<legend className={legendClasses}>Billing Details</legend>
-					<div className="flex flex-col gap-y-6">
-						<div>
-							<FormField
-								name="name"
-								inputType="text"
-								label="Name"
-								onChange={handleChange}
-								value={formData.name}
-								onBlur={handleBlur}
-								error={errors.name}
-								showError={touchedFields.name}
-								placeholder="Alexei Ward"
-							/>
-						</div>
-						<div>
-							<FormField
-								name="email"
-								inputType="email"
-								label="Email"
-								onChange={handleChange}
-								value={formData.email}
-								onBlur={handleBlur}
-								error={errors.email}
-								showError={touchedFields.email}
-								placeholder="alexeiward@email.com"
-							/>
-						</div>
-						<div>
-							<FormField
-								name="phoneNumber"
-								inputType="text"
-								label="Phone Number"
-								onChange={handleChange}
-								value={formData.phoneNumber}
-								onBlur={handleBlur}
-								error={errors.phoneNumber}
-								showError={touchedFields.phoneNumber}
-								placeholder="+1 202 555-0136"
-							/>
-						</div>
+					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+						<FormField
+							name="name"
+							inputType="text"
+							label="Name"
+							onChange={handleChange}
+							value={formData.name}
+							onBlur={handleBlur}
+							error={errors.name}
+							showError={touchedFields.name}
+							placeholder="Alexei Ward"
+						/>
+						<FormField
+							name="email"
+							inputType="email"
+							label="Email"
+							onChange={handleChange}
+							value={formData.email}
+							onBlur={handleBlur}
+							error={errors.email}
+							showError={touchedFields.email}
+							placeholder="alexeiward@email.com"
+						/>
+						<FormField
+							name="phoneNumber"
+							inputType="text"
+							label="Phone Number"
+							onChange={handleChange}
+							value={formData.phoneNumber}
+							onBlur={handleBlur}
+							error={errors.phoneNumber}
+							showError={touchedFields.phoneNumber}
+							placeholder="+1 202 555-0136"
+						/>
 					</div>
 				</fieldset>
 				<fieldset>
 					<legend className={legendClasses}>Shipping info</legend>
-					<div className="flex flex-col gap-y-6">
-						<div>
+					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+						<div className="md:col-span-2">
 							<FormField
 								name="address"
 								inputType="text"
@@ -219,51 +214,45 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 								placeholder="1137 Williams Avenue"
 							/>
 						</div>
-						<div>
-							<FormField
-								name="zipCode"
-								inputType="text"
-								label="ZIP Code"
-								onChange={handleChange}
-								value={formData.zipCode}
-								onBlur={handleBlur}
-								error={errors.zipCode}
-								showError={touchedFields.zipCode}
-								placeholder="10001"
-							/>
-						</div>
-						<div>
-							<FormField
-								name="city"
-								inputType="text"
-								label="City"
-								onChange={handleChange}
-								value={formData.city}
-								onBlur={handleBlur}
-								error={errors.city}
-								showError={touchedFields.city}
-								placeholder="New York City"
-							/>
-						</div>
-						<div>
-							<FormField
-								name="country"
-								inputType="text"
-								label="Country"
-								onChange={handleChange}
-								value={formData.country}
-								onBlur={handleBlur}
-								error={errors.country}
-								showError={touchedFields.country}
-								placeholder="United States"
-							/>
-						</div>
+						<FormField
+							name="zipCode"
+							inputType="text"
+							label="ZIP Code"
+							onChange={handleChange}
+							value={formData.zipCode}
+							onBlur={handleBlur}
+							error={errors.zipCode}
+							showError={touchedFields.zipCode}
+							placeholder="10001"
+						/>
+						<FormField
+							name="city"
+							inputType="text"
+							label="City"
+							onChange={handleChange}
+							value={formData.city}
+							onBlur={handleBlur}
+							error={errors.city}
+							showError={touchedFields.city}
+							placeholder="New York City"
+						/>
+						<FormField
+							name="country"
+							inputType="text"
+							label="Country"
+							onChange={handleChange}
+							value={formData.country}
+							onBlur={handleBlur}
+							error={errors.country}
+							showError={touchedFields.country}
+							placeholder="United States"
+						/>
 					</div>
 				</fieldset>
 				<fieldset>
 					<legend className={legendClasses}>payment details</legend>
-					<div className="flex flex-col gap-y-6">
-						<div>
+					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+						<div className="md:col-span-2">
 							<RadioGroup
 								name="paymentMethod"
 								label="Payment Method"
@@ -280,33 +269,48 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 						</div>
 						{formData.paymentMethod === "E-MONEY" && (
 							<>
-								<div>
-									<FormField
-										name="eMoneyNumber"
-										inputType="text"
-										label="e-Money Number"
-										onChange={handleChange}
-										value={formData.eMoneyNumber}
-										onBlur={handleBlur}
-										error={errors.eMoneyNumber}
-										showError={touchedFields.eMoneyNumber}
-										placeholder="238521993"
-									/>
-								</div>
-								<div>
-									<FormField
-										name="eMoneyPin"
-										inputType="text"
-										label="e-Money Pin"
-										onChange={handleChange}
-										value={formData.eMoneyPin}
-										onBlur={handleBlur}
-										error={errors.eMoneyPin}
-										showError={touchedFields.eMoneyPin}
-										placeholder="6891"
-									/>
-								</div>
+								<FormField
+									name="eMoneyNumber"
+									inputType="text"
+									label="e-Money Number"
+									onChange={handleChange}
+									value={formData.eMoneyNumber}
+									onBlur={handleBlur}
+									error={errors.eMoneyNumber}
+									showError={touchedFields.eMoneyNumber}
+									placeholder="238521993"
+								/>
+								<FormField
+									name="eMoneyPin"
+									inputType="text"
+									label="e-Money Pin"
+									onChange={handleChange}
+									value={formData.eMoneyPin}
+									onBlur={handleBlur}
+									error={errors.eMoneyPin}
+									showError={touchedFields.eMoneyPin}
+									placeholder="6891"
+								/>
 							</>
+						)}
+						{formData.paymentMethod === "CASH" && (
+							<div className="mt-[30px] md:col-span-2">
+								<div className="flex items-start gap-x-8">
+									<div className="my-3">
+										<CashOnDeliveryIcon
+											className="fill-audiophile-orange"
+											width={48}
+											height={48}
+										/>
+									</div>
+									<p className="body-text text-black/50">
+										The 'Cash on Delivery' option enables you to pay in cash
+										when our delivery courier arrives at your residence. Just
+										make sure your address is correct so that your order will
+										not be cancelled.
+									</p>
+								</div>
+							</div>
 						)}
 					</div>
 				</fieldset>

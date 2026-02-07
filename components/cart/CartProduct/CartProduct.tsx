@@ -52,7 +52,7 @@ export default function CartProduct(props: CartProductProps) {
 
 	return (
 		<div className="flex items-center justify-between">
-			<div className="bg-audiophile-gray mr-4 h-16 w-16 rounded-lg">
+			<div className="bg-audiophile-gray mr-4 flex h-16 w-16 items-center rounded-lg">
 				{cartImage ? (
 					<Image
 						src={cartImage}

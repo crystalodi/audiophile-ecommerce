@@ -21,16 +21,15 @@ export default function NavigationList({
 	const menuAriaLabel = `${menuType} navigation menu`;
 
 	const navigationMenuClasses = cn({
-		"hidden xl:flex xl:flex-1 xl:items-center": menuType === "header",
+		"hidden lg:flex lg:flex-1 lg:items-center": menuType === "header",
 		"w-full": menuType === "content" || menuType === "mobile",
 	});
 
-	const navigationULClasses = cn("flex list-none", {
+	const navigationULClasses = cn("flex list-none gap-4 md:flex-row", {
 		"subtitle-text gap-[34px]": menuType === "header",
-		"flex-col gap-4 md:flex-row md:gap-[10px] xl:gap-[30px]":
+		"flex-col md:flex-row md:gap-[10px] lg:gap-[30px]":
 			menuType === "content" || menuType === "mobile",
-		"subtitle-text flex-col items-center gap-4 md:flex-row md:gap-[34px]":
-			menuType === "footer",
+		"subtitle-text flex-col items-center md:gap-[34px]": menuType === "footer",
 	});
 
 	const listItemClasses = cn({

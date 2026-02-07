@@ -11,7 +11,7 @@ export default async function PreFooter() {
 	const headersList = await headers();
 	const pathname = headersList.get("x-pathname") || "/";
 	const homePath = "/";
-	const hideNavigation = pathname !== homePath;
+	const isHomePath = pathname == homePath;
 
 	const portableTextComponents: PortableTextComponents = {
 		marks: {
@@ -29,7 +29,7 @@ export default async function PreFooter() {
 		},
 		block: {
 			normal: props => (
-				<h2 className="heading-4 md:heading-2 mb-8 max-w-[573px] text-center xl:text-left">
+				<h2 className="heading-4 md:heading-2 mb-8 max-w-[573px] text-center lg:text-left">
 					{props.children}
 				</h2>
 			),
@@ -40,18 +40,18 @@ export default async function PreFooter() {
 		<div className="main-container">
 			<section aria-label="Product Categories and Store Information">
 				<div className="mb-30 flex flex-col gap-30">
-					{!hideNavigation && (
+					{!isHomePath && (
 						<div className="flex">
 							<NavigationMenu menuType="content" />
 						</div>
 					)}
 					{preFooterData && (
-						<div className="flex flex-col items-center justify-center gap-10 md:gap-[63px] xl:flex-row-reverse xl:gap-31.25">
-							<div className="xl:flex-1">
+						<div className="flex flex-col items-center justify-center gap-10 md:gap-[63px] lg:flex-row-reverse lg:gap-31.25">
+							<div className="lg:flex-1">
 								<picture>
 									<source
 										srcSet={imageUrl(preFooterData.image.desktop.asset).url()}
-										media="(min-width: 1280px)"
+										media="(min-width: 1024px)"
 									/>
 									<source
 										srcSet={imageUrl(preFooterData.image.tablet.asset).url()}
@@ -65,14 +65,14 @@ export default async function PreFooter() {
 									/>
 								</picture>
 							</div>
-							<div className="flex flex-col items-center xl:flex-1">
+							<div className="flex flex-col items-center lg:flex-1">
 								{preFooterData?.title && (
 									<PortableText
 										value={preFooterData.title}
 										components={portableTextComponents}
 									/>
 								)}
-								<p className="body-text text-center text-black/50 xl:text-left">
+								<p className="body-text text-center text-black/50 lg:text-left">
 									{preFooterData.description}
 								</p>
 							</div>
