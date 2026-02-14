@@ -13,6 +13,28 @@
  */
 
 // Source: schema.json
+export type Cart = {
+	_id: string;
+	_type: "cart";
+	_createdAt: string;
+	_updatedAt: string;
+	_rev: string;
+	items?: Array<{
+		product?: {
+			_ref: string;
+			_type: "reference";
+			_weak?: boolean;
+			[internalGroqTypeReferenceTo]?: "product";
+		};
+		quantity?: number;
+		reservedAt?: string;
+		_key: string;
+	}>;
+	status?: "active" | "expired" | "converted_to_order";
+	createdAt?: string;
+	expiresAt?: string;
+};
+
 export type HomePageContent = {
 	_id: string;
 	_type: "homePageContent";
@@ -532,6 +554,7 @@ export type SanityAssetSourceData = {
 };
 
 export type AllSanitySchemaTypes =
+	| Cart
 	| HomePageContent
 	| HeroContent
 	| FooterContent

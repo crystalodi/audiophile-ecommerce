@@ -105,7 +105,9 @@ export const productType = defineType({
 		}),
 		defineField({
 			name: "stock",
+			title: "Total Stock",
 			type: "number",
+			description: "Total inventory available for sale",
 			validation: Rule => Rule.required().min(0),
 		}),
 	],

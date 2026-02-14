@@ -4,6 +4,7 @@ import { useCartStore } from "@/store/cartStore";
 import { ProductData } from "@/store/productStore";
 import QuantitySelector from "@/components/cart/QuantitySelector";
 import Image from "next/image";
+import { useCartDataStore } from "@/store/cartDataStore";
 
 interface CartProductPropsFromCartDialog extends ProductData {
 	quantity: number;
@@ -35,18 +36,19 @@ export default function CartProduct(props: CartProductProps) {
 
 	const updateQuantity = useCartStore(state => state.updateQuantity);
 	const deleteCartItem = useCartStore(state => state.deleteCartItem);
+	const totalItems = useCartDataStore(state => state.totalItems);
 
-	const onQuantityChange = (newQuantity: number) => {
+	const onQuantityChange = async (newQuantity: number) => {
 		if (newQuantity === 0) {
-			deleteCartItem(_id);
+			await deleteCartItem(_id);
 			setTimeout(() => {
-				const updatedTotalItems = useCartStore.getState().totalItems;
+				const updatedTotalItems = totalItems;
 				if (updatedTotalItems === 0) {
 					onClose && onClose();
 				}
 			}, 0);
 		} else {
-			updateQuantity({ _id, quantity: newQuantity });
+			await updateQuantity({ _id, quantity: newQuantity });
 		}
 	};
 

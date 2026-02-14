@@ -16,8 +16,8 @@ export default function AddToCart({ stock, productName, _id }: AddToCartProps) {
 	const addToast = useToastStore(state => state.addToast);
 	const isDisabled = stock === 0;
 
-	const handleAddToCart = () => {
-		addCartItem({
+	const handleAddToCart = async () => {
+		await addCartItem({
 			quantity,
 			_id,
 		});

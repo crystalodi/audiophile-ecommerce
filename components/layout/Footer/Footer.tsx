@@ -4,10 +4,10 @@ import InstagramIcon from "@/public/icon-instagram.svg";
 import TwitterIcon from "@/public/icon-twitter.svg";
 import { cn } from "@/lib/utils";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
+import CopyrightYear from "@/components/layout/CopyrightYear";
 
 export default async function Footer() {
 	const footerData = await getFooterContent();
-	const currentYear = new Date().getFullYear();
 
 	const getIconComponent = (iconName: string) => {
 		const className = cn("[&>path]:fill-current [&>g]:fill-current"); // Target nested elements
@@ -35,9 +35,11 @@ export default async function Footer() {
 							<p className="body-text text-center text-white/50 md:text-left md:[grid-area:text]">
 								{footerData?.footerText}
 							</p>
-							<p className="text-[15px] leading-[25px] font-bold tracking-normal text-white/50 capitalize md:[grid-area:copyright] lg:col-span-2">
-								copyright {currentYear}.&nbsp;{footerData?.copyrightText}
-							</p>
+							<CopyrightYear
+								copyrightText={
+									footerData?.copyrightText || "All rights reserved"
+								}
+							/>
 							<div className="flex w-full items-center justify-center gap-4 md:justify-end md:justify-self-end md:[grid-area:social] lg:place-self-end">
 								{footerData?.socialMediaLinks.map((link, index) => (
 									<a

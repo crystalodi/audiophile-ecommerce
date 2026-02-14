@@ -8,6 +8,7 @@ import HamburgerIcon from "@/public/icon-hamburger.svg";
 import CartIcon from "@/public/icon-cart.svg";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
 import { useRouter } from "next/navigation";
+import { useCartDataStore } from "@/store/cartDataStore";
 
 const BREAKPOINT_XL = 1280;
 
@@ -18,7 +19,7 @@ interface HeaderProps {
 
 function CartBadge() {
 	const [mounted, setMounted] = useState(false);
-	const totalItems = useCartStore(state => state.totalItems);
+	const totalItems = useCartDataStore(state => state.totalItems);
 	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	useEffect(() => {

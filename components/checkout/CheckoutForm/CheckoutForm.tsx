@@ -157,12 +157,16 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 		"text-audiophile-orange mb-4 text-[13px] leading-[25px] font-bold tracking-[0.93px] uppercase"
 	);
 
+	const formGroupContainerClasses = cn(
+		"grid grid-cols-1 gap-x-4 gap-y-6 xl:grid-cols-2"
+	);
+
 	return (
 		<form noValidate ref={ref} onSubmit={handleFormValidation} method="post">
 			<div className="flex flex-col gap-y-8">
 				<fieldset>
 					<legend className={legendClasses}>Billing Details</legend>
-					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+					<div className={formGroupContainerClasses}>
 						<FormField
 							name="name"
 							inputType="text"
@@ -200,8 +204,8 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 				</fieldset>
 				<fieldset>
 					<legend className={legendClasses}>Shipping info</legend>
-					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
-						<div className="md:col-span-2">
+					<div className={formGroupContainerClasses}>
+						<div className="xl:col-span-2">
 							<FormField
 								name="address"
 								inputType="text"
@@ -251,8 +255,8 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 				</fieldset>
 				<fieldset>
 					<legend className={legendClasses}>payment details</legend>
-					<div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
-						<div className="md:col-span-2">
+					<div className={formGroupContainerClasses}>
+						<div className="xl:col-span-2">
 							<RadioGroup
 								name="paymentMethod"
 								label="Payment Method"
@@ -294,7 +298,7 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 							</>
 						)}
 						{formData.paymentMethod === "CASH" && (
-							<div className="mt-[30px] md:col-span-2">
+							<div className="mt-[30px] xl:col-span-2">
 								<div className="flex items-start gap-x-8">
 									<div className="my-3">
 										<CashOnDeliveryIcon

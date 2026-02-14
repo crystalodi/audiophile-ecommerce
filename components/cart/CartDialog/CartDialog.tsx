@@ -3,6 +3,7 @@
 import { RefObject, useMemo } from "react";
 import Dialog from "@/components/ui/Dialog";
 import { useCartStore } from "@/store/cartStore";
+import { useCartDataStore } from "@/store/cartDataStore";
 import { useProductStore } from "@/store/productStore";
 import CartProduct from "@/components/cart/CartProduct";
 import CartTotal from "@/components/cart/CartTotal";
@@ -38,32 +39,12 @@ function CartDialogHeader({
 
 function CartDialog({ open, onClose, anchorRef, onCheckout }: CartDialogProps) {
 	const clearCart = useCartStore(state => state.clearCart);
-	const totalItems = useCartStore(state => state.totalItems);
-	const cartItems = useCartStore(state => state.cartItems);
+	const totalItems = useCartDataStore(state => state.totalItems);
+	const cartItems = useCartDataStore(state => state.cartData);
 	const getProduct = useProductStore(state => state.getProduct);
 	const products = useProductStore(state => state.products);
 
-	const itemsWithPrices = useMemo(() => {
-		const items = Array.from(cartItems.values()).filter(
-			item => item.quantity > 0
-		);
-
-		return items
-			.map(cartItem => {
-				const product = getProduct(cartItem._id);
-				if (!product) return null;
-
-				return {
-					...cartItem,
-					slug: product.slug,
-					price: product.price,
-					productName: product.productName,
-					cartImage: product.cartImage,
-					maxQuantity: product.maxQuantity,
-				};
-			})
-			.filter((item): item is NonNullable<typeof item> => item !== null);
-	}, [cartItems, getProduct, products]);
+	const itemsWithPrices: any[] = [];
 
 	const totalPrice = itemsWithPrices.reduce((sum, item) => {
 		return sum + item.price * item.quantity;
@@ -71,9 +52,9 @@ function CartDialog({ open, onClose, anchorRef, onCheckout }: CartDialogProps) {
 
 	const offsetMemo = useMemo(() => ({ x: 0, y: 24 }), []);
 
-	const removeAllCartItems = () => {
+	const removeAllCartItems = async () => {
 		onClose();
-		clearCart();
+		await clearCart();
 	};
 
 	return (

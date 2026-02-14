@@ -43,7 +43,7 @@ export default function FeaturedProduct({
 						</picture>
 					)}
 				</div>
-				<div className="relative">
+				<div className="relative flex flex-col justify-center">
 					<h4 className="heading-4 mb-8">{productName}</h4>
 					<div>
 						<Link

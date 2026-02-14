@@ -1,5 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import {
+	deleteCart,
+	removeItemFromCart,
+	updateCartItemQuantity,
+	addItemToCart,
+	createCart,
+} from "@/sanity/lib/cartApi";
 
 export type CartItem = {
 	_id: string;
@@ -7,142 +14,79 @@ export type CartItem = {
 };
 
 interface CartStore {
-	cartItems: Map<string, CartItem>;
-	totalItems: number;
+	cartId: string;
 	hasHydrated: boolean;
-	setHasHydrated: (state: boolean) => void;
-	addCartItem: (item: CartItem) => void;
-	deleteCartItem: (_id: string) => void;
-	updateQuantity: (item: CartItem) => void;
-	clearCart: () => void;
 	timestamp: number;
+	setHasHydrated: (state: boolean) => void;
+	setCartId: (cartId: string) => void;
+	addCartItem: (item: CartItem) => Promise<void>;
+	updateQuantity: (item: CartItem) => Promise<void>;
+	deleteCartItem: (productId: string) => Promise<void>;
+	clearCart: () => Promise<void>;
 }
 
-const CART_TTL = 1000 * 60 * 60 * 24;
+const CART_TTL = 24 * 60 * 60 * 1000; // 24 hours
 
 export const useCartStore = create<CartStore>()(
 	persist(
 		(set, get) => ({
-			cartItems: new Map(),
-			totalItems: 0,
+			cartId: "",
 			hasHydrated: false,
 			timestamp: Date.now(),
+
 			setHasHydrated: (state: boolean) => {
 				set({ hasHydrated: state });
 			},
 
-			addCartItem: (item: CartItem) => {
-				const { cartItems } = get();
-				const existingItem = cartItems.get(item._id);
-				let newCartItems: Map<string, CartItem>;
+			setCartId: (cartId: string) => {
+				set({ cartId, timestamp: Date.now() });
+			},
 
-				if (existingItem) {
-					newCartItems = new Map(cartItems);
-					newCartItems.set(item._id, {
-						...existingItem,
-						quantity: existingItem.quantity + item.quantity,
-					});
+			addCartItem: async (item: CartItem) => {
+				const { cartId } = get();
+
+				if (!cartId) {
+					const newCart = await createCart([item]);
+					set({ cartId: newCart._id, timestamp: Date.now() });
 				} else {
-					newCartItems = new Map(cartItems);
-					newCartItems.set(item._id, item);
+					await addItemToCart(cartId, item);
 				}
-
-				const totalItems = Array.from(newCartItems.values()).reduce(
-					(sum, item) => sum + item.quantity,
-					0
-				);
-
-				set({ cartItems: newCartItems, totalItems, timestamp: Date.now() });
 			},
 
-			deleteCartItem: (slug: string) => {
-				set(state => {
-					const newCartItems = new Map(state.cartItems);
-					newCartItems.delete(slug);
-
-					const totalItems = Array.from(newCartItems.values()).reduce(
-						(sum, item) => sum + item.quantity,
-						0
-					);
-
-					return { cartItems: newCartItems, totalItems, timestamp: Date.now() };
-				});
+			updateQuantity: async (item: CartItem) => {
+				const { cartId } = get();
+				if (cartId) {
+					await updateCartItemQuantity(cartId, item);
+				}
 			},
 
-			updateQuantity: (item: CartItem) => {
-				set(state => {
-					const newCartItems = new Map(state.cartItems);
-					const existingItem = newCartItems.get(item._id);
-
-					if (existingItem) {
-						newCartItems.set(item._id, {
-							...existingItem,
-							quantity: item.quantity,
-						});
-					}
-
-					// Recalculate totalItems
-					const totalItems = Array.from(newCartItems.values()).reduce(
-						(sum, item) => sum + item.quantity,
-						0
-					);
-
-					return { cartItems: newCartItems, totalItems, timestamp: Date.now() };
-				});
+			deleteCartItem: async (productId: string) => {
+				const { cartId } = get();
+				if (cartId) {
+					await removeItemFromCart(cartId, productId);
+				}
 			},
 
-			clearCart: () => {
-				set({ cartItems: new Map(), totalItems: 0, timestamp: Date.now() });
+			clearCart: async () => {
+				const { cartId } = get();
+				if (cartId) {
+					await deleteCart(cartId);
+				}
+				set({ cartId: "", timestamp: Date.now() });
 			},
 		}),
 		{
 			name: "audiophile-cart-storage",
 			onRehydrateStorage: () => state => {
 				if (state) {
+					// Check if cart has expired
+					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
+						const cartId = state.cartId;
+						state.cartId = "";
+						// cartId && deleteCart(cartId);
+					}
 					state.setHasHydrated(true);
 				}
-			},
-			storage: {
-				getItem: name => {
-					const str = localStorage.getItem(name);
-					if (!str) return null;
-
-					const { state } = JSON.parse(str);
-
-					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
-						localStorage.removeItem(name);
-						return null;
-					}
-
-					const cartItems: Map<string, CartItem> = new Map(
-						state.cartItems || []
-					);
-
-					// Recalculate totalItems on hydration
-					const totalItems = Array.from(cartItems.values()).reduce(
-						(sum, item) => sum + item.quantity,
-						0
-					);
-
-					return {
-						state: {
-							...state,
-							cartItems,
-							totalItems,
-						},
-					};
-				},
-				setItem: (name, value) => {
-					const cartItemsArray = Array.from(value.state.cartItems.entries());
-					const toStore = {
-						state: {
-							...value.state,
-							cartItems: cartItemsArray,
-						},
-					};
-					localStorage.setItem(name, JSON.stringify(toStore));
-				},
-				removeItem: name => localStorage.removeItem(name),
 			},
 		}
 	)
