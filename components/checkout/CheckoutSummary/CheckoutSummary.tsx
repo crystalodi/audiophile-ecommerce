@@ -10,11 +10,11 @@ import { useMemo } from "react";
 const VAT_RATE = 0.2;
 const SHIPPING_FEE = 50;
 export default function CheckoutSummary() {
-	const cartItems = useCartDataStore(state => state.cartData);
+	const cartItems = useCartDataStore(state => state.cartData?.items);
 	const getProduct = useProductStore(state => state.getProduct);
 	const products = useProductStore(state => state.products);
 
-	const itemsWithPrices = [];
+	const itemsWithPrices: any[] = [];
 	const totalPrice = 0;
 	const vatTotal = 0;
 	const grandTotal = 0;

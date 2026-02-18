@@ -91,21 +91,21 @@ export async function deleteCart(cartId: string) {
 export async function fetchCart(cartId: string) {
 	const cart = await client.fetch(
 		`*[_type == "cart" && _id == $cartId][0] {
-                _id,
-                items[] {
-                    product-> {
-                        _id,
-                        "productName": coalesce(shortName, productName),
-                        price,
-                        cartImage
-                    },
-                    quantity,
-                    reservedAt
-                },
-                status,
-                createdAt,
-                expiresAt
-            }`,
+			_id,
+			items[] {
+				product-> {
+						_id,
+						"productName": coalesce(shortName, productName),
+						price,
+						cartImage
+				},
+				quantity,
+				reservedAt
+			},
+			status,
+			createdAt,
+			expiresAt
+    }`,
 		{ cartId }
 	);
 	return cart;

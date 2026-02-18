@@ -368,7 +368,7 @@
                           }
                         ]
                       },
-                      "optional": false
+                      "optional": true
                     },
                     "tablet": {
                       "type": "objectAttribute",
@@ -389,7 +389,7 @@
                           }
                         ]
                       },
-                      "optional": false
+                      "optional": true
                     },
                     "desktop": {
                       "type": "objectAttribute",
@@ -410,11 +410,11 @@
                           }
                         ]
                       },
-                      "optional": false
+                      "optional": true
                     }
                   }
                 },
-                "optional": false
+                "optional": true
               },
               "height": {
                 "type": "objectAttribute",
@@ -426,25 +426,25 @@
                       "value": {
                         "type": "number"
                       },
-                      "optional": false
+                      "optional": true
                     },
                     "tablet": {
                       "type": "objectAttribute",
                       "value": {
                         "type": "number"
                       },
-                      "optional": false
+                      "optional": true
                     },
                     "desktop": {
                       "type": "objectAttribute",
                       "value": {
                         "type": "number"
                       },
-                      "optional": false
+                      "optional": true
                     }
                   }
                 },
-                "optional": false
+                "optional": true
               }
             },
             "rest": {

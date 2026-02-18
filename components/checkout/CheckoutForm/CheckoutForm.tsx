@@ -38,7 +38,7 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 			})
 			.addRule("phoneNumber", {
 				required: true,
-				pattern: /^\+\d{1,4} \d{3}-\d{3}-\d{4}$/,
+				pattern: /^\+\d{1,4}\d{3}-\d{3}-\d{4}$/,
 				displayName: "Phone Number",
 			})
 			.addRule("address", {

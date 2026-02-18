@@ -80,4 +80,33 @@ export const cartType = defineType({
 			description: "When the cart expires (24 hours from creation)",
 		}),
 	],
+	preview: {
+		select: {
+			status: "status",
+			createdAt: "createdAt",
+			items: "items",
+		},
+		prepare({ status, createdAt, items }) {
+			const itemCount = items?.length || 0;
+			const totalItems =
+				items?.reduce(
+					(sum: number, item: any) => sum + (item.quantity || 0),
+					0
+				) || 0;
+			const totalPrice =
+				items?.reduce(
+					(sum: number, item: any) =>
+						sum + (item.product?.price || 0) * (item.quantity || 0),
+					0
+				) || 0;
+			const formattedDate = createdAt
+				? new Date(createdAt).toLocaleDateString()
+				: "N/A";
+
+			return {
+				title: `Cart - ${status} - $${totalPrice.toFixed(2)}`,
+				subtitle: `${itemCount} products (${totalItems} items) - Created: ${formattedDate}`,
+			};
+		},
+	},
 });

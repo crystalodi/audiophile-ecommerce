@@ -178,9 +178,7 @@ async function getHomePageContent() {
 				heroBitmapBackgroundImage,
 				"heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,
 				featuredProductImage,
-				ctaType,
-				textAlignment,
-				height
+				ctaType
 			}
 		}
 	`);

@@ -151,12 +151,16 @@ export const homePageContentType = defineType({
 							title: "Text Alignment",
 							type: "object",
 							description: "Control text alignment for different screen sizes",
-							validation: Rule => Rule.required(),
+							readOnly: true,
+							deprecated: { reason: "Not used" },
+
 							fields: [
 								defineField({
 									name: "mobile",
 									title: "Mobile Text Alignment",
 									type: "string",
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 									options: {
 										list: [
 											{ title: "Left", value: "left" },
@@ -164,12 +168,13 @@ export const homePageContentType = defineType({
 											{ title: "Right", value: "right" },
 										],
 									},
-									validation: Rule => Rule.required(),
 								}),
 								defineField({
 									name: "tablet",
 									title: "Tablet Text Alignment",
 									type: "string",
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 									options: {
 										list: [
 											{ title: "Left", value: "left" },
@@ -177,12 +182,13 @@ export const homePageContentType = defineType({
 											{ title: "Right", value: "right" },
 										],
 									},
-									validation: Rule => Rule.required(),
 								}),
 								defineField({
 									name: "desktop",
 									title: "Desktop Text Alignment",
 									type: "string",
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 									options: {
 										list: [
 											{ title: "Left", value: "left" },
@@ -190,7 +196,6 @@ export const homePageContentType = defineType({
 											{ title: "Right", value: "right" },
 										],
 									},
-									validation: Rule => Rule.required(),
 								}),
 							],
 						}),
@@ -200,28 +205,32 @@ export const homePageContentType = defineType({
 							type: "object",
 							description:
 								"Custom height for this featured product card on different devices",
-							validation: Rule => Rule.required(),
+							readOnly: true,
+							deprecated: { reason: "Not used" },
 							fields: [
 								defineField({
 									name: "mobile",
 									title: "Mobile Height",
 									type: "number",
 									description: "Height in pixels",
-									validation: Rule => Rule.required().min(1),
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 								}),
 								defineField({
 									name: "tablet",
 									title: "Tablet Height",
 									type: "number",
 									description: "Height in pixels",
-									validation: Rule => Rule.required().min(1),
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 								}),
 								defineField({
 									name: "desktop",
 									title: "Desktop Height",
 									type: "number",
 									description: "Height in pixels",
-									validation: Rule => Rule.required().min(1),
+									readOnly: true,
+									deprecated: { reason: "Not used" },
 								}),
 							],
 						}),
