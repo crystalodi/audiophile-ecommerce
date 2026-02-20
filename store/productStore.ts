@@ -1,34 +1,23 @@
 import { ALL_PRODUCT_PRICES_QUERYResult } from "@/sanity.types";
 import { create } from "zustand";
-import { imageUrl } from "@/lib/imageUrl";
 
-export type ProductData = Omit<
-	ALL_PRODUCT_PRICES_QUERYResult[0],
-	"cartImage"
-> & {
-	cartImage: string;
-};
+export type ProductData = ALL_PRODUCT_PRICES_QUERYResult[0];
 
 interface ProductStore {
-	products: Map<string, ProductData>;
-	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => void;
+	products: Map<string, any>;
+	initializeProducts: (initialProducts: ProductData[]) => void;
 	getProduct: (_id: string) => ProductData | undefined;
 }
 
 export const useProductStore = create<ProductStore>()((set, get) => ({
 	products: new Map(),
 
-	initializeProducts: (products: ALL_PRODUCT_PRICES_QUERYResult) => {
+	initializeProducts: (initialProducts: ProductData[]) => {
 		const productsMap = new Map(
-			products.map(product => [
+			initialProducts.map(product => [
 				product._id,
 				{
-					slug: product.slug,
-					price: product.price,
-					maxQuantity: product.maxQuantity,
-					productName: product.productName,
-					cartImage: imageUrl(product.cartImage.asset).url(),
-					_id: product._id,
+					...product,
 				},
 			])
 		);

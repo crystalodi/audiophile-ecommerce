@@ -1,4 +1,4 @@
-import { getFooterContent } from "@/sanity/lib/api";
+import { getFooterContent } from "@/sanity/lib/contentApi";
 import FacebookIcon from "@/public/icon-facebook.svg";
 import InstagramIcon from "@/public/icon-instagram.svg";
 import TwitterIcon from "@/public/icon-twitter.svg";

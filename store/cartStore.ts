@@ -6,6 +6,7 @@ import {
 	updateCartItemQuantity,
 	addItemToCart,
 	createCart,
+	expireCart,
 } from "@/sanity/lib/cartApi";
 
 export type CartItem = {
@@ -18,7 +19,6 @@ interface CartStore {
 	hasHydrated: boolean;
 	timestamp: number;
 	setHasHydrated: (state: boolean) => void;
-	setCartId: (cartId: string) => void;
 	addCartItem: (item: CartItem) => Promise<void>;
 	updateQuantity: (item: CartItem) => Promise<void>;
 	deleteCartItem: (productId: string) => Promise<void>;
@@ -38,16 +38,15 @@ export const useCartStore = create<CartStore>()(
 				set({ hasHydrated: state });
 			},
 
-			setCartId: (cartId: string) => {
-				set({ cartId, timestamp: Date.now() });
-			},
-
 			addCartItem: async (item: CartItem) => {
 				const { cartId } = get();
 
 				if (!cartId) {
 					const newCart = await createCart([item]);
-					set({ cartId: newCart._id, timestamp: Date.now() });
+					set({
+						cartId: newCart._id,
+						timestamp: new Date(newCart._createdAt).getTime(),
+					});
 				} else {
 					await addItemToCart(cartId, item);
 				}
@@ -79,11 +78,13 @@ export const useCartStore = create<CartStore>()(
 			name: "audiophile-cart-storage",
 			onRehydrateStorage: () => state => {
 				if (state) {
-					// Check if cart has expired
-					if (Date.now() - (state.timestamp ?? 0) > CART_TTL) {
-						const cartId = state.cartId;
+					const isExpired = Date.now() - (state.timestamp ?? 0) > CART_TTL;
+					if (isExpired && state.cartId) {
+						expireCart(state.cartId).catch(error => {
+							console.error("Error expiring cart:", error);
+						});
 						state.cartId = "";
-						// cartId && deleteCart(cartId);
+						state.timestamp = 0;
 					}
 					state.setHasHydrated(true);
 				}

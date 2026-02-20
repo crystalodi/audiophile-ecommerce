@@ -1,4 +1,4 @@
-import { getAllProductPrices } from "@/sanity/lib/api";
+import { getAllProductPrices } from "@/sanity/lib/productApi";
 import ProductInitializerClient from "./ProductInitializerClient";
 
 export default async function ProductInitializer() {

@@ -1,5 +1,5 @@
 import { imageUrl } from "@/lib/imageUrl";
-import { getHeroContent } from "@/sanity/lib/api";
+import { getHeroContent } from "@/sanity/lib/contentApi";
 import Link from "next/link";
 
 export default async function HeroSection() {

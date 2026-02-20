@@ -1,5 +1,5 @@
 import { imageUrl } from "@/lib/imageUrl";
-import { getPreFooterContent } from "@/sanity/lib/api";
+import { getPreFooterContent } from "@/sanity/lib/contentApi";
 import { PortableText } from "next-sanity";
 import { PortableTextComponents } from "next-sanity";
 import { ReactNode } from "react";

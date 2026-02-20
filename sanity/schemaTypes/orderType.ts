@@ -221,18 +221,6 @@ export const orderType = defineType({
 			initialValue: "processing",
 			validation: Rule => Rule.required(),
 		}),
-		defineField({
-			name: "createdAt",
-			title: "Created At",
-			type: "datetime",
-			validation: Rule => Rule.required(),
-		}),
-		defineField({
-			name: "updatedAt",
-			title: "Updated At",
-			type: "datetime",
-			validation: Rule => Rule.required(),
-		}),
 	],
 	preview: {
 		select: {

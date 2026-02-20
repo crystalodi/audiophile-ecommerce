@@ -3,11 +3,8 @@
 import CartProduct from "@/components/cart/CartProduct";
 import CartTotal from "@/components/cart/CartTotal";
 import { useCartDataStore } from "@/store/cartDataStore";
-import { useCartStore } from "@/store/cartStore";
 import { useProductStore } from "@/store/productStore";
-import { useMemo } from "react";
 
-const VAT_RATE = 0.2;
 const SHIPPING_FEE = 50;
 export default function CheckoutSummary() {
 	const cartItems = useCartDataStore(state => state.cartData?.items);

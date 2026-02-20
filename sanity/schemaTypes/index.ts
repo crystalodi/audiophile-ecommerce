@@ -11,6 +11,7 @@ import { footerContentType } from "./footerContentType";
 import { heroContentType } from "./heroContentType";
 import { homePageContentType } from "./homePageContentType";
 import { cartType } from "./cartType";
+import { orderType } from "./orderType";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
 	types: [
@@ -25,5 +26,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
 		heroContentType,
 		homePageContentType,
 		cartType,
+		orderType,
 	],
 };

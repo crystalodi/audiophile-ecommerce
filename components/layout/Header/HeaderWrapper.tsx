@@ -1,4 +1,4 @@
-import { getNavigationMenu } from "@/sanity/lib/api";
+import { getNavigationMenu } from "@/sanity/lib/contentApi";
 import Header from "./Header";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import { urlFor } from "@/sanity/lib/image";

@@ -1,5 +1,5 @@
 import ProductCard from "@/components/product/ProductCard/ProductCard";
-import { getProductsByCategory } from "@/sanity/lib/api";
+import { getProductsByCategory } from "@/sanity/lib/productApi";
 import { notFound } from "next/navigation";
 
 const VALID_CATEGORIES = ["headphones", "speakers", "earphones"];

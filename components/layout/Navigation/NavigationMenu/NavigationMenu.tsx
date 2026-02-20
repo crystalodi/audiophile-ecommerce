@@ -1,5 +1,5 @@
 import { urlFor } from "@/sanity/lib/image";
-import { getNavigationMenu } from "@/sanity/lib/api";
+import { getNavigationMenu } from "@/sanity/lib/contentApi";
 import NavigationLogo from "@/components/layout/Navigation/NavigationLogo";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
 

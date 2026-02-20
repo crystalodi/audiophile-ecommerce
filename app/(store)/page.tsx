@@ -1,5 +1,5 @@
 import HeroSection from "@/components/home/HeroSection";
-import { getHomePageContent } from "@/sanity/lib/api";
+import { getHomePageContent } from "@/sanity/lib/contentApi";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import FeaturedProductSection from "@/components/home/FeaturedProductSection";
 

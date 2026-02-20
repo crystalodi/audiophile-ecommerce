@@ -1,4 +1,4 @@
-import { getProductDetail } from "@/sanity/lib/api";
+import { getProductDetail } from "@/sanity/lib/productApi";
 import { PortableText } from "next-sanity";
 import { notFound } from "next/navigation";
 import { imageUrl } from "@/lib/imageUrl";

@@ -67,26 +67,14 @@ export const cartType = defineType({
 			},
 			initialValue: "active",
 		}),
-		defineField({
-			name: "createdAt",
-			title: "Created At",
-			type: "datetime",
-			description: "When the cart was created",
-		}),
-		defineField({
-			name: "expiresAt",
-			title: "Expires At",
-			type: "datetime",
-			description: "When the cart expires (24 hours from creation)",
-		}),
 	],
 	preview: {
 		select: {
 			status: "status",
-			createdAt: "createdAt",
+			_createdAt: "_createdAt",
 			items: "items",
 		},
-		prepare({ status, createdAt, items }) {
+		prepare({ status, _createdAt, items }) {
 			const itemCount = items?.length || 0;
 			const totalItems =
 				items?.reduce(
@@ -99,8 +87,8 @@ export const cartType = defineType({
 						sum + (item.product?.price || 0) * (item.quantity || 0),
 					0
 				) || 0;
-			const formattedDate = createdAt
-				? new Date(createdAt).toLocaleDateString()
+			const formattedDate = _createdAt
+				? new Date(_createdAt).toLocaleDateString()
 				: "N/A";
 
 			return {
