@@ -3,29 +3,31 @@ import { defineQuery } from "next-sanity";
 
 export async function getProductsByCategory(categorySlug: string) {
 	const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`
-    *[_type == "product"&& references(*[_type == "category" && slug.current == $categorySlug]._id)] {
-      _id,
-      "mediaImage": categoryImage,
-      isNewProduct,
-      productName,
-      description,
-      slug,
-      category-> {categoryName},
-      isNewProduct
+    *[_type == "category" && slug.current == $categorySlug][0] {
+      categoryName,
+      "products": *[_type == "product" && references(^._id)] {
+        _id,
+        "mediaImage": categoryImage,
+        isNewProduct,
+        productName,
+        description,
+        slug,
+        category->{categoryName}
+      }
     }
   `);
 
 	try {
-		const products = await sanityFetch({
+		const categoryWithProducts = await sanityFetch({
 			query: PRODUCTS_BY_CATEGORY_QUERY,
 			params: {
 				categorySlug,
 			},
 		});
-		return products.data || [];
+		return categoryWithProducts.data || null;
 	} catch (error) {
-		console.error("Error fetching category");
-		return [];
+		console.error("Error fetching category with products:", error);
+		return null;
 	}
 }
 
