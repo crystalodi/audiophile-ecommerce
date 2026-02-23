@@ -1,7 +1,11 @@
-import { FeaturedProductType } from "@/lib/custom.types";
 import { cn } from "@/lib/utils";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
+import { HOME_PAGE_CONTENT_QUERYResult } from "@/sanity.types";
+
+type FeaturedProductProps = NonNullable<
+	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
+>[0];
 
 export default function FeaturedProduct({
 	product,
@@ -11,7 +15,7 @@ export default function FeaturedProduct({
 	heroBitmapBackgroundImage,
 	featuredProductImage,
 	description,
-}: FeaturedProductType) {
+}: FeaturedProductProps) {
 	const isHeroWithSVG = layoutType === "hero" && backgroundType === "svg";
 	const isHeroWithBitmapImage =
 		layoutType === "hero" && backgroundType === "bitmap";

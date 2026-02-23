@@ -6,7 +6,7 @@ export default function CategoryPageContent({
 	products,
 }: CategoryComponentProps) {
 	return (
-		<div className="main-container">
+		<div className="main-container mt-16 mb-30 md:mt-30 lg:mt-40">
 			<CategoryList categoryName={categoryName} products={products} />
 		</div>
 	);

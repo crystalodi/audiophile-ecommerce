@@ -1,13 +1,23 @@
-import React from "react";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
-import { CategoryProductType, DetailProductType } from "@/lib/custom.types";
 import AddToCart from "@/components/cart/AddToCart";
 import { cn } from "@/lib/utils";
+import {
+	PRODUCT_BY_ID_QUERYResult,
+	PRODUCTS_BY_CATEGORY_QUERYResult,
+} from "@/sanity.types";
+
+type DetailProduct = Omit<
+	NonNullable<PRODUCT_BY_ID_QUERYResult>,
+	"features" | "includes" | "gallery" | "others"
+>;
+
+type CategoryProduct =
+	NonNullable<PRODUCTS_BY_CATEGORY_QUERYResult>["products"][0];
 
 interface ProductCardProps {
 	variant: "category" | "detail";
-	product: CategoryProductType | DetailProductType;
+	product: CategoryProduct | DetailProduct;
 }
 
 export default function ProductCard({ variant, product }: ProductCardProps) {
@@ -121,11 +131,11 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 					{variant === "detail" && hasPrice && hasStock && (
 						<>
 							<div className="mb-[31px] font-bold">
-								{`$ ${(product as DetailProductType).price.toLocaleString("en-US")}`}
+								{`$ ${(product as DetailProduct).price.toLocaleString("en-US")}`}
 							</div>
 							<div>
 								<AddToCart
-									stock={(product as DetailProductType).stock}
+									stock={(product as DetailProduct).stock}
 									productName={productName}
 									_id={_id}
 								/>

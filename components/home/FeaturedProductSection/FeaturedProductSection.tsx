@@ -7,13 +7,15 @@ export default function FeaturedProductSection({
 	featuredProducts: Array<FeaturedProductType>;
 }) {
 	return (
-		<div className="flex flex-col gap-y-6">
-			{featuredProducts.map(featuredProduct => (
-				<FeaturedProduct
-					{...featuredProduct}
-					key={`featuredProduct-${featuredProduct.product.slug.current}`}
-				/>
-			))}
-		</div>
+		<section aria-label="Featured Products">
+			<div className="flex flex-col gap-y-6">
+				{featuredProducts.map(featuredProduct => (
+					<FeaturedProduct
+						{...featuredProduct}
+						key={`featuredProduct-${featuredProduct.product.slug.current}`}
+					/>
+				))}
+			</div>
+		</section>
 	);
 }
