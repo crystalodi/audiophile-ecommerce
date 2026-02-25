@@ -4,7 +4,7 @@ import { create } from "zustand";
 export type ProductData = ALL_PRODUCT_PRICES_QUERYResult[0];
 
 interface ProductStore {
-	products: Map<string, any>;
+	products: Map<string, ProductData>;
 	initializeProducts: (initialProducts: ProductData[]) => void;
 	getProduct: (_id: string) => ProductData | undefined;
 }

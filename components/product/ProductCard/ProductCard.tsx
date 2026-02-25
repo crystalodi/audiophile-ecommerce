@@ -1,3 +1,4 @@
+"use client";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
 import AddToCart from "@/components/cart/AddToCart";
@@ -6,6 +7,7 @@ import {
 	PRODUCT_BY_ID_QUERYResult,
 	PRODUCTS_BY_CATEGORY_QUERYResult,
 } from "@/sanity.types";
+import { useProductStore } from "@/store/productStore";
 
 type DetailProduct = Omit<
 	NonNullable<PRODUCT_BY_ID_QUERYResult>,
@@ -23,6 +25,8 @@ interface ProductCardProps {
 export default function ProductCard({ variant, product }: ProductCardProps) {
 	const { slug, mediaImage, productName, isNewProduct, description, _id } =
 		product;
+	const productFromStore = useProductStore(state => state.products.get(_id));
+	console.log("productFromStore", productFromStore);
 
 	const hasCategory = "category" in product;
 	const hasPrice = "price" in product;

@@ -6,9 +6,10 @@ import { useCartStore } from "@/store/cartStore";
 import { client } from "@/sanity/lib/client";
 import { fetchCart } from "@/sanity/lib/cartApi";
 
-export default function CartInitializerClient() {
-	const { initializeCart } = useCartDataStore();
-	const { cartId, hasHydrated } = useCartStore();
+export default function CartInitializer() {
+	const initializeCart = useCartDataStore(state => state.initializeCart);
+	const cartId = useCartStore(state => state.cartId);
+	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	useEffect(() => {
 		if (!cartId || !hasHydrated) return;
