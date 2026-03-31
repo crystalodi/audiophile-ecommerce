@@ -26,11 +26,10 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 	const { slug, mediaImage, productName, isNewProduct, description, _id } =
 		product;
 	const productFromStore = useProductStore(state => state.products.get(_id));
-	console.log("productFromStore", productFromStore);
 
 	const hasCategory = "category" in product;
 	const hasPrice = "price" in product;
-	const hasStock = "stock" in product;
+	const availableStock = productFromStore?.availableStock ?? 0;
 
 	const productHref = hasCategory
 		? `/${product.category.categoryName.toLowerCase()}/${slug.current}`
@@ -132,14 +131,14 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 						</Link>
 					)}
 
-					{variant === "detail" && hasPrice && hasStock && (
+					{variant === "detail" && hasPrice && (
 						<>
 							<div className="mb-[31px] font-bold">
 								{`$ ${(product as DetailProduct).price.toLocaleString("en-US")}`}
 							</div>
 							<div>
 								<AddToCart
-									stock={(product as DetailProduct).stock}
+									stock={availableStock}
 									productName={productName}
 									_id={_id}
 								/>

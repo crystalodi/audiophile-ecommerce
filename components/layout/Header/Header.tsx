@@ -3,7 +3,6 @@
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import CartDialog from "@/components/cart/CartDialog";
-import { useCartStore } from "@/store/cartStore";
 import HamburgerIcon from "@/public/icon-hamburger.svg";
 import CartIcon from "@/public/icon-cart.svg";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
@@ -20,13 +19,12 @@ interface HeaderProps {
 function CartBadge() {
 	const [mounted, setMounted] = useState(false);
 	const totalItems = useCartDataStore(state => state.totalItems);
-	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	useEffect(() => {
 		setMounted(true);
 	}, []);
 
-	if (!mounted || !hasHydrated || totalItems === 0) {
+	if (!mounted || totalItems === 0) {
 		return null;
 	}
 
@@ -42,13 +40,12 @@ function CartBadge() {
 
 function ConditionalNavigation({ children }: { children: React.ReactNode }) {
 	const [mounted, setMounted] = useState(false);
-	const hasHydrated = useCartStore(state => state.hasHydrated);
 
 	useEffect(() => {
 		setMounted(true);
 	}, []);
 
-	if (!mounted || !hasHydrated) {
+	if (!mounted) {
 		return null;
 	}
 

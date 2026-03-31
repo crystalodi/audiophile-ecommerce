@@ -1,59 +1,12 @@
-"use client";
-
-import { useEffect } from "react";
-import { useCartDataStore, CartData } from "@/store/cartDataStore";
-import { useCartStore } from "@/store/cartStore";
-import { client } from "@/sanity/lib/client";
+import { getCartId } from "@/actions/cartCookieActions";
 import { fetchCart } from "@/sanity/lib/cartApi";
+import CartInitializerClient from "./CartInitializerClient";
 
-export default function CartInitializer() {
-	const initializeCart = useCartDataStore(state => state.initializeCart);
-	const cartId = useCartStore(state => state.cartId);
-	const hasHydrated = useCartStore(state => state.hasHydrated);
+export default async function CartInitializer() {
+	const cartId = await getCartId();
+	const initialCart = cartId ? await fetchCart(cartId) : null;
 
-	useEffect(() => {
-		if (!cartId || !hasHydrated) return;
-
-		const fetchAndInitializeCart = async () => {
-			const cart = await fetchCart(cartId);
-
-			if (cart) {
-				initializeCart(cart);
-			}
-		};
-
-		fetchAndInitializeCart();
-	}, [cartId, hasHydrated, initializeCart]);
-
-	useEffect(() => {
-		if (!cartId || !hasHydrated) return;
-
-		const subscription = client
-			.listen<CartData>(
-				`*[_type == "cart" && _id == "${cartId}"] {
-					_id,
-					items[] {
-						product-> {
-							_id,
-							"productName": coalesce(shortName, productName),
-							price,
-							cartImage
-						},
-						quantity,
-						reservedAt
-					},
-					status,
-					_createdAt
-				}`
-			)
-			.subscribe(update => {
-				if (update.result) {
-					initializeCart(update.result);
-				}
-			});
-
-		return () => subscription.unsubscribe();
-	}, [cartId, hasHydrated, initializeCart]);
-
-	return null;
+	return (
+		<CartInitializerClient initialCartId={cartId} initialCart={initialCart} />
+	);
 }

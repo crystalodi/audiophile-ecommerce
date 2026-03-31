@@ -14,7 +14,7 @@ type DialogProps = {
 	anchorRef?: React.RefObject<
 		HTMLElement | HTMLButtonElement | HTMLDivElement | null
 	>;
-	onClose: () => void;
+	onClose: (navigateOnClose?: boolean) => void;
 	positionStrategy?: PositionStrategy;
 	offset?: { x: number; y: number };
 	placement?: Placement;

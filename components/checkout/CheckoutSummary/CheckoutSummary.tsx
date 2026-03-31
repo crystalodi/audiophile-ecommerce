@@ -2,24 +2,34 @@
 
 import CartProduct from "@/components/cart/CartProduct";
 import CartTotal from "@/components/cart/CartTotal";
+import { urlFor } from "@/sanity/lib/image";
 import { useCartDataStore } from "@/store/cartDataStore";
-import { useProductStore } from "@/store/productStore";
+import { useMemo } from "react";
 
-const SHIPPING_FEE = 50;
 export default function CheckoutSummary() {
 	const cartItems = useCartDataStore(state => state.cartData?.items);
-	const getProduct = useProductStore(state => state.getProduct);
-	const products = useProductStore(state => state.products);
+	const totalPrice = useCartDataStore(state => state.cartTotal);
+	const vatTotal = useCartDataStore(state => state.vatTotal);
+	const grandTotal = useCartDataStore(state => state.grandTotal);
+	const shippingTotal = useCartDataStore(state => state.shippingFee);
 
-	const itemsWithPrices: any[] = [];
-	const totalPrice = 0;
-	const vatTotal = 0;
-	const grandTotal = 0;
+	const cartProducts = useMemo(() => {
+		return (
+			cartItems?.map(item => ({
+				_id: item.product._id,
+				productName: item.product.productName,
+				cartImage: urlFor(item.product.cartImage.asset).url(),
+				_key: item._key,
+				price: item.product.price,
+				quantity: item.quantity,
+			})) ?? []
+		);
+	}, [cartItems]);
 
 	return (
 		<div>
 			<div className="flex flex-col gap-y-6">
-				{itemsWithPrices.map(item => (
+				{cartProducts.map(item => (
 					<CartProduct {...item} variant="checkout" key={item._id} />
 				))}
 			</div>
@@ -29,7 +39,7 @@ export default function CheckoutSummary() {
 					totalPrice={totalPrice}
 					grandTotal={grandTotal}
 					vatTotal={vatTotal}
-					shippingTotal={SHIPPING_FEE}
+					shippingTotal={shippingTotal}
 				/>
 			</div>
 		</div>

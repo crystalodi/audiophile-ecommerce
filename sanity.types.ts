@@ -619,6 +619,37 @@ export type AllSanitySchemaTypes =
 	| Slug
 	| SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ./sanity/lib/cartApi.ts
+// Variable: CART_BY_ID_QUERY
+// Query: *[_type == "cart" && _id == $cartId][0] {			_id,			items[] {				product-> {					_id,					"productName": coalesce(shortName, productName),					price,					cartImage				},				quantity,				reservedAt,				_key			},			status,			_createdAt    }
+export type CART_BY_ID_QUERYResult = {
+	_id: string;
+	items: Array<{
+		product: {
+			_id: string;
+			productName: string;
+			price: number;
+			cartImage: {
+				asset: {
+					_ref: string;
+					_type: "reference";
+					_weak?: boolean;
+					[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+				};
+				media?: unknown;
+				hotspot?: SanityImageHotspot;
+				crop?: SanityImageCrop;
+				_type: "image";
+			};
+		} | null;
+		quantity: number | null;
+		reservedAt: string | null;
+		_key: string;
+	}> | null;
+	status: "active" | "converted_to_order" | "expired" | null;
+	_createdAt: string;
+} | null;
+
 // Source: ./sanity/lib/contentApi.ts
 // Variable: NAVIGATION_MENU_QUERY
 // Query: *[_type == "navigationMenu" && menuType == $menuType][0] {      menuType,      showLogo,      navigationItems[isActive == true] | order(order asc) {        title,        href,        image,        order      }    }
@@ -848,6 +879,7 @@ export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
 	interface SanityQueries {
+		'\n\t*[_type == "cart" && _id == $cartId][0] {\n\t\t\t_id,\n\t\t\titems[] {\n\t\t\t\tproduct-> {\n\t\t\t\t\t_id,\n\t\t\t\t\t"productName": coalesce(shortName, productName),\n\t\t\t\t\tprice,\n\t\t\t\t\tcartImage\n\t\t\t\t},\n\t\t\t\tquantity,\n\t\t\t\treservedAt,\n\t\t\t\t_key\n\t\t\t},\n\t\t\tstatus,\n\t\t\t_createdAt\n    }\n\t': CART_BY_ID_QUERYResult;
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;

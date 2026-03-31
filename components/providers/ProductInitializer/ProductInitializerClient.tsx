@@ -14,6 +14,7 @@ export default function ProductInitializerClient({
 
 	useEffect(() => {
 		if (initialProducts && initialProducts.length > 0) {
+			console.log("initialProducts", initialProducts);
 			initializeProducts(initialProducts);
 		}
 	}, [initialProducts]);

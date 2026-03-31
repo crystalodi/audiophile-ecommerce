@@ -1,19 +1,18 @@
 "use client";
 
 import { useCartStore } from "@/store/cartStore";
-import { ProductData } from "@/store/productStore";
 import QuantitySelector from "@/components/cart/QuantitySelector";
 import Image from "next/image";
-import { useCartDataStore } from "@/store/cartDataStore";
+import { CartProductItem, useCartDataStore } from "@/store/cartDataStore";
+import { useProductStore } from "@/store/productStore";
+import { updateQuantity, deleteCartItem } from "@/actions/cartActions";
 
-interface CartProductPropsFromCartDialog extends ProductData {
-	quantity: number;
+interface CartProductPropsFromCartDialog extends CartProductItem {
 	onClose: () => void;
 	variant: "cartDialog";
 }
 
-interface CartProductPropsFromCheckout extends ProductData {
-	quantity: number;
+interface CartProductPropsFromCheckout extends CartProductItem {
 	variant: "checkout";
 	onClose?: never;
 }
@@ -28,27 +27,31 @@ export default function CartProduct(props: CartProductProps) {
 		productName,
 		price,
 		cartImage,
-		maxQuantity,
 		_id,
 		variant,
 		onClose,
+		_key,
 	} = props;
 
-	const updateQuantity = useCartStore(state => state.updateQuantity);
-	const deleteCartItem = useCartStore(state => state.deleteCartItem);
 	const totalItems = useCartDataStore(state => state.totalItems);
+	const maxQuantity = useProductStore(
+		state => state.getProduct(_id)?.availableStock ?? 0
+	);
+	const cartId = useCartStore(state => state.cartId);
 
 	const onQuantityChange = async (newQuantity: number) => {
 		if (newQuantity === 0) {
-			await deleteCartItem(_id);
-			setTimeout(() => {
-				const updatedTotalItems = totalItems;
-				if (updatedTotalItems === 0) {
-					onClose && onClose();
-				}
-			}, 0);
+			const isLastItem = totalItems === 1;
+			await deleteCartItem(cartId, _key);
+			if (isLastItem) {
+				onClose && onClose();
+			}
 		} else {
-			await updateQuantity({ _id, quantity: newQuantity });
+			await updateQuantity(cartId, {
+				_id,
+				quantity: newQuantity,
+				_key,
+			});
 		}
 	};
 
