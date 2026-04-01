@@ -12,6 +12,7 @@ export const cartType = defineType({
 			title: "items",
 			description: "Items added to this cart",
 			type: "array",
+			readOnly: ({ document }) => document?.status !== "active",
 			of: [
 				defineArrayMember({
 					type: "object",

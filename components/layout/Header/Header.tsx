@@ -14,6 +14,7 @@ const BREAKPOINT_XL = 1280;
 interface HeaderProps {
 	children: React.ReactNode;
 	navigationItems: Array<{ title: string; href: string; image?: string }>;
+	disableCartDialog?: boolean;
 }
 
 function CartBadge() {
@@ -52,7 +53,11 @@ function ConditionalNavigation({ children }: { children: React.ReactNode }) {
 	return <>{children}</>;
 }
 
-export default function Header({ children, navigationItems }: HeaderProps) {
+export default function Header({
+	children,
+	navigationItems,
+	disableCartDialog,
+}: HeaderProps) {
 	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 	const navRef = useRef<HTMLDivElement>(null);
@@ -66,6 +71,9 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 	};
 
 	const openCartModal = () => {
+		if (disableCartDialog) {
+			return;
+		}
 		setIsNavModalOpen(false);
 		setIsCartModalOpen(true);
 	};
@@ -207,12 +215,14 @@ export default function Header({ children, navigationItems }: HeaderProps) {
 					</div>
 				</div>
 
-				<CartDialog
-					open={isCartModalOpen}
-					onClose={closeCartModal}
-					anchorRef={navRef}
-					onCheckout={onCheckoutCallback}
-				/>
+				{!disableCartDialog && (
+					<CartDialog
+						open={isCartModalOpen}
+						onClose={closeCartModal}
+						anchorRef={navRef}
+						onCheckout={onCheckoutCallback}
+					/>
+				)}
 
 				<div className="md:main-container w-full">
 					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />

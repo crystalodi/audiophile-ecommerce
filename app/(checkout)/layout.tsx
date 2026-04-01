@@ -5,6 +5,7 @@ import HeaderWrapper from "@/components/layout/Header";
 import { SanityLive } from "@/sanity/lib/live";
 import Footer from "@/components/layout/Footer";
 import ProductInitializer from "@/components/providers/ProductInitializer";
+import CartInitializer from "@/components/providers/CartInitializer";
 
 export const metadata: Metadata = {
 	title: "Checkout - Audiophile",
@@ -26,8 +27,9 @@ export default function CheckoutLayout({
 		<html lang="en" className={manrope.variable}>
 			<body className="bg-app-background lg:bg-checkout-page-background">
 				<div className="flex min-h-screen flex-col">
+					<CartInitializer />
 					<ProductInitializer />
-					<HeaderWrapper />
+					<HeaderWrapper disableCartDialog={true} />
 					<main>{children}</main>
 					<Footer />
 					<SanityLive />

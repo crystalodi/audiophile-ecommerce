@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CartProductItem, useCartDataStore } from "@/store/cartDataStore";
 import { useProductStore } from "@/store/productStore";
 import { updateQuantity, deleteCartItem } from "@/actions/cartActions";
+import { useEffect, useState } from "react";
 
 interface CartProductPropsFromCartDialog extends CartProductItem {
 	onClose: () => void;
@@ -32,28 +33,38 @@ export default function CartProduct(props: CartProductProps) {
 		onClose,
 		_key,
 	} = props;
-
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const maxQuantity = useProductStore(
 		state => state.getProduct(_id)?.availableStock ?? 0
 	);
 	const cartId = useCartStore(state => state.cartId);
 
-	const onQuantityChange = async (newQuantity: number) => {
-		if (newQuantity === 0) {
-			const isLastItem = totalItems === 1;
-			await deleteCartItem(cartId, _key);
-			if (isLastItem) {
-				onClose && onClose();
+	const [localQuantity, setLocalQuantity] = useState(quantity);
+
+	useEffect(() => {
+		setLocalQuantity(quantity);
+	}, [quantity]);
+
+	useEffect(() => {
+		const timer = setTimeout(async () => {
+			if (typeof localQuantity !== "number" || localQuantity === quantity) {
+				return;
 			}
-		} else {
-			await updateQuantity(cartId, {
-				_id,
-				quantity: newQuantity,
-				_key,
-			});
-		}
-	};
+			if (localQuantity !== quantity) {
+				if (localQuantity === 0) {
+					await deleteCartItem(cartId, _key);
+				} else {
+					await updateQuantity(cartId, {
+						_id,
+						quantity: localQuantity,
+						_key,
+					});
+				}
+			}
+		}, 500);
+
+		return () => clearTimeout(timer);
+	}, [localQuantity, quantity, cartId, _id, _key, totalItems, onClose]);
 
 	return (
 		<div className="flex items-center justify-between">
@@ -80,8 +91,8 @@ export default function CartProduct(props: CartProductProps) {
 				{variant === "cartDialog" && (
 					<QuantitySelector
 						maxQuantity={maxQuantity}
-						quantity={quantity}
-						onQuantityChange={onQuantityChange}
+						quantity={localQuantity}
+						onQuantityChange={setLocalQuantity}
 						minQuantity={0}
 						variant="small"
 					/>

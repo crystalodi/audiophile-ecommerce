@@ -3,6 +3,10 @@ import Header from "./Header";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import { urlFor } from "@/sanity/lib/image";
 
+interface HeaderWrapperProps {
+	disableCartDialog?: boolean;
+}
+
 async function getNavigationList() {
 	const navigationMenuData = await getNavigationMenu("mobile");
 	return (
@@ -19,10 +23,15 @@ async function getNavigationList() {
 	);
 }
 
-export default async function HeaderWrapper() {
+export default async function HeaderWrapper({
+	disableCartDialog = false,
+}: HeaderWrapperProps) {
 	const navigationItems = await getNavigationList();
 	return (
-		<Header navigationItems={navigationItems}>
+		<Header
+			navigationItems={navigationItems}
+			disableCartDialog={disableCartDialog}
+		>
 			<NavigationMenu menuType="header" />
 		</Header>
 	);
