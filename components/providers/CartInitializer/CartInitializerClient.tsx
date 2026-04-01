@@ -23,7 +23,6 @@ export default function CartInitializerClient({
 			setCartId(initialCartId);
 		}
 		if (initialCart) {
-			console.log("initialCart", initialCart);
 			initializeCart(initialCart);
 		} else if (!initialCartId) {
 			clearCart();
