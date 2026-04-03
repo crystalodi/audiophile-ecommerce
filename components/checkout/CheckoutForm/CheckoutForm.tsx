@@ -6,6 +6,10 @@ import { cn } from "@/lib/utils";
 import { FormValidator } from "@/lib/validation";
 import { useMemo, useState } from "react";
 import CashOnDeliveryIcon from "@/public/icon-cash-on-delivery.svg";
+import { createOrder } from "@/actions/orderActions";
+import { useCartStore } from "@/store/cartStore";
+import { CartData, useCartDataStore } from "@/store/cartDataStore";
+import CheckoutConfirmationDialog from "@/components/checkout/CheckoutConfirmationDialog";
 
 interface CheckoutFormProps {
 	ref?: React.Ref<HTMLFormElement>;
@@ -28,6 +32,12 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 	const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
 		{}
 	);
+	const [currentCart, setCurrentCart] = useState<CartData | null>(null);
+	const [currentGrandTotal, setCurrentGrandTotal] = useState<number>(0);
+	const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+	const cartId = useCartStore(state => state.cartId);
+	const cartData = useCartDataStore(state => state.cartData);
+	const grandTotal = useCartDataStore(state => state.grandTotal);
 
 	const validator = useMemo(() => {
 		return new FormValidator()
@@ -149,8 +159,45 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 		}));
 	};
 
-	const handleFormValidation = (e: React.FormEvent<HTMLFormElement>) => {
+	const openConfirmationModal = () => {
+		window.scrollTo(0, 0);
+		setIsConfirmationModalOpen(true);
+	};
+
+	const closeConfirmationModal = () => {
+		setIsConfirmationModalOpen(false);
+	};
+
+	const handleFormValidation = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		const allTouched: Record<string, boolean> = {};
+		const allErrors: Record<string, string> = {};
+
+		Object.keys(formData).forEach(field => {
+			allTouched[field] = true;
+			const error = validator.validate(
+				field,
+				formData[field as keyof typeof formData],
+				formData
+			);
+			if (error) allErrors[field] = error;
+		});
+
+		setTouchedFields(allTouched);
+		setErrors(allErrors);
+
+		if (Object.keys(allErrors).length > 0) return;
+
+		if (!cartId) return;
+		setCurrentCart(cartData);
+		setCurrentGrandTotal(grandTotal);
+
+		const result = await createOrder(cartId, formData);
+		if (!result.success) {
+			console.error("Order creation failed:", result.error);
+		} else {
+			openConfirmationModal();
+		}
 	};
 
 	const legendClasses = cn(
@@ -162,163 +209,173 @@ export default function CheckoutForm({ ref }: CheckoutFormProps) {
 	);
 
 	return (
-		<form noValidate ref={ref} onSubmit={handleFormValidation} method="post">
-			<div className="flex flex-col gap-y-8">
-				<fieldset>
-					<legend className={legendClasses}>Billing Details</legend>
-					<div className={formGroupContainerClasses}>
-						<FormField
-							name="name"
-							inputType="text"
-							label="Name"
-							onChange={handleChange}
-							value={formData.name}
-							onBlur={handleBlur}
-							error={errors.name}
-							showError={touchedFields.name}
-							placeholder="Alexei Ward"
-						/>
-						<FormField
-							name="email"
-							inputType="email"
-							label="Email"
-							onChange={handleChange}
-							value={formData.email}
-							onBlur={handleBlur}
-							error={errors.email}
-							showError={touchedFields.email}
-							placeholder="alexeiward@email.com"
-						/>
-						<FormField
-							name="phoneNumber"
-							inputType="text"
-							label="Phone Number"
-							onChange={handleChange}
-							value={formData.phoneNumber}
-							onBlur={handleBlur}
-							error={errors.phoneNumber}
-							showError={touchedFields.phoneNumber}
-							placeholder="+1 202 555-0136"
-						/>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend className={legendClasses}>Shipping info</legend>
-					<div className={formGroupContainerClasses}>
-						<div className="xl:col-span-2">
+		<>
+			<form noValidate ref={ref} onSubmit={handleFormValidation} method="post">
+				<div className="flex flex-col gap-y-8">
+					<fieldset>
+						<legend className={legendClasses}>Billing Details</legend>
+						<div className={formGroupContainerClasses}>
 							<FormField
-								name="address"
+								name="name"
 								inputType="text"
-								label="Your Address"
+								label="Name"
 								onChange={handleChange}
-								value={formData.address}
+								value={formData.name}
 								onBlur={handleBlur}
-								error={errors.address}
-								showError={touchedFields.address}
-								placeholder="1137 Williams Avenue"
+								error={errors.name}
+								showError={touchedFields.name}
+								placeholder="Alexei Ward"
+							/>
+							<FormField
+								name="email"
+								inputType="email"
+								label="Email"
+								onChange={handleChange}
+								value={formData.email}
+								onBlur={handleBlur}
+								error={errors.email}
+								showError={touchedFields.email}
+								placeholder="alexeiward@email.com"
+							/>
+							<FormField
+								name="phoneNumber"
+								inputType="text"
+								label="Phone Number"
+								onChange={handleChange}
+								value={formData.phoneNumber}
+								onBlur={handleBlur}
+								error={errors.phoneNumber}
+								showError={touchedFields.phoneNumber}
+								placeholder="+1 202 555-0136"
 							/>
 						</div>
-						<FormField
-							name="zipCode"
-							inputType="text"
-							label="ZIP Code"
-							onChange={handleChange}
-							value={formData.zipCode}
-							onBlur={handleBlur}
-							error={errors.zipCode}
-							showError={touchedFields.zipCode}
-							placeholder="10001"
-						/>
-						<FormField
-							name="city"
-							inputType="text"
-							label="City"
-							onChange={handleChange}
-							value={formData.city}
-							onBlur={handleBlur}
-							error={errors.city}
-							showError={touchedFields.city}
-							placeholder="New York City"
-						/>
-						<FormField
-							name="country"
-							inputType="text"
-							label="Country"
-							onChange={handleChange}
-							value={formData.country}
-							onBlur={handleBlur}
-							error={errors.country}
-							showError={touchedFields.country}
-							placeholder="United States"
-						/>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend className={legendClasses}>payment details</legend>
-					<div className={formGroupContainerClasses}>
-						<div className="xl:col-span-2">
-							<RadioGroup
-								name="paymentMethod"
-								label="Payment Method"
-								options={[
-									{ label: "e-Money", value: "E-MONEY" },
-									{ label: "Cash on Delivery", value: "CASH" },
-								]}
-								value={formData.paymentMethod}
-								onBlur={handleBlur}
-								onChange={handleChange}
-								error={errors.paymentMethod}
-								showError={touchedFields.paymentMethod}
-							/>
-						</div>
-						{formData.paymentMethod === "E-MONEY" && (
-							<>
+					</fieldset>
+					<fieldset>
+						<legend className={legendClasses}>Shipping info</legend>
+						<div className={formGroupContainerClasses}>
+							<div className="xl:col-span-2">
 								<FormField
-									name="eMoneyNumber"
+									name="address"
 									inputType="text"
-									label="e-Money Number"
+									label="Your Address"
 									onChange={handleChange}
-									value={formData.eMoneyNumber}
+									value={formData.address}
 									onBlur={handleBlur}
-									error={errors.eMoneyNumber}
-									showError={touchedFields.eMoneyNumber}
-									placeholder="238521993"
+									error={errors.address}
+									showError={touchedFields.address}
+									placeholder="1137 Williams Avenue"
 								/>
-								<FormField
-									name="eMoneyPin"
-									inputType="text"
-									label="e-Money Pin"
-									onChange={handleChange}
-									value={formData.eMoneyPin}
-									onBlur={handleBlur}
-									error={errors.eMoneyPin}
-									showError={touchedFields.eMoneyPin}
-									placeholder="6891"
-								/>
-							</>
-						)}
-						{formData.paymentMethod === "CASH" && (
-							<div className="mt-[30px] xl:col-span-2">
-								<div className="flex items-start gap-x-8">
-									<div className="my-3">
-										<CashOnDeliveryIcon
-											className="fill-audiophile-orange"
-											width={48}
-											height={48}
-										/>
-									</div>
-									<p className="body-text text-black/50">
-										The 'Cash on Delivery' option enables you to pay in cash
-										when our delivery courier arrives at your residence. Just
-										make sure your address is correct so that your order will
-										not be cancelled.
-									</p>
-								</div>
 							</div>
-						)}
-					</div>
-				</fieldset>
-			</div>
-		</form>
+							<FormField
+								name="zipCode"
+								inputType="text"
+								label="ZIP Code"
+								onChange={handleChange}
+								value={formData.zipCode}
+								onBlur={handleBlur}
+								error={errors.zipCode}
+								showError={touchedFields.zipCode}
+								placeholder="10001"
+							/>
+							<FormField
+								name="city"
+								inputType="text"
+								label="City"
+								onChange={handleChange}
+								value={formData.city}
+								onBlur={handleBlur}
+								error={errors.city}
+								showError={touchedFields.city}
+								placeholder="New York City"
+							/>
+							<FormField
+								name="country"
+								inputType="text"
+								label="Country"
+								onChange={handleChange}
+								value={formData.country}
+								onBlur={handleBlur}
+								error={errors.country}
+								showError={touchedFields.country}
+								placeholder="United States"
+							/>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend className={legendClasses}>payment details</legend>
+						<div className={formGroupContainerClasses}>
+							<div className="xl:col-span-2">
+								<RadioGroup
+									name="paymentMethod"
+									label="Payment Method"
+									options={[
+										{ label: "e-Money", value: "E-MONEY" },
+										{ label: "Cash on Delivery", value: "CASH" },
+									]}
+									value={formData.paymentMethod}
+									onBlur={handleBlur}
+									onChange={handleChange}
+									error={errors.paymentMethod}
+									showError={touchedFields.paymentMethod}
+								/>
+							</div>
+							{formData.paymentMethod === "E-MONEY" && (
+								<>
+									<FormField
+										name="eMoneyNumber"
+										inputType="text"
+										label="e-Money Number"
+										onChange={handleChange}
+										value={formData.eMoneyNumber}
+										onBlur={handleBlur}
+										error={errors.eMoneyNumber}
+										showError={touchedFields.eMoneyNumber}
+										placeholder="238521993"
+									/>
+									<FormField
+										name="eMoneyPin"
+										inputType="text"
+										label="e-Money Pin"
+										onChange={handleChange}
+										value={formData.eMoneyPin}
+										onBlur={handleBlur}
+										error={errors.eMoneyPin}
+										showError={touchedFields.eMoneyPin}
+										placeholder="6891"
+									/>
+								</>
+							)}
+							{formData.paymentMethod === "CASH" && (
+								<div className="mt-[30px] xl:col-span-2">
+									<div className="flex items-start gap-x-8">
+										<div className="my-3">
+											<CashOnDeliveryIcon
+												className="fill-audiophile-orange"
+												width={48}
+												height={48}
+											/>
+										</div>
+										<p className="body-text text-black/50">
+											The 'Cash on Delivery' option enables you to pay in cash
+											when our delivery courier arrives at your residence. Just
+											make sure your address is correct so that your order will
+											not be cancelled.
+										</p>
+									</div>
+								</div>
+							)}
+						</div>
+					</fieldset>
+				</div>
+			</form>
+			{currentCart && (
+				<CheckoutConfirmationDialog
+					cartData={currentCart}
+					grandTotal={currentGrandTotal}
+					open={isConfirmationModalOpen}
+					onClose={closeConfirmationModal}
+				/>
+			)}
+		</>
 	);
 }

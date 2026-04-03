@@ -15,7 +15,6 @@ export async function getCartId() {
 		const cartTimestamp = parseInt(timestamp);
 		const isExpired = Date.now() - cartTimestamp > CART_TTL;
 		if (isExpired) {
-			await clearCartId();
 			return null;
 		}
 	}

@@ -69,7 +69,7 @@ export default function AddToCart({ stock, productName, _id }: AddToCartProps) {
 				onClick={handleAddToCart}
 				disabled={isDisabled}
 			>
-				Add to cart
+				{isDisabled ? "Out of Stock" : "Add to Cart"}
 			</button>
 		</div>
 	);

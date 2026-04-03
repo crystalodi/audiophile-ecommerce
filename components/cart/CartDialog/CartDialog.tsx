@@ -1,7 +1,6 @@
 "use client";
 
-import { RefObject, useMemo } from "react";
-import Dialog from "@/components/ui/Dialog";
+import { useMemo } from "react";
 import { useCartDataStore } from "@/store/cartDataStore";
 import CartProduct from "@/components/cart/CartProduct";
 import CartTotal from "@/components/cart/CartTotal";
@@ -11,11 +10,9 @@ import { useCartStore } from "@/store/cartStore";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import Popover from "@/components/ui/Popover";
 
 interface CartDialogProps {
-	open: boolean;
-	onClose: () => void;
-	anchorRef?: RefObject<HTMLElement | null>;
 	onCheckout: () => void;
 }
 
@@ -77,11 +74,11 @@ function EmptyCartContent({ onClose }: { onClose: () => void }) {
 }
 
 function CartContent({
-	onClose,
 	onCheckout,
+	onClose,
 }: {
-	onClose: () => void;
 	onCheckout: () => void;
+	onClose: () => void;
 }) {
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const cartTotal = useCartDataStore(state => state.cartTotal);
@@ -119,12 +116,7 @@ function CartContent({
 			<div className="max-h-60 overflow-y-auto px-[33px] pr-[31px]">
 				<div className="flex flex-col gap-y-3.5">
 					{cartProducts?.map(item => (
-						<CartProduct
-							key={item._id}
-							{...item}
-							onClose={onClose}
-							variant="cartDialog"
-						/>
+						<CartProduct key={item._id} {...item} variant="cartDialog" />
 					))}
 				</div>
 			</div>
@@ -144,30 +136,32 @@ function CartContent({
 	);
 }
 
-function CartDialog({ open, onClose, anchorRef, onCheckout }: CartDialogProps) {
+function CartDialog({ onCheckout }: CartDialogProps) {
 	const totalItems = useCartDataStore(state => state.totalItems);
-	const offsetMemo = useMemo(() => ({ x: 0, y: 24 }), []);
-	const classNames = cn("w-[87.2%] rounded-lg md:w-[377px]", {
-		"max-h-[488px]": totalItems,
-		"h-62.5": !totalItems,
-	});
+
+	const onClose = () => {
+		document.getElementById("cart-popover")?.hidePopover();
+	};
+
 	return (
-		<Dialog
-			open={open}
-			onClose={onClose}
-			className={classNames}
-			anchorRef={anchorRef}
-			placement="bottom-right"
-			positionStrategy="anchor"
-			useParentHorizontalPaddingAsOffset
-			offset={offsetMemo}
+		<Popover
+			id="cart-popover"
+			popover="auto"
+			backdropClassName="bg-black/40"
+			className={cn(
+				"inset-auto top-[113px] right-[var(--sm-container-margin)] m-0 w-[87.2%] md:right-[var(--md-container-margin)] md:w-[377px] lg:right-[var(--lg-container-margin)]",
+				{
+					"max-h-[min(488px,calc(100vh-137px))]": totalItems,
+					"h-62.5": !totalItems,
+				}
+			)}
 		>
 			{totalItems === 0 ? (
 				<EmptyCartContent onClose={onClose} />
 			) : (
 				<CartContent onClose={onClose} onCheckout={onCheckout} />
 			)}
-		</Dialog>
+		</Popover>
 	);
 }
 

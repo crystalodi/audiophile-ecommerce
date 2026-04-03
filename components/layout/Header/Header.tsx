@@ -58,28 +58,14 @@ export default function Header({
 	navigationItems,
 	disableCartDialog,
 }: HeaderProps) {
-	const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
-	const navRef = useRef<HTMLDivElement>(null);
 	const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 	const navContainerRef = useRef<HTMLDivElement>(null);
 	const router = useRouter();
 
 	const openNavModal = () => {
-		setIsCartModalOpen(false);
+		document.getElementById("cart-popover")?.hidePopover();
 		setIsNavModalOpen(true);
-	};
-
-	const openCartModal = () => {
-		if (disableCartDialog) {
-			return;
-		}
-		setIsNavModalOpen(false);
-		setIsCartModalOpen(true);
-	};
-
-	const closeCartModal = () => {
-		setIsCartModalOpen(false);
 	};
 
 	const closeNavModal = () => {
@@ -88,7 +74,7 @@ export default function Header({
 	};
 
 	const onCheckoutCallback = () => {
-		closeCartModal();
+		document.getElementById("cart-popover")?.hidePopover();
 		router.push("/checkout");
 	};
 
@@ -174,7 +160,7 @@ export default function Header({
 	return (
 		<>
 			<header className="bg-audiophile-black relative z-50">
-				<div className="main-container py-[32px]" ref={navRef}>
+				<div className="main-container py-[32px]">
 					<div className="flex gap-x-[42px]">
 						<div className="flex flex-1 items-center md:flex-[initial] lg:hidden">
 							<button
@@ -198,10 +184,9 @@ export default function Header({
 						<div className="flex flex-1 items-center justify-end">
 							<button
 								aria-label="Shopping cart"
-								aria-haspopup="dialog"
-								aria-expanded={isCartModalOpen}
+								popoverTarget="cart-popover"
+								popoverTargetAction="toggle"
 								className="relative cursor-pointer"
-								onClick={openCartModal}
 							>
 								<CartIcon
 									width={23}
@@ -215,14 +200,7 @@ export default function Header({
 					</div>
 				</div>
 
-				{!disableCartDialog && (
-					<CartDialog
-						open={isCartModalOpen}
-						onClose={closeCartModal}
-						anchorRef={navRef}
-						onCheckout={onCheckoutCallback}
-					/>
-				)}
+				{!disableCartDialog && <CartDialog onCheckout={onCheckoutCallback} />}
 
 				<div className="md:main-container w-full">
 					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />
