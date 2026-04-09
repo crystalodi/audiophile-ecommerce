@@ -8,9 +8,10 @@ export async function fetchCart(cartId: string) {
 			items[] {
 				product-> {
 					_id,
-					"productName": coalesce(shortName, productName),
+					productName,
 					price,
-					cartImage
+					cartImage,
+					"cartDisplayName": coalesce(cartDisplayName, shortName)
 				},
 				quantity,
 				reservedAt,

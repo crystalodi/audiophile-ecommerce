@@ -20,6 +20,12 @@ export const productType = defineType({
 			description: "A shorter name for the product",
 		}),
 		defineField({
+			name: "cartDisplayName",
+			type: "string",
+			description:
+				"The display name of the product when viewed in Cart Dialog, Checkout, and Checkout Confirmation Pages",
+		}),
+		defineField({
 			name: "slug",
 			type: "slug",
 			validation: Rule => Rule.required(),

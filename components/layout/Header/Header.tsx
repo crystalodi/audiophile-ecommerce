@@ -187,6 +187,7 @@ export default function Header({
 								popoverTarget="cart-popover"
 								popoverTargetAction="toggle"
 								className="relative cursor-pointer"
+								aria-controls="cart-popover"
 							>
 								<CartIcon
 									width={23}

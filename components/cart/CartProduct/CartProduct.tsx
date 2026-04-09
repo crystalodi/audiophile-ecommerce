@@ -14,14 +14,22 @@ interface CartProductProps extends CartProductItem {
 }
 
 export default function CartProduct(props: CartProductProps) {
-	const { quantity, productName, price, cartImage, _id, variant, _key } = props;
+	const {
+		quantity,
+		productName,
+		price,
+		cartImage,
+		_id,
+		variant,
+		_key,
+		cartDisplayName,
+	} = props;
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const maxQuantity = useProductStore(
 		state => state.getProduct(_id)?.availableStock ?? 0
 	);
 	const cartId = useCartStore(state => state.cartId);
 	const imageWidthHeight = variant === "confirmation" ? 50 : 64;
-	const cartDisplayName = productName.split(" ")[0];
 
 	const [localQuantity, setLocalQuantity] = useState(quantity);
 
@@ -67,7 +75,7 @@ export default function CartProduct(props: CartProductProps) {
 				{cartImage ? (
 					<Image
 						src={cartImage}
-						alt={`${productName} X ${quantity}`}
+						alt={`${productName} times ${quantity}`}
 						objectFit="contain"
 						objectPosition="center"
 						width={imageWidthHeight}

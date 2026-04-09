@@ -17,6 +17,7 @@ export interface CartData {
 				};
 				_type: "image";
 			};
+			cartDisplayName: string;
 		};
 		quantity: number;
 		reservedAt: string;
@@ -33,6 +34,7 @@ export interface CartProductItem {
 	cartImage: string;
 	price: number;
 	_key: string;
+	cartDisplayName: string;
 }
 
 interface CartDataStore {

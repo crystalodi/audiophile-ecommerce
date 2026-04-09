@@ -1,16 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
 import { useCartDataStore } from "@/store/cartDataStore";
 import CartProduct from "@/components/cart/CartProduct";
 import CartTotal from "@/components/cart/CartTotal";
-import { urlFor } from "@/sanity/lib/image";
 import { clearCart } from "@/actions/cartActions";
 import { useCartStore } from "@/store/cartStore";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Popover from "@/components/ui/Popover";
+import { useCartProducts } from "@/hooks/useCartProducts";
 
 interface CartDialogProps {
 	onCheckout: () => void;
@@ -56,7 +55,7 @@ function EmptyCartContent({ onClose }: { onClose: () => void }) {
 	};
 	return (
 		<div className="flex h-full flex-col items-center justify-center gap-y-5 px-[31px] pt-[31px] pr-[31px] pl-[33px] text-center">
-			<h3 className="heading-5">Your Cart is Empty</h3>
+			<h3 className="heading-6">Your Cart is Empty</h3>
 			<p className="body-text text-black/50">
 				Browse our collection and add items to get started.
 			</p>
@@ -82,22 +81,10 @@ function CartContent({
 }) {
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const cartTotal = useCartDataStore(state => state.cartTotal);
-	const cartItems = useCartDataStore(state => state.cartData?.items);
 	const cartId = useCartStore(state => state.cartId);
 	const setClientSideCartId = useCartStore(state => state.setCartId);
 
-	const cartProducts = useMemo(() => {
-		return (
-			cartItems?.map(item => ({
-				_id: item.product._id,
-				productName: item.product.productName,
-				cartImage: urlFor(item.product.cartImage.asset).url(),
-				_key: item._key,
-				price: item.product.price,
-				quantity: item.quantity,
-			})) ?? []
-		);
-	}, [cartItems]);
+	const cartProducts = useCartProducts();
 
 	const removeAllCartItems = async () => {
 		onClose();
@@ -148,6 +135,7 @@ function CartDialog({ onCheckout }: CartDialogProps) {
 			id="cart-popover"
 			popover="auto"
 			backdropClassName="bg-black/40"
+			role="dialog"
 			className={cn(
 				"inset-auto top-[113px] right-[var(--sm-container-margin)] m-0 w-[87.2%] md:right-[var(--md-container-margin)] md:w-[377px] lg:right-[var(--lg-container-margin)]",
 				{

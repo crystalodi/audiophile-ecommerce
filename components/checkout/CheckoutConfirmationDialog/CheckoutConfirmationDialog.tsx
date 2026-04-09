@@ -45,6 +45,7 @@ function CheckoutConfirmationSummary({
 							cartImage={urlFor(item.product.cartImage.asset).url()}
 							quantity={item.quantity}
 							variant="confirmation"
+							cartDisplayName={item.product.cartDisplayName}
 						/>
 					))}
 				</div>

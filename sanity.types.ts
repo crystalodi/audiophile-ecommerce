@@ -313,6 +313,7 @@ export type Product = {
 	_rev: string;
 	productName: string;
 	shortName?: string;
+	cartDisplayName?: string;
 	slug: Slug;
 	description: string;
 	category: {
@@ -541,7 +542,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/cartApi.ts
 // Variable: CART_BY_ID_QUERY
-// Query: *[_type == "cart" && _id == $cartId][0] {			_id,			items[] {				product-> {					_id,					"productName": coalesce(shortName, productName),					price,					cartImage				},				quantity,				reservedAt,				_key			},			status,			_createdAt    }
+// Query: *[_type == "cart" && _id == $cartId][0] {			_id,			items[] {				product-> {					_id,					productName,					price,					cartImage,					"cartDisplayName": coalesce(cartDisplayName, shortName)				},				quantity,				reservedAt,				_key			},			status,			_createdAt    }
 export type CART_BY_ID_QUERYResult = {
 	_id: string;
 	items: Array<{
@@ -561,6 +562,7 @@ export type CART_BY_ID_QUERYResult = {
 				crop?: SanityImageCrop;
 				_type: "image";
 			};
+			cartDisplayName: string | null;
 		} | null;
 		quantity: number | null;
 		reservedAt: string | null;
@@ -719,7 +721,7 @@ export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n\t*[_type == "cart" && _id == $cartId][0] {\n\t\t\t_id,\n\t\t\titems[] {\n\t\t\t\tproduct-> {\n\t\t\t\t\t_id,\n\t\t\t\t\t"productName": coalesce(shortName, productName),\n\t\t\t\t\tprice,\n\t\t\t\t\tcartImage\n\t\t\t\t},\n\t\t\t\tquantity,\n\t\t\t\treservedAt,\n\t\t\t\t_key\n\t\t\t},\n\t\t\tstatus,\n\t\t\t_createdAt\n    }\n\t': CART_BY_ID_QUERYResult;
+		'\n\t*[_type == "cart" && _id == $cartId][0] {\n\t\t\t_id,\n\t\t\titems[] {\n\t\t\t\tproduct-> {\n\t\t\t\t\t_id,\n\t\t\t\t\tproductName,\n\t\t\t\t\tprice,\n\t\t\t\t\tcartImage,\n\t\t\t\t\t"cartDisplayName": coalesce(cartDisplayName, shortName)\n\t\t\t\t},\n\t\t\t\tquantity,\n\t\t\t\treservedAt,\n\t\t\t\t_key\n\t\t\t},\n\t\t\tstatus,\n\t\t\t_createdAt\n    }\n\t': CART_BY_ID_QUERYResult;
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
