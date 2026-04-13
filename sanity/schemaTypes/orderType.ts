@@ -148,6 +148,12 @@ export const orderType = defineType({
 			validation: Rule => Rule.required().min(0),
 		}),
 		defineField({
+			name: "grandTotal",
+			title: "Grand Total",
+			type: "number",
+			description: "Total Order amount plus 20% VAT and 50.00 USD Shipping Fee",
+		}),
+		defineField({
 			name: "paymentMethod",
 			title: "Payment Method",
 			type: "string",

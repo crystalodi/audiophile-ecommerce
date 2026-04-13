@@ -3,7 +3,6 @@
 import { useCartDataStore } from "@/store/cartDataStore";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
-import { CartData } from "@/store/cartDataStore";
 import CheckoutConfirmationDialog from "@/components/checkout/CheckoutConfirmationDialog";
 import CheckoutContent from "@/components/checkout/CheckoutContent";
 import EmptyCheckoutState from "@/components/checkout/EmptyCheckoutState";
@@ -12,22 +11,19 @@ export default function CheckoutPageClient() {
 	const formRef = useRef<HTMLFormElement>(null);
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const [isHydrated, setIsHydrated] = useState(false);
-	const [confirmationData, setConfirmationData] = useState<{
-		cartData: CartData;
-		grandTotal: number;
-	} | null>(null);
+	const [orderId, setOrderId] = useState("");
 
 	useEffect(() => {
 		setIsHydrated(true);
 	}, []);
 
-	const handleOrderSuccess = (cartData: CartData, grandTotal: number) => {
+	const handleOrderSuccess = (newOrderId: string) => {
 		window.scrollTo(0, 0);
-		setConfirmationData({ cartData, grandTotal });
+		setOrderId(newOrderId);
 	};
 
 	const closeConfirmationModal = () => {
-		setConfirmationData(null);
+		setOrderId("");
 	};
 
 	const handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,7 +39,7 @@ export default function CheckoutPageClient() {
 				</Link>
 			</div>
 
-			{!isHydrated ? null : confirmationData ? (
+			{!isHydrated ? null : orderId ? (
 				<EmptyCheckoutState />
 			) : totalItems === 0 ? (
 				<EmptyCheckoutState />
@@ -55,11 +51,10 @@ export default function CheckoutPageClient() {
 				/>
 			)}
 
-			{confirmationData && (
+			{orderId && (
 				<CheckoutConfirmationDialog
-					cartData={confirmationData.cartData}
-					grandTotal={confirmationData.grandTotal}
-					open={!!confirmationData}
+					orderId={orderId}
+					open={!!orderId}
 					onClose={closeConfirmationModal}
 				/>
 			)}

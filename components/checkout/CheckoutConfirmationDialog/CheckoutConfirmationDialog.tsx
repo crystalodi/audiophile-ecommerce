@@ -1,31 +1,26 @@
 "use client";
 
-import { CartData } from "@/store/cartDataStore";
 import Dialog from "@/components/ui/Dialog";
 import OrderConfirmationIcon from "@/public/icon-order-confirmation.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartProduct from "@/components/cart/CartProduct";
 import { urlFor } from "@/sanity/lib/image";
 import { useRouter } from "next/navigation";
+import { getOrderConfirmation } from "@/actions/orderActions";
+import { ORDER_BY_ID_QUERYResult } from "@/sanity.types";
 
 interface CheckoutConfirmationDialogProps {
-	cartData: CartData;
-	grandTotal: number;
+	orderId: string;
 	onClose: () => void;
 	open: boolean;
 }
 
-interface CheckoutConfirmationSummaryProps {
-	cartData: CartData;
-	grandTotal: number;
-}
-
 function CheckoutConfirmationSummary({
-	cartData,
-	grandTotal,
-}: CheckoutConfirmationSummaryProps) {
+	cartData: { items, grandTotal },
+}: {
+	cartData: NonNullable<ORDER_BY_ID_QUERYResult>;
+}) {
 	const [showAll, setShowAll] = useState(false);
-	const items = cartData.items;
 	const firstItem = items[0];
 	const remainingCount = items.length - 1;
 
@@ -38,14 +33,14 @@ function CheckoutConfirmationSummary({
 					{visibleItems.map(item => (
 						<CartProduct
 							key={item._key}
-							_id={item.product._id}
+							_id={item.productId}
 							_key={item._key}
-							productName={item.product.productName}
-							price={item.product.price}
-							cartImage={urlFor(item.product.cartImage.asset).url()}
+							productName={item.productName}
+							price={item.price}
+							cartImage={urlFor(item.cartImage.asset).url()}
 							quantity={item.quantity}
 							variant="confirmation"
-							cartDisplayName={item.product.cartDisplayName}
+							cartDisplayName={item.cartDisplayName!}
 						/>
 					))}
 				</div>
@@ -65,18 +60,45 @@ function CheckoutConfirmationSummary({
 			</div>
 			<div className="flex h-[92px] flex-shrink-0 flex-col justify-center bg-black px-6 text-white md:h-auto md:w-[198px]">
 				<p className="body-text mb-2 text-white/50 uppercase">grand total</p>
-				<p className="heading-6">$ {grandTotal.toLocaleString()}</p>
+				<p className="heading-6">$ {(grandTotal ?? 0).toLocaleString()}</p>
 			</div>
 		</div>
 	);
 }
+
+function ConfirmationSkeleton() {
+	return (
+		<div className="flex flex-col overflow-hidden rounded-lg md:flex-row">
+			<div className="bg-audiophile-gray flex-1 p-6">
+				<div className="flex items-center gap-4">
+					<div className="animate-shimmer h-[50px] w-[50px] bg-black/10" />
+					<div className="flex flex-col gap-2">
+						<div className="animate-shimmer h-4 w-24 bg-black/10" />
+						<div className="animate-shimmer h-3 w-16 bg-black/10" />
+					</div>
+				</div>
+			</div>
+			<div className="flex h-[92px] flex-col justify-center bg-black px-6 md:h-auto md:w-[198px]">
+				<div className="animate-shimmer mb-2 h-3 w-20 bg-white/20" />
+				<div className="animate-shimmer h-5 w-24 bg-white/20" />
+			</div>
+		</div>
+	);
+}
+
 export default function CheckoutConfirmationDialog({
-	cartData,
+	orderId,
 	onClose,
-	grandTotal,
 	open,
 }: CheckoutConfirmationDialogProps) {
+	const [orderData, setOrderData] = useState<ORDER_BY_ID_QUERYResult>(null);
 	const router = useRouter();
+
+	useEffect(() => {
+		if (orderId) {
+			getOrderConfirmation(orderId).then(setOrderData);
+		}
+	}, [orderId]);
 
 	const onGoToHomeClick = () => {
 		onClose();
@@ -104,10 +126,11 @@ export default function CheckoutConfirmationDialog({
 						You will receive an email confirmation shortly.
 					</p>
 					<div className="mb-6 w-full">
-						<CheckoutConfirmationSummary
-							grandTotal={grandTotal}
-							cartData={cartData}
-						/>
+						{orderData ? (
+							<CheckoutConfirmationSummary cartData={orderData} />
+						) : (
+							<ConfirmationSkeleton />
+						)}
 					</div>
 					<div className="w-full">
 						<button className="btn btn-orange w-full" onClick={onGoToHomeClick}>

@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { CART_BY_ID_QUERYResult } from "@/sanity.types";
+import { SHIPPING_FEE, VAT_RATE } from "@/lib/constants";
 
 export interface CartData {
 	_id: string;
@@ -82,8 +83,8 @@ export const useCartDataStore = create<CartDataStore>()(set => ({
 				previous + current.quantity * current.product.price,
 			0
 		);
-		const vatTotal = Math.floor(cartTotal * 0.2);
-		const shippingFee = 50;
+		const vatTotal = Math.floor(cartTotal * VAT_RATE);
+		const shippingFee = SHIPPING_FEE;
 		const grandTotal = vatTotal + cartTotal + shippingFee;
 
 		set({

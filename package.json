@@ -28,6 +28,7 @@
 		"sanity": "^4.10.1",
 		"styled-components": "^6.1.19",
 		"tailwind-merge": "^3.3.1",
+		"validator": "^13.15.35",
 		"zustand": "^5.0.6"
 	},
 	"devDependencies": {
@@ -37,6 +38,7 @@
 		"@types/node": "^20",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
+		"@types/validator": "^13.15.10",
 		"@typescript-eslint/eslint-plugin": "^8.45.0",
 		"@typescript-eslint/parser": "^8.45.0",
 		"eslint": "^9.36.0",

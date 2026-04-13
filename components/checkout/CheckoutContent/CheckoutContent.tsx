@@ -3,11 +3,12 @@
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
 import { CartData } from "@/store/cartDataStore";
+import { useState } from "react";
 
 interface CheckoutContentProps {
 	formRef: React.RefObject<HTMLFormElement | null>;
 	onSubmit: (e: React.MouseEvent<HTMLButtonElement>) => void;
-	onOrderSuccess: (cartData: CartData, grandTotal: number) => void;
+	onOrderSuccess: (newOrderId: string) => void;
 }
 
 export default function CheckoutContent({
@@ -15,12 +16,18 @@ export default function CheckoutContent({
 	onSubmit,
 	onOrderSuccess,
 }: CheckoutContentProps) {
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	return (
 		<div className="flex flex-col gap-y-8 xl:flex-row xl:gap-x-[30px]">
 			<section aria-label="Checkout Form" className="xl:flex-1">
 				<div className="rounded-lg bg-white pt-6 pr-6 pb-[31px] pl-[23px] md:px-[27px] md:pb-[30px] lg:px-12 lg:pt-13.5 lg:pb-12">
 					<h1 className="heading-4 md:heading-3 mb-8">checkout</h1>
-					<CheckoutForm ref={formRef} onOrderSuccess={onOrderSuccess} />
+					<CheckoutForm
+						ref={formRef}
+						onOrderSuccess={onOrderSuccess}
+						onPendingChange={setIsSubmitting}
+					/>
 				</div>
 			</section>
 			<section
@@ -33,8 +40,12 @@ export default function CheckoutContent({
 					</h2>
 					<CheckoutSummary />
 					<div className="mt-8">
-						<button className="btn btn-orange w-full" onClick={onSubmit}>
-							continue & pay
+						<button
+							className="btn btn-orange w-full"
+							onClick={onSubmit}
+							disabled={isSubmitting}
+						>
+							{isSubmitting ? "Processing..." : "continue & pay"}
 						</button>
 					</div>
 				</div>

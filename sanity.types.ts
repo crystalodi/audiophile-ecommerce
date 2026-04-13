@@ -45,6 +45,7 @@ export type Order = {
 		_key: string;
 	}>;
 	totalAmount: number;
+	grandTotal?: number;
 	paymentMethod: "CASH" | "E-MONEY";
 	eMoneyNumber?: string;
 	eMoneyPin?: string;
@@ -542,7 +543,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/cartApi.ts
 // Variable: CART_BY_ID_QUERY
-// Query: *[_type == "cart" && _id == $cartId][0] {			_id,			items[] {				product-> {					_id,					productName,					price,					cartImage,					"cartDisplayName": coalesce(cartDisplayName, shortName)				},				quantity,				reservedAt,				_key			},			status,			_createdAt    }
+// Query: *[_type == "cart" && _id == $cartId && status == "active"][0] {			_id,			items[] {				product-> {					_id,					productName,					price,					cartImage,					"cartDisplayName": coalesce(cartDisplayName, shortName)				},				quantity,				reservedAt,				_key			},			status,			_createdAt,    }
 export type CART_BY_ID_QUERYResult = {
 	_id: string;
 	items: Array<{
@@ -570,6 +571,19 @@ export type CART_BY_ID_QUERYResult = {
 	}> | null;
 	status: "active" | "converted_to_order" | "expired" | null;
 	_createdAt: string;
+} | null;
+// Variable: CART_STOCK_QUERY
+// Query: *[_type == "cart" && _id == $cartId && status == "active"][0]{			_rev,			status,			items[]{				"productId": product->._id,				"price": product->.price,				"productName": product->.productName,				quantity,				"availableStock": product->.stock - coalesce(					math::sum(						*[_type == "cart" && status == "active" && _id != $cartId]							.items[product._ref == ^.product->._id].quantity					),					0				)			}		}
+export type CART_STOCK_QUERYResult = {
+	_rev: string;
+	status: "active" | "converted_to_order" | "expired" | null;
+	items: Array<{
+		productId: string | null;
+		price: number | null;
+		productName: string | null;
+		quantity: number | null;
+		availableStock: number | null;
+	}> | null;
 } | null;
 
 // Source: ./sanity/lib/contentApi.ts
@@ -655,6 +669,33 @@ export type HOME_PAGE_CONTENT_QUERYResult = {
 	}> | null;
 } | null;
 
+// Source: ./sanity/lib/orderApi.ts
+// Variable: ORDER_BY_ID_QUERY
+// Query: *[_type == "order" && _id == $orderId][0]{      items[]{        productName,        price,        quantity,        "cartImage": product->.cartImage,        "cartDisplayName": coalesce(product->.cartDisplayName, product->.shortName),        _key,        "productId": product->._id      },      grandTotal    }
+export type ORDER_BY_ID_QUERYResult = {
+	items: Array<{
+		productName: string;
+		price: number;
+		quantity: number;
+		cartImage: {
+			asset: {
+				_ref: string;
+				_type: "reference";
+				_weak?: boolean;
+				[internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+			};
+			media?: unknown;
+			hotspot?: SanityImageHotspot;
+			crop?: SanityImageCrop;
+			_type: "image";
+		};
+		cartDisplayName: string | null;
+		_key: string;
+		productId: string;
+	}>;
+	grandTotal: number | null;
+} | null;
+
 // Source: ./sanity/lib/productApi.ts
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
 // Query: *[_type == "category" && slug.current == $categorySlug][0] {      categoryName,      "products": *[_type == "product" && references(^._id)] {        _id,        "mediaImage": categoryImage,        isNewProduct,        productName,        description,        slug,        category->{categoryName}      }    }
@@ -721,12 +762,14 @@ export type ALL_PRODUCT_PRICES_QUERYResult = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
 	interface SanityQueries {
-		'\n\t*[_type == "cart" && _id == $cartId][0] {\n\t\t\t_id,\n\t\t\titems[] {\n\t\t\t\tproduct-> {\n\t\t\t\t\t_id,\n\t\t\t\t\tproductName,\n\t\t\t\t\tprice,\n\t\t\t\t\tcartImage,\n\t\t\t\t\t"cartDisplayName": coalesce(cartDisplayName, shortName)\n\t\t\t\t},\n\t\t\t\tquantity,\n\t\t\t\treservedAt,\n\t\t\t\t_key\n\t\t\t},\n\t\t\tstatus,\n\t\t\t_createdAt\n    }\n\t': CART_BY_ID_QUERYResult;
+		'\n\t*[_type == "cart" && _id == $cartId && status == "active"][0] {\n\t\t\t_id,\n\t\t\titems[] {\n\t\t\t\tproduct-> {\n\t\t\t\t\t_id,\n\t\t\t\t\tproductName,\n\t\t\t\t\tprice,\n\t\t\t\t\tcartImage,\n\t\t\t\t\t"cartDisplayName": coalesce(cartDisplayName, shortName)\n\t\t\t\t},\n\t\t\t\tquantity,\n\t\t\t\treservedAt,\n\t\t\t\t_key\n\t\t\t},\n\t\t\tstatus,\n\t\t\t_createdAt,\n    }\n\t': CART_BY_ID_QUERYResult;
+		'\n\t*[_type == "cart" && _id == $cartId && status == "active"][0]{\n\t\t\t_rev,\n\t\t\tstatus,\n\t\t\titems[]{\n\t\t\t\t"productId": product->._id,\n\t\t\t\t"price": product->.price,\n\t\t\t\t"productName": product->.productName,\n\t\t\t\tquantity,\n\t\t\t\t"availableStock": product->.stock - coalesce(\n\t\t\t\t\tmath::sum(\n\t\t\t\t\t\t*[_type == "cart" && status == "active" && _id != $cartId]\n\t\t\t\t\t\t\t.items[product._ref == ^.product->._id].quantity\n\t\t\t\t\t),\n\t\t\t\t\t0\n\t\t\t\t)\n\t\t\t}\n\t\t}\n  ': CART_STOCK_QUERYResult;
 		'\n    *[_type == "navigationMenu" && menuType == $menuType][0] {\n      menuType,\n      showLogo,\n      navigationItems[isActive == true] | order(order asc) {\n        title,\n        href,\n        image,\n        order\n      }\n    }\n  ': NAVIGATION_MENU_QUERYResult;
 		'\n    *[_type == "preFooterContent"][0] {\n      name,\n      slug,\n      image,\n      title,\n      description\n    }\n  ': PRE_FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "footerContent"][0] {\n      name,\n      slug,\n      footerText,\n      socialMediaLinks[] {\n        platform,\n        url,\n        icon\n      },\n      copyrightText\n    }\n  ': FOOTER_CONTENT_QUERYResult;
 		'\n    *[_type == "heroContent"][0] {\n        heroBackgroundImage,\n        featuredProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n        featuredProductDescription\n      }\n  ': HERO_CONTENT_QUERYResult;
 		'\n    *[_type == "homePageContent"][0] {\n        featuredProducts[] {\n          product->{productName, shortName, slug, category->{categoryName}},\n          description,\n          layoutType,\n          backgroundType,\n          heroBitmapBackgroundImage,\n          "heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,\n          featuredProductImage,\n          ctaType\n          }\n        }\n    ': HOME_PAGE_CONTENT_QUERYResult;
+		'\n    *[_type == "order" && _id == $orderId][0]{\n      items[]{\n        productName,\n        price,\n        quantity,\n        "cartImage": product->.cartImage,\n        "cartDisplayName": coalesce(product->.cartDisplayName, product->.shortName),\n        _key,\n        "productId": product->._id\n      },\n      grandTotal\n    }\n  ': ORDER_BY_ID_QUERYResult;
 		'\n    *[_type == "category" && slug.current == $categorySlug][0] {\n      categoryName,\n      "products": *[_type == "product" && references(^._id)] {\n        _id,\n        "mediaImage": categoryImage,\n        isNewProduct,\n        productName,\n        description,\n        slug,\n        category->{categoryName}\n      }\n    }\n  ': PRODUCTS_BY_CATEGORY_QUERYResult;
 		'\n    *[_type == "product" && slug.current == $slug] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price,\n      _id\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
 		'\n    *[_type == "product"] {\n        _id,\n        stock,\n        "reservedStock": coalesce(math::sum(*[_type == "cart" && status == "active"].items[product._ref == ^._id].quantity), 0),\n        "availableStock": stock - coalesce(math::sum(*[_type == "cart" && status == "active"].items[product._ref == ^._id].quantity), 0)\n      }\n  ': ALL_PRODUCT_PRICES_QUERYResult;

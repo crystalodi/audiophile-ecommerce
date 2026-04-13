@@ -15,8 +15,6 @@ export async function getCartId() {
 		const cartTimestamp = parseInt(timestamp);
 		const isExpired = Date.now() - cartTimestamp > CART_TTL;
 		if (isExpired) {
-			cookieStore.delete(CART_COOKIE_NAME);
-			cookieStore.delete(CART_TIMESTAMP_COOKIE_NAME);
 			return null;
 		}
 	}

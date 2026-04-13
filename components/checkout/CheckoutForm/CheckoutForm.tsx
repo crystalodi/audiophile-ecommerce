@@ -4,7 +4,7 @@ import FormField from "@/components/ui/FormField";
 import RadioGroup from "@/components/ui/RadioGroup";
 import { cn } from "@/lib/utils";
 import { FormValidator } from "@/lib/validation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import CashOnDeliveryIcon from "@/public/icon-cash-on-delivery.svg";
 import { createOrder } from "@/actions/orderActions";
 import { useCartStore } from "@/store/cartStore";
@@ -12,12 +12,14 @@ import { CartData, useCartDataStore } from "@/store/cartDataStore";
 
 interface CheckoutFormProps {
 	ref?: React.Ref<HTMLFormElement>;
-	onOrderSuccess: (cartData: CartData, grandTotal: number) => void;
+	onOrderSuccess: (newOrderId: string) => void;
+	onPendingChange: (isPending: boolean) => void;
 }
 
 export default function CheckoutForm({
 	ref,
 	onOrderSuccess,
+	onPendingChange,
 }: CheckoutFormProps) {
 	const [formData, setFormData] = useState({
 		name: "",
@@ -35,9 +37,13 @@ export default function CheckoutForm({
 	const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>(
 		{}
 	);
+	const [isPending, startTransition] = useTransition();
+
 	const cartId = useCartStore(state => state.cartId);
-	const cartData = useCartDataStore(state => state.cartData);
-	const grandTotal = useCartDataStore(state => state.grandTotal);
+
+	useEffect(() => {
+		onPendingChange(isPending);
+	}, [isPending, onPendingChange]);
 
 	const validator = useMemo(() => {
 		return new FormValidator()
@@ -181,12 +187,14 @@ export default function CheckoutForm({
 
 		if (!cartId) return;
 
-		const result = await createOrder(cartId, formData);
-		if (!result.success) {
-			console.error("Order creation failed:", result.error);
-		} else {
-			onOrderSuccess(cartData!, grandTotal);
-		}
+		startTransition(async () => {
+			const result = await createOrder(cartId, formData);
+			if (!result.success) {
+				console.error("Order creation failed:", result.error);
+			} else {
+				result.newOrderId && onOrderSuccess(result.newOrderId);
+			}
+		});
 	};
 
 	const legendClasses = cn(

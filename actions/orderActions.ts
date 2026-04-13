@@ -1,9 +1,13 @@
 "use server";
 
 import { writeClient } from "@/sanity/lib/writeClient";
-import { fetchCart } from "@/sanity/lib/cartApi";
+import { fetchCartStockLevels } from "@/sanity/lib/cartApi";
 import { revalidatePath } from "next/cache";
 import { clearCartId } from "@/actions/cartCookieActions";
+import { getCartId } from "@/actions/cartCookieActions";
+import validator from "validator";
+import { SHIPPING_FEE, VAT_RATE } from "@/lib/constants";
+import { fetchOrderById } from "@/sanity/lib/orderApi";
 
 interface OrderFormData {
 	name: string;
@@ -18,9 +22,26 @@ interface OrderFormData {
 	eMoneyPin?: string;
 }
 
+function sanitize(value?: string): string {
+	if (!value) {
+		return "";
+	}
+	return validator.blacklist(validator.trim(value), "<>");
+}
+
 export async function createOrder(cartId: string, formData: OrderFormData) {
 	try {
-		const cart = await fetchCart(cartId);
+		const ALLOWED_PAYMENT_METHODS = ["E-MONEY", "CASH"] as const;
+		if (!ALLOWED_PAYMENT_METHODS.includes(formData.paymentMethod as any)) {
+			return { success: false, error: "Invalid payment method" };
+		}
+
+		const cookieCartId = await getCartId();
+		if (!cookieCartId || cookieCartId !== cartId) {
+			return { success: false, error: "Unauthorized" };
+		}
+
+		const cart = await fetchCartStockLevels(cartId);
 		if (!cart || !cart.items || cart.items.length === 0) {
 			return { success: false, error: "Cart is empty or not cart not found" };
 		}
@@ -30,8 +51,24 @@ export async function createOrder(cartId: string, formData: OrderFormData) {
 		}
 
 		const validItems = cart.items.filter(
-			item =>
-				item.product !== null && item.quantity !== null && item.quantity > 0
+			(
+				item
+			): item is {
+				productId: string;
+				productName: string;
+				price: number;
+				quantity: number;
+				availableStock: number;
+			} =>
+				item !== null &&
+				item.productId !== null &&
+				item.productName !== null &&
+				item.price !== null &&
+				item.quantity !== null &&
+				item.availableStock !== null &&
+				item.quantity > 0 &&
+				item.availableStock > 0 &&
+				item.quantity <= item.availableStock
 		);
 
 		if (validItems.length === 0) {
@@ -39,10 +76,10 @@ export async function createOrder(cartId: string, formData: OrderFormData) {
 		}
 
 		const orderItems = validItems.map(item => ({
-			product: { _ref: item.product!._id },
-			quantity: item.quantity!,
-			price: item.product!.price,
-			productName: item.product!.productName,
+			product: { _ref: item.productId },
+			quantity: item.quantity,
+			price: item.price,
+			productName: item.productName,
 		}));
 
 		const totalAmount = orderItems.reduce(
@@ -50,45 +87,69 @@ export async function createOrder(cartId: string, formData: OrderFormData) {
 			0
 		);
 
+		const vatFee = Math.floor(totalAmount * VAT_RATE);
+		const grandTotal = totalAmount + vatFee + SHIPPING_FEE;
+
+		const sanitizedData = {
+			name: sanitize(formData.name),
+			email: validator.normalizeEmail(formData.email) || "",
+			phoneNumber: sanitize(formData.phoneNumber),
+			address: sanitize(formData.address),
+			zipCode: sanitize(formData.zipCode),
+			city: sanitize(formData.city),
+			country: sanitize(formData.country),
+			paymentMethod: formData.paymentMethod,
+			eMoneyNumber: sanitize(formData.eMoneyNumber),
+			eMoneyPin: sanitize(formData.eMoneyPin),
+		};
+
 		const transaction = writeClient.transaction();
 
 		transaction.create({
 			_type: "order",
 			cart: { _ref: cartId },
-			name: formData.name,
-			email: formData.email,
-			phoneNumber: formData.phoneNumber,
-			address: formData.address,
-			zipCode: formData.zipCode,
-			city: formData.city,
-			country: formData.country,
+			...sanitizedData,
 			items: orderItems,
 			totalAmount,
-			paymentMethod: formData.paymentMethod,
-			eMoneyNumber: formData.eMoneyNumber || undefined,
-			eMoneyPin: formData.eMoneyPin || undefined,
+			grandTotal,
 			paymentStatus:
-				formData.paymentMethod === "CASH" ? "pending" : "completed",
+				sanitizedData.paymentMethod === "CASH" ? "pending" : "completed",
 			orderStatus: "processing",
 		});
 
 		for (const item of validItems) {
-			item.product!._id &&
-				transaction.patch(item.product!._id, {
-					dec: { stock: item.quantity ?? 0 },
+			item.productId &&
+				transaction.patch(item.productId, {
+					dec: { stock: item.quantity },
 				});
 		}
 
 		transaction.patch(cartId, {
+			ifRevisionID: cart._rev,
 			set: { status: "converted_to_order" },
 		});
 
-		const result = await transaction.commit({ autoGenerateArrayKeys: true });
+		const transactionResult = await transaction.commit({
+			autoGenerateArrayKeys: true,
+		});
+		const newOrderAction = transactionResult.results.find(
+			action => action.operation === "create"
+		);
+
 		await clearCartId();
 		revalidatePath("/");
-		return { success: true, data: result };
+		return {
+			success: true,
+			data: transactionResult,
+			newOrderId: newOrderAction?.id,
+			droppedItems: cart.items.length - validItems.length,
+		};
 	} catch (error) {
 		console.error("Error creating order:", error);
 		return { success: false, error: "Failed to create order" };
 	}
+}
+
+export async function getOrderConfirmation(orderId: string) {
+	return await fetchOrderById(orderId);
 }
