@@ -58,12 +58,9 @@ export async function addItemToCart(cartId: string, item: CartItem) {
 export async function expireCart(cartId: string) {
 	try {
 		await writeClient.patch(cartId).set({ status: "expired" }).commit();
-		await clearCartId();
 		console.log(`Cart ${cartId} expired`);
-		revalidatePath("/");
 	} catch (error) {
 		console.error("Error expiring cart:", error);
-		throw error;
 	}
 }
 

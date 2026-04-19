@@ -1,5 +1,6 @@
 "use server";
 
+import { expireCart } from "@/actions/cartActions";
 import { cookies } from "next/headers";
 
 const CART_COOKIE_NAME = "audiophile-cart-id";
@@ -15,6 +16,7 @@ export async function getCartId() {
 		const cartTimestamp = parseInt(timestamp);
 		const isExpired = Date.now() - cartTimestamp > CART_TTL;
 		if (isExpired) {
+			await expireCart(cartId);
 			return null;
 		}
 	}

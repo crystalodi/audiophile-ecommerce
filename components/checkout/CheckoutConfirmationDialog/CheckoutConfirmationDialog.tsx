@@ -48,17 +48,15 @@ function CheckoutConfirmationSummary({
 					<>
 						<div className="my-3 h-px bg-black/10" />
 						<button
-							className="body-text w-full cursor-pointer text-center text-black/50"
+							className="w-full cursor-pointer text-center text-xs font-bold -tracking-[0.21px] text-black/50"
 							onClick={() => setShowAll(!showAll)}
 						>
-							{showAll
-								? "View less"
-								: `and ${remainingCount} other item${remainingCount > 1 ? "s" : ""}`}
+							{showAll ? "View less" : `and ${remainingCount} other item(s)`}
 						</button>
 					</>
 				)}
 			</div>
-			<div className="flex h-[92px] flex-shrink-0 flex-col justify-center bg-black px-6 text-white md:h-auto md:w-[198px]">
+			<div className="flex flex-shrink-0 flex-col justify-end bg-black px-6 pt-4 pb-[18px] text-white md:h-auto md:w-[198px] md:pt-[41px] md:pb-[42px] lg:px-8 lg:pb-[41px]">
 				<p className="body-text mb-2 text-white/50 uppercase">grand total</p>
 				<p className="heading-6">$ {(grandTotal ?? 0).toLocaleString()}</p>
 			</div>
@@ -109,34 +107,34 @@ export default function CheckoutConfirmationDialog({
 		<Dialog
 			open={open}
 			onClose={onClose}
-			className="max-h-[min(600px,75vh-90px)] w-[87.2%] md:max-h-[581px] md:w-135 lg:max-h-[713px]"
+			className="max-h-[min(600px,75dvh_-_90px)] w-[87.2%] md:max-h-[min(581px,75dvh_-_90px)] md:w-135 lg:max-h-[min(713px,75dvh_-_90px)]"
 			preventClose={true}
 		>
-			<div className="overflow-y-auto p-8 md:p-12">
-				<div className="flex flex-col items-start justify-center">
-					<div className="mb-[23px] flex h-16 w-16 items-center justify-center md:mb-[33px]">
-						<OrderConfirmationIcon aria-hidden={true} />
-					</div>
-					<h1 className="heading-5 md:heading-3 mb-4 leading-7 tracking-[0.83px] md:mb-6">
+			<div className="flex max-h-[inherit] flex-col overflow-y-auto p-8 md:p-12">
+				<div className="mb-[23px] flex h-16 w-16 flex-shrink-0 items-center justify-center md:mb-[33px]">
+					<OrderConfirmationIcon aria-hidden={true} />
+				</div>
+				<div className="mb-6">
+					<h1 className="heading-5 md:heading-3 mb-4 flex-shrink-0 leading-7 tracking-[0.83px] md:mb-6">
 						thank you
 						<br />
 						for your order
 					</h1>
-					<p className="body-text mb-6 text-black/50 md:mb-[33px]">
+					<p className="body-text mb-6 flex-shrink-0 text-black/50 md:mb-[33px]">
 						You will receive an email confirmation shortly.
 					</p>
-					<div className="mb-6 w-full">
+					<div>
 						{orderData ? (
 							<CheckoutConfirmationSummary cartData={orderData} />
 						) : (
 							<ConfirmationSkeleton />
 						)}
 					</div>
-					<div className="w-full">
-						<button className="btn btn-orange w-full" onClick={onGoToHomeClick}>
-							back to home
-						</button>
-					</div>
+				</div>
+				<div className="w-full flex-shrink-0">
+					<button className="btn btn-orange w-full" onClick={onGoToHomeClick}>
+						back to home
+					</button>
 				</div>
 			</div>
 		</Dialog>

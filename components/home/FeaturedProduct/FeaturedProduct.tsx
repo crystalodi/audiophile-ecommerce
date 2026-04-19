@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
 import { HOME_PAGE_CONTENT_QUERYResult } from "@/sanity.types";
+import { splitHeading } from "@/lib/splitHeading";
 
 type FeaturedProductProps = NonNullable<
 	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
@@ -103,6 +104,8 @@ export default function FeaturedProduct({
 	};
 
 	const renderHeroSVGContent = () => {
+		const { first, second } = splitHeading(productName);
+
 		return (
 			<div className="flex w-full flex-col items-center justify-center text-center xl:flex xl:flex-row xl:items-start xl:justify-center xl:gap-x-[138px]">
 				{featuredProductImage && (
@@ -126,8 +129,9 @@ export default function FeaturedProduct({
 					</div>
 				)}
 				<div className="flex flex-col items-center justify-center gap-6 md:max-w-[349px] xl:items-start xl:pt-10 xl:text-left">
-					<h3 className="md:heading-1 max-w-45 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:max-w-[349px]">
-						{productName}
+					<h3 className="md:heading-1 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase">
+						<span className="block">{first}</span>
+						{second && <span className="block">{second}</span>}
 					</h3>
 					<p className="body-text text-white/75">{description}</p>
 					<div>

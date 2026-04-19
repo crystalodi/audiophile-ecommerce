@@ -1,10 +1,13 @@
-import { FeaturedProductType } from "@/lib/custom.types";
 import FeaturedProduct from "@/components/home/FeaturedProduct";
+import { HOME_PAGE_CONTENT_QUERYResult } from "@/sanity.types";
 
+type FeaturedProduct = NonNullable<
+	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
+>;
 export default function FeaturedProductSection({
 	featuredProducts,
 }: {
-	featuredProducts: Array<FeaturedProductType>;
+	featuredProducts: FeaturedProduct;
 }) {
 	return (
 		<section aria-label="Featured Products">

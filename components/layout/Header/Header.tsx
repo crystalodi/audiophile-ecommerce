@@ -61,7 +61,12 @@ export default function Header({
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
 	const hamburgerButtonRef = useRef<HTMLButtonElement>(null);
 	const navContainerRef = useRef<HTMLDivElement>(null);
+	const [mounted, setMounted] = useState(false);
 	const router = useRouter();
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 
 	const openNavModal = () => {
 		document.getElementById("cart-popover")?.hidePopover();
@@ -161,11 +166,11 @@ export default function Header({
 		<>
 			<header className="bg-audiophile-black relative z-50">
 				<div className="main-container py-[32px]">
-					<div className="flex gap-x-[42px]">
+					<div className="flex">
 						<div className="flex flex-1 items-center md:flex-[initial] lg:hidden">
 							<button
 								ref={hamburgerButtonRef}
-								className="cursor-pointer"
+								className="mr-10.5 cursor-pointer"
 								aria-label="Open mobile menu"
 								aria-expanded={isNavModalOpen}
 								aria-controls="mobile-navigation"
@@ -201,7 +206,9 @@ export default function Header({
 					</div>
 				</div>
 
-				{!disableCartDialog && <CartDialog onCheckout={onCheckoutCallback} />}
+				{mounted && !disableCartDialog && (
+					<CartDialog onCheckout={onCheckoutCallback} />
+				)}
 
 				<div className="md:main-container w-full">
 					<div className="bg-audiophile-divider h-[1px]" aria-hidden="true" />

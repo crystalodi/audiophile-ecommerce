@@ -23,7 +23,7 @@ const ToastItem = ({ id, message, type, onRemove }: ToastItemProps) => {
 
 	const getToastStyles = () => {
 		const baseStyles =
-			"transform transition-all duration-300 ease-in-out p-4 rounded-lg shadow-lg mb-2 flex items-center justify-between min-w-[300px] max-w-[500px]";
+			"transform transition-all duration-300 ease-in-out p-4 rounded-lg shadow-lg mb-2 flex items-center justify-between max-w-[327px]";
 
 		const typeStyles = {
 			success: "bg-green-500 text-white",

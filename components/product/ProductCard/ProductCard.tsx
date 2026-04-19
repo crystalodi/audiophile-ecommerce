@@ -8,6 +8,7 @@ import {
 	PRODUCTS_BY_CATEGORY_QUERYResult,
 } from "@/sanity.types";
 import { useProductStore } from "@/store/productStore";
+import { splitHeading } from "@/lib/splitHeading";
 
 type DetailProduct = Omit<
 	NonNullable<PRODUCT_BY_ID_QUERYResult>,
@@ -34,6 +35,8 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 	const productHref = hasCategory
 		? `/${product.category.categoryName.toLowerCase()}/${slug.current}`
 		: "";
+
+	const { first, second } = splitHeading(productName);
 
 	const articleClasses = cn("flex flex-col", {
 		"gap-y-8 md:gap-y-[52px] lg:gap-y-0 lg:gap-x-31.25 lg:flex-row lg:even:flex-row-reverse":
@@ -113,11 +116,14 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 				<div className={contentClasses}>
 					{isNewProduct && <div className={newProductClasses}>new product</div>}
 
-					{variant === "category" ? (
-						<h2 className={titleClasses}>{productName}</h2>
-					) : (
-						<h1 className={titleClasses}>{productName}</h1>
-					)}
+					<div
+						className={titleClasses}
+						role="heading"
+						aria-level={variant === "category" ? 2 : 1}
+					>
+						<span className="block">{first}</span>
+						{second && <span className="block">{second}</span>}
+					</div>
 
 					<p className={descriptionClasses}>{description}</p>
 

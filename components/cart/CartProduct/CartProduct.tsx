@@ -42,6 +42,7 @@ export default function CartProduct(props: CartProductProps) {
 			if (typeof localQuantity !== "number" || localQuantity === quantity) {
 				return;
 			}
+
 			if (localQuantity !== quantity) {
 				if (localQuantity === 0) {
 					await deleteCartItem(cartId, _key);
@@ -59,11 +60,7 @@ export default function CartProduct(props: CartProductProps) {
 	}, [localQuantity, quantity, cartId, _id, _key, totalItems]);
 
 	return (
-		<div
-			className={cn("flex items-center justify-between", {
-				"items-start": variant === "confirmation",
-			})}
-		>
+		<div className={cn("flex items-center justify-between")}>
 			<div
 				className={cn(
 					"bg-audiophile-gray mr-4 flex h-16 w-16 items-center rounded-lg",
@@ -83,10 +80,10 @@ export default function CartProduct(props: CartProductProps) {
 						className="rounded-lg"
 					/>
 				) : (
-					<div className="h-full w-full rounded-lg" />
+					<div className="mr-4 h-full w-full rounded-lg" />
 				)}
 			</div>
-			<div className="flex flex-col justify-center">
+			<div className="mr-[19px] flex flex-col justify-center">
 				<div className="body-text font-bold! uppercase">{cartDisplayName}</div>
 				<div className="text-[14px] font-bold text-black/50">{`$ ${price.toLocaleString("en-US")}`}</div>
 			</div>
@@ -100,7 +97,9 @@ export default function CartProduct(props: CartProductProps) {
 						variant="small"
 					/>
 				) : (
-					<span className="body-text font-bold text-black/50">x{quantity}</span>
+					<span className="body-text font-bold! text-black/50">
+						x{quantity}
+					</span>
 				)}
 			</div>
 		</div>

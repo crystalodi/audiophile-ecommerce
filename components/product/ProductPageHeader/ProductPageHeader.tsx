@@ -9,7 +9,10 @@ export default function ProductPageHeader({
 }: ProductPageHeaderProps) {
 	return (
 		<nav aria-label="Breadcrumb">
-			<Link href={`/${categoryName}`} className="body-text opacity-50">
+			<Link
+				href={`/${categoryName}`}
+				className="body-text hover:text-audiophile-orange opacity-50 hover:opacity-100"
+			>
 				Go Back
 			</Link>
 		</nav>

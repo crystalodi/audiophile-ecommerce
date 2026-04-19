@@ -54,7 +54,7 @@ function EmptyCartContent({ onClose }: { onClose: () => void }) {
 		}
 	};
 	return (
-		<div className="flex h-full flex-col items-center justify-center gap-y-5 px-[31px] pt-[31px] pr-[31px] pl-[33px] text-center">
+		<div className="flex h-full flex-col items-center justify-center gap-y-5 px-7 py-[31px] text-center">
 			<h3 className="heading-6">Your Cart is Empty</h3>
 			<p className="body-text text-black/50">
 				Browse our collection and add items to get started.
@@ -93,21 +93,21 @@ function CartContent({
 	};
 
 	return (
-		<div className="flex flex-col">
-			<div className="px-[31px] pt-[31px] pr-[31px] pl-[33px]">
+		<div className="flex max-h-[inherit] flex-col overflow-auto px-7 py-[31px]">
+			<div>
 				<CartDialogHeader
 					totalItems={totalItems}
 					onRemoveAll={removeAllCartItems}
 				/>
 			</div>
-			<div className="max-h-60 overflow-y-auto px-[33px] pr-[31px]">
+			<div>
 				<div className="flex flex-col gap-y-3.5">
 					{cartProducts?.map(item => (
 						<CartProduct key={item._id} {...item} variant="cartDialog" />
 					))}
 				</div>
 			</div>
-			<div className="px-[31px] pr-[31px] pb-[31px] pl-[33px]">
+			<div>
 				<div className="mt-8">
 					<CartTotal variant="cartDialog" totalPrice={cartTotal} />
 				</div>
@@ -137,9 +137,9 @@ function CartDialog({ onCheckout }: CartDialogProps) {
 			backdropClassName="bg-black/40"
 			role="dialog"
 			className={cn(
-				"inset-auto top-[113px] right-[var(--sm-container-margin)] m-0 w-[87.2%] md:right-[var(--md-container-margin)] md:w-[377px] lg:right-[var(--lg-container-margin)]",
+				"inset-auto top-[113px] right-[var(--sm-container-margin)] m-0 w-[87.2%] overflow-hidden md:right-[var(--md-container-margin)] md:w-[377px] lg:right-[var(--lg-container-margin)]",
 				{
-					"max-h-[min(488px,calc(100vh-137px))]": totalItems,
+					"max-h-[min(488px,calc(100dvh-137px))]": totalItems,
 					"h-62.5": !totalItems,
 				}
 			)}

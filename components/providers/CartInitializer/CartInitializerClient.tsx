@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useCartDataStore } from "@/store/cartDataStore";
 import { useCartStore } from "@/store/cartStore";
 import { CART_BY_ID_QUERYResult } from "@/sanity.types";
+import { clearCartId } from "@/actions/cartCookieActions";
 
 interface CartInitializerClientProps {
 	initialCartId: string | null;
@@ -26,6 +27,7 @@ export default function CartInitializerClient({
 			initializeCart(initialCart);
 		} else if (!initialCartId) {
 			clearCart();
+			clearCartId();
 		}
 	}, [initialCartId, initialCart, setCartId, initializeCart, clearCart]);
 

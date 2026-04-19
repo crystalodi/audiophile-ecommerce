@@ -2,7 +2,6 @@
 
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import CheckoutSummary from "@/components/checkout/CheckoutSummary";
-import { CartData } from "@/store/cartDataStore";
 import { useState } from "react";
 
 interface CheckoutContentProps {

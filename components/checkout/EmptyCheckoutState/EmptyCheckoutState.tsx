@@ -17,7 +17,7 @@ export default function EmptyCheckoutState() {
 						our collection to find the perfect audio equipment for you.
 					</p>
 					<Link href="/" className="btn btn-orange w-[85%]">
-						continue shopping
+						back to home
 					</Link>
 				</div>
 			</div>

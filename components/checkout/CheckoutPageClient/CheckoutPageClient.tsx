@@ -12,6 +12,7 @@ export default function CheckoutPageClient() {
 	const totalItems = useCartDataStore(state => state.totalItems);
 	const [isHydrated, setIsHydrated] = useState(false);
 	const [orderId, setOrderId] = useState("");
+	const [orderCompleted, setOrderCompleted] = useState(false);
 
 	useEffect(() => {
 		setIsHydrated(true);
@@ -20,10 +21,12 @@ export default function CheckoutPageClient() {
 	const handleOrderSuccess = (newOrderId: string) => {
 		window.scrollTo(0, 0);
 		setOrderId(newOrderId);
+		formRef?.current?.reset();
 	};
 
 	const closeConfirmationModal = () => {
 		setOrderId("");
+		setOrderCompleted(true);
 	};
 
 	const handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,14 +37,17 @@ export default function CheckoutPageClient() {
 	return (
 		<div className="main-container mb-[97px]">
 			<div className="mt-4 mb-6">
-				<Link href="/" className="body-text opacity-50">
+				<Link
+					href="/"
+					className="body-text hover:text-audiophile-orange opacity-50 hover:opacity-100"
+				>
 					Go Back
 				</Link>
 			</div>
 
-			{!isHydrated ? null : orderId ? (
+			{!isHydrated ? null : orderCompleted ? (
 				<EmptyCheckoutState />
-			) : totalItems === 0 ? (
+			) : totalItems === 0 && !orderId ? (
 				<EmptyCheckoutState />
 			) : (
 				<CheckoutContent
