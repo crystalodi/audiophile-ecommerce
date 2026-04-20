@@ -185,7 +185,7 @@ export default function Header({
 								/>
 							</button>
 						</div>
-						<ConditionalNavigation>{children}/</ConditionalNavigation>
+						<ConditionalNavigation>{children}</ConditionalNavigation>
 						<div className="flex flex-1 items-center justify-end">
 							<button
 								aria-label="Shopping cart"

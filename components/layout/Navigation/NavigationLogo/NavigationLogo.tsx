@@ -13,7 +13,7 @@ export default function NavigationLogo({
 		return null;
 	}
 
-	const logoClasses = cn("flex items-center", {
+	const logoClasses = cn("flex items-center justify-center", {
 		"flex-1": menuType === "header",
 	});
 
