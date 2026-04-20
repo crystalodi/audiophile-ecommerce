@@ -215,7 +215,8 @@ export default function Header({
 				</div>
 			</header>
 
-			{isNavModalOpen &&
+			{mounted &&
+				isNavModalOpen &&
 				typeof document !== "undefined" &&
 				createPortal(
 					<>

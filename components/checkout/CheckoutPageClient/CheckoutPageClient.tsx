@@ -21,7 +21,6 @@ export default function CheckoutPageClient() {
 	const handleOrderSuccess = (newOrderId: string) => {
 		window.scrollTo(0, 0);
 		setOrderId(newOrderId);
-		formRef?.current?.reset();
 	};
 
 	const closeConfirmationModal = () => {
@@ -36,7 +35,7 @@ export default function CheckoutPageClient() {
 
 	return (
 		<div className="main-container mb-[97px]">
-			<div className="mt-4 mb-6">
+			<div className="mt-4 mb-6 md:mt-[47px] lg:mt-[79px] lg:mb-[38px]">
 				<Link
 					href="/"
 					className="body-text hover:text-audiophile-orange opacity-50 hover:opacity-100"
@@ -51,6 +50,7 @@ export default function CheckoutPageClient() {
 				<EmptyCheckoutState />
 			) : (
 				<CheckoutContent
+					key={orderId || "checkout"}
 					formRef={formRef}
 					onSubmit={handleFormSubmit}
 					onOrderSuccess={handleOrderSuccess}

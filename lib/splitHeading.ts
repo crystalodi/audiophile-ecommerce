@@ -1,5 +1,7 @@
+import { stegaClean } from "next-sanity";
 export function splitHeading(title: string = "") {
-	const words = title.trim().split(/\s+/);
+	const clean = stegaClean(title);
+	const words = clean.trim().split(/\s+/);
 
 	if (words.length === 1) {
 		return { first: words[0], second: null };

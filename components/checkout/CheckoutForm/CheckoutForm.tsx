@@ -8,7 +8,6 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import CashOnDeliveryIcon from "@/public/icon-cash-on-delivery.svg";
 import { createOrder } from "@/actions/orderActions";
 import { useCartStore } from "@/store/cartStore";
-import { CartData, useCartDataStore } from "@/store/cartDataStore";
 
 interface CheckoutFormProps {
 	ref?: React.Ref<HTMLFormElement>;
