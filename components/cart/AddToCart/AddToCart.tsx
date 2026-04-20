@@ -50,6 +50,7 @@ export default function AddToCart({ stock, productName, _id }: AddToCartProps) {
 				}
 				addToast(`${productName} added to cart!`, "success", 3000);
 			} catch (e) {
+				console.error(`Error adding ${productName} to cart`, e);
 				addToast(
 					`Error Adding ${productName} to cart. Please try again.`,
 					"error",

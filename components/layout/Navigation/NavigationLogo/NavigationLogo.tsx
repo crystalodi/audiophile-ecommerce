@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import Logo from "@/public/logo.svg";
+import Logo from "@/assets/icons/logo.svg";
 
 export default function NavigationLogo({
 	showLogo,

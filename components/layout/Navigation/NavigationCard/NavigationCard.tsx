@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import RightArrowIcon from "@/public/icon-arrow-right.svg";
+import RightArrowIcon from "@/assets/icons/icon-arrow-right.svg";
+import Image from "next/image";
 
 interface NavigationCardProps {
 	title: string;
@@ -18,10 +19,11 @@ export default function NavigationCard({
 	return (
 		<div className="relative flex flex-col">
 			{image && (
-				<img
+				<Image
 					src={image}
 					aria-hidden
 					className="absolute top-1/10 left-1/2 w-[147px] -translate-x-1/2 -translate-y-1/10 object-cover lg:top-1/5 lg:w-[178px] lg:-translate-y-1/5"
+					alt={`Category ${title}`}
 				/>
 			)}
 			<div className="flex-1 p-6.5 md:p-6.25 lg:p-10"></div>

@@ -16,6 +16,6 @@ export default function ProductInitializerClient({
 		if (initialProducts && initialProducts.length > 0) {
 			initializeProducts(initialProducts);
 		}
-	}, [initialProducts]);
+	}, [initialProducts, initializeProducts]);
 	return null;
 }

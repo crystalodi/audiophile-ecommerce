@@ -2,6 +2,7 @@ import { getNavigationMenu } from "@/sanity/lib/contentApi";
 import Header from "./Header";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 interface HeaderWrapperProps {
 	disableCartDialog?: boolean;
@@ -13,7 +14,7 @@ async function getNavigationList() {
 		navigationMenuData?.navigationItems?.map(item => ({
 			title: item.title,
 			href: item.href,
-			image: urlFor(item.image?.asset as any).url(),
+			image: urlFor(item.image?.asset as SanityImageSource).url(),
 		})) ?? [
 			{ title: "Home", href: "/" },
 			{ title: "Headphones", href: "/headphones" },

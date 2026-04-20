@@ -1,7 +1,7 @@
 "use client";
 
 import Dialog from "@/components/ui/Dialog";
-import OrderConfirmationIcon from "@/public/icon-order-confirmation.svg";
+import OrderConfirmationIcon from "@/assets/icons/icon-order-confirmation.svg";
 import { useEffect, useState } from "react";
 import CartProduct from "@/components/cart/CartProduct";
 import { urlFor } from "@/sanity/lib/image";

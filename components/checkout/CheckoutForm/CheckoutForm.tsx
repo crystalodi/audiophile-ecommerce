@@ -5,7 +5,7 @@ import RadioGroup from "@/components/ui/RadioGroup";
 import { cn } from "@/lib/utils";
 import { FormValidator } from "@/lib/validation";
 import { useEffect, useMemo, useState, useTransition } from "react";
-import CashOnDeliveryIcon from "@/public/icon-cash-on-delivery.svg";
+import CashOnDeliveryIcon from "@/assets/icons/icon-cash-on-delivery.svg";
 import { createOrder } from "@/actions/orderActions";
 import { useCartStore } from "@/store/cartStore";
 
@@ -191,7 +191,9 @@ export default function CheckoutForm({
 			if (!result.success) {
 				console.error("Order creation failed:", result.error);
 			} else {
-				result.newOrderId && onOrderSuccess(result.newOrderId);
+				if (result.newOrderId) {
+					onOrderSuccess(result.newOrderId);
+				}
 			}
 		});
 	};
@@ -351,10 +353,9 @@ export default function CheckoutForm({
 										/>
 									</div>
 									<p className="body-text text-black/50">
-										The 'Cash on Delivery' option enables you to pay in cash
-										when our delivery courier arrives at your residence. Just
-										make sure your address is correct so that your order will
-										not be cancelled.
+										{
+											"The 'Cash on Delivery' option enables you to pay in cash when our delivery courier arrives at your residence. Just make sure your address is correct so that your order will not be cancelled."
+										}
 									</p>
 								</div>
 							</div>

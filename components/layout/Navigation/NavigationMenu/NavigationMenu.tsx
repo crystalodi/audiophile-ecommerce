@@ -2,6 +2,7 @@ import { urlFor } from "@/sanity/lib/image";
 import { getNavigationMenu } from "@/sanity/lib/contentApi";
 import NavigationLogo from "@/components/layout/Navigation/NavigationLogo";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 interface NavigationMenuProps {
 	menuType: "header" | "footer" | "mobile" | "content";
@@ -31,7 +32,9 @@ export default async function NavigationMenu({
 			return {
 				title: navItem.title,
 				href: navItem.href,
-				image: navItem.image ? urlFor(navItem?.image?.asset as any).url() : "",
+				image: navItem.image
+					? urlFor(navItem?.image?.asset as SanityImageSource).url()
+					: "",
 			};
 		}) ?? null;
 

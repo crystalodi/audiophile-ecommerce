@@ -13,8 +13,9 @@ export default function EmptyCheckoutState() {
 					</div>
 					<h1 className="heading-4 mb-6">Your cart is empty</h1>
 					<p className="body-text mb-6 text-balance text-black/50">
-						Looks like you haven't added any products to your cart yet. Browse
-						our collection to find the perfect audio equipment for you.
+						{
+							"Looks like you haven't added any products to your cart yet. Browse our collection to find the perfect audio equipment for you."
+						}
 					</p>
 					<Link href="/" className="btn btn-orange w-[85%]">
 						back to home

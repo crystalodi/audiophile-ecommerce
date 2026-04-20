@@ -3,8 +3,8 @@
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import CartDialog from "@/components/cart/CartDialog";
-import HamburgerIcon from "@/public/icon-hamburger.svg";
-import CartIcon from "@/public/icon-cart.svg";
+import HamburgerIcon from "@/assets/icons/icon-hamburger.svg";
+import CartIcon from "@/assets/icons/icon-cart.svg";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
 import { useRouter } from "next/navigation";
 import { useCartDataStore } from "@/store/cartDataStore";
@@ -185,7 +185,7 @@ export default function Header({
 								/>
 							</button>
 						</div>
-						<ConditionalNavigation children={children} />
+						<ConditionalNavigation>{children}/</ConditionalNavigation>
 						<div className="flex flex-1 items-center justify-end">
 							<button
 								aria-label="Shopping cart"

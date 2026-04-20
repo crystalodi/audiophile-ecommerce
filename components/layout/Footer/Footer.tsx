@@ -1,7 +1,7 @@
 import { getFooterContent } from "@/sanity/lib/contentApi";
-import FacebookIcon from "@/public/icon-facebook.svg";
-import InstagramIcon from "@/public/icon-instagram.svg";
-import TwitterIcon from "@/public/icon-twitter.svg";
+import FacebookIcon from "@/assets/icons/icon-facebook.svg";
+import InstagramIcon from "@/assets/icons/icon-instagram.svg";
+import TwitterIcon from "@/assets/icons/icon-twitter.svg";
 import { cn } from "@/lib/utils";
 import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import CopyrightYear from "@/components/layout/CopyrightYear";
@@ -41,7 +41,7 @@ export default async function Footer() {
 								}
 							/>
 							<div className="flex w-full items-center justify-center gap-4 md:justify-end md:justify-self-end md:[grid-area:social] lg:place-self-end">
-								{footerData?.socialMediaLinks.map((link, index) => (
+								{footerData?.socialMediaLinks.map(link => (
 									<a
 										target="_blank"
 										href={link.url}
