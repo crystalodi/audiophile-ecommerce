@@ -6,15 +6,29 @@ import {
 } from "sanity";
 import { BasketIcon } from "@sanity/icons";
 
-const eMoneyValidatorFn = (
+const eMoneyNumberValidator = (
 	value: string | undefined,
 	context: ValidationContext
 ) => {
-	const document = context.document;
-	const paymentMethod = document?.paymentMethod;
-	if (paymentMethod === "E-MONEY" && !value) {
-		return "Field is required when payment method is e-Money";
-	}
+	const paymentMethod = context.document?.paymentMethod;
+
+	if (paymentMethod !== "E-MONEY") return true;
+	if (!value) return "e-Money Number is required";
+	if (!/^\d{9}$/.test(value)) return "Invalid e-Money number.";
+
+	return true;
+};
+
+const eMoneyPinValidator = (
+	value: string | undefined,
+	context: ValidationContext
+) => {
+	const paymentMethod = context.document?.paymentMethod;
+
+	if (paymentMethod !== "E-MONEY") return true;
+	if (!value) return "e-Money Pin is required";
+	if (!/^\d{4}$/.test(value)) return "Invalid eMoney pin";
+
 	return true;
 };
 
@@ -173,14 +187,7 @@ export const orderType = defineType({
 				const paymentMethod = document?.paymentMethod;
 				return paymentMethod === "CASH";
 			},
-			validation: Rule =>
-				Rule.custom(eMoneyValidatorFn)
-					.length(9)
-					.regex(/^\d{9}$/, {
-						name: "eMoney number format",
-						invert: false,
-					})
-					.error("Invalid e-Money number."),
+			validation: Rule => Rule.custom(eMoneyNumberValidator),
 		}),
 		defineField({
 			name: "eMoneyPin",
@@ -190,14 +197,7 @@ export const orderType = defineType({
 				const paymentMethod = document?.paymentMethod;
 				return paymentMethod === "CASH";
 			},
-			validation: Rule =>
-				Rule.custom(eMoneyValidatorFn)
-					.length(4)
-					.regex(/^\d{4}$/, {
-						invert: false,
-						name: "eMoney pin format",
-					})
-					.error("Invalid eMoney pin"),
+			validation: Rule => Rule.custom(eMoneyPinValidator),
 		}),
 		defineField({
 			name: "paymentStatus",
