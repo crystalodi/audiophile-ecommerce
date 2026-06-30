@@ -10,6 +10,8 @@ export async function getProductsByCategory(categorySlug: string) {
         "mediaImage": categoryImage,
         isNewProduct,
         productName,
+        "firstPart": array::join(string::split(productName, " ")[0...-1], " "),
+        "lastWord": string::split(productName, " ")[-1],
         description,
         slug,
         category->{categoryName}
@@ -37,6 +39,8 @@ export async function getProductDetail(slug: string) {
       "mediaImage": image,
       isNewProduct,
       productName,
+      "firstPart": array::join(string::split(productName, " ")[0...-1], " "),
+      "lastWord": string::split(productName, " ")[-1],
       description,
       slug,
       category-> {categoryName},

@@ -698,7 +698,7 @@ export type ORDER_BY_ID_QUERYResult = {
 
 // Source: ./sanity/lib/productApi.ts
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
-// Query: *[_type == "category" && slug.current == $categorySlug][0] {      categoryName,      "products": *[_type == "product" && references(^._id)] {        _id,        "mediaImage": categoryImage,        isNewProduct,        productName,        description,        slug,        category->{categoryName}      }    }
+// Query: *[_type == "category" && slug.current == $categorySlug][0] {      categoryName,      "products": *[_type == "product" && references(^._id)] {        _id,        "mediaImage": categoryImage,        isNewProduct,        productName,        "firstPart": array::join(string::split(productName, " ")[0...-1], " "),        "lastWord": string::split(productName, " ")[-1],        description,        slug,        category->{categoryName}      }    }
 export type PRODUCTS_BY_CATEGORY_QUERYResult = {
 	categoryName: string;
 	products: Array<{
@@ -706,6 +706,8 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = {
 		mediaImage: CustomImageType;
 		isNewProduct: boolean | null;
 		productName: string;
+		firstPart: string;
+		lastWord: string | null;
 		description: string;
 		slug: Slug;
 		category: {
@@ -714,11 +716,13 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = {
 	}>;
 } | null;
 // Variable: PRODUCT_BY_ID_QUERY
-// Query: *[_type == "product" && slug.current == $slug] [0] {      "mediaImage": image,      isNewProduct,      productName,      description,      slug,      category-> {categoryName},      features,      includes,      gallery,      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},      stock,      isNewProduct,      price,      _id    }
+// Query: *[_type == "product" && slug.current == $slug] [0] {      "mediaImage": image,      isNewProduct,      productName,      "firstPart": array::join(string::split(productName, " ")[0...-1], " "),      "lastWord": string::split(productName, " ")[-1],      description,      slug,      category-> {categoryName},      features,      includes,      gallery,      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},      stock,      isNewProduct,      price,      _id    }
 export type PRODUCT_BY_ID_QUERYResult = {
 	mediaImage: CustomImageType;
 	isNewProduct: boolean | null;
 	productName: string;
+	firstPart: string;
+	lastWord: string | null;
 	description: string;
 	slug: Slug;
 	category: {
@@ -770,8 +774,8 @@ declare module "@sanity/client" {
 		'\n    *[_type == "heroContent"][0] {\n        heroBackgroundImage,\n        featuredProduct-> {productName, slug, category-> {categoryName}, isNewProduct},\n        featuredProductDescription\n      }\n  ': HERO_CONTENT_QUERYResult;
 		'\n    *[_type == "homePageContent"][0] {\n        featuredProducts[] {\n          product->{productName, shortName, slug, category->{categoryName}},\n          description,\n          layoutType,\n          backgroundType,\n          heroBitmapBackgroundImage,\n          "heroSVGBackgroundImage": heroSVGBackgroundImage.asset->url,\n          featuredProductImage,\n          ctaType\n          }\n        }\n    ': HOME_PAGE_CONTENT_QUERYResult;
 		'\n    *[_type == "order" && _id == $orderId][0]{\n      items[]{\n        productName,\n        price,\n        quantity,\n        "cartImage": product->.cartImage,\n        "cartDisplayName": coalesce(product->.cartDisplayName, product->.shortName),\n        _key,\n        "productId": product->._id\n      },\n      grandTotal\n    }\n  ': ORDER_BY_ID_QUERYResult;
-		'\n    *[_type == "category" && slug.current == $categorySlug][0] {\n      categoryName,\n      "products": *[_type == "product" && references(^._id)] {\n        _id,\n        "mediaImage": categoryImage,\n        isNewProduct,\n        productName,\n        description,\n        slug,\n        category->{categoryName}\n      }\n    }\n  ': PRODUCTS_BY_CATEGORY_QUERYResult;
-		'\n    *[_type == "product" && slug.current == $slug] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price,\n      _id\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
+		'\n    *[_type == "category" && slug.current == $categorySlug][0] {\n      categoryName,\n      "products": *[_type == "product" && references(^._id)] {\n        _id,\n        "mediaImage": categoryImage,\n        isNewProduct,\n        productName,\n        "firstPart": array::join(string::split(productName, " ")[0...-1], " "),\n        "lastWord": string::split(productName, " ")[-1],\n        description,\n        slug,\n        category->{categoryName}\n      }\n    }\n  ': PRODUCTS_BY_CATEGORY_QUERYResult;
+		'\n    *[_type == "product" && slug.current == $slug] [0] {\n      "mediaImage": image,\n      isNewProduct,\n      productName,\n      "firstPart": array::join(string::split(productName, " ")[0...-1], " "),\n      "lastWord": string::split(productName, " ")[-1],\n      description,\n      slug,\n      category-> {categoryName},\n      features,\n      includes,\n      gallery,\n      others[]-> {_id, productName, shortName, "mediaImage":categoryImage, slug, category-> {categoryName}},\n      stock,\n      isNewProduct,\n      price,\n      _id\n    }\n  ': PRODUCT_BY_ID_QUERYResult;
 		'\n    *[_type == "product"] {\n        _id,\n        stock,\n        "reservedStock": coalesce(math::sum(*[_type == "cart" && status == "active"].items[product._ref == ^._id].quantity), 0),\n        "availableStock": stock - coalesce(math::sum(*[_type == "cart" && status == "active"].items[product._ref == ^._id].quantity), 0)\n      }\n  ': ALL_PRODUCT_PRICES_QUERYResult;
 	}
 }

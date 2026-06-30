@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import { imageUrl } from "@/lib/imageUrl";
 import Link from "next/link";
 import { HOME_PAGE_CONTENT_QUERYResult } from "@/sanity.types";
-import { splitHeading } from "@/lib/splitHeading";
 
 type FeaturedProductProps = NonNullable<
 	NonNullable<HOME_PAGE_CONTENT_QUERYResult>["featuredProducts"]
@@ -49,7 +48,7 @@ export default function FeaturedProduct({
 					)}
 				</div>
 				<div className="relative flex flex-col justify-center">
-					<h4 className="heading-4 mb-8">{productName}</h4>
+					<h4 className="heading-4 mb-8 leading-normal">{productName}</h4>
 					<div>
 						<Link
 							href={ctaUrl}
@@ -88,7 +87,7 @@ export default function FeaturedProduct({
 					)}
 				</div>
 				<div className="rounded-lg bg-[#f1f1f1] px-6 py-[41px] md:py-[101px] md:pr-[51px] md:pl-[41px] lg:pl-[95px]">
-					<h4 className="heading-4 mb-8">{productName}</h4>
+					<h4 className="heading-4 mb-8 leading-normal">{productName}</h4>
 					<div>
 						<Link
 							href={ctaUrl}
@@ -104,8 +103,6 @@ export default function FeaturedProduct({
 	};
 
 	const renderHeroSVGContent = () => {
-		const { first, second } = splitHeading(productName);
-
 		return (
 			<div className="flex w-full flex-col items-center justify-center text-center xl:flex xl:flex-row xl:items-start xl:justify-center xl:gap-x-[138px]">
 				{featuredProductImage && (
@@ -129,9 +126,8 @@ export default function FeaturedProduct({
 					</div>
 				)}
 				<div className="flex flex-col items-center justify-center gap-6 md:max-w-[349px] xl:items-start xl:pt-10 xl:text-left">
-					<h3 className="md:heading-1 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase">
-						<span className="block">{first}</span>
-						{second && <span className="block">{second}</span>}
+					<h3 className="md:heading-1 min-w-0 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase">
+						{productName}
 					</h3>
 					<p className="body-text text-white/75">{description}</p>
 					<div>

@@ -94,7 +94,7 @@ footer {
 	}
 
 	.overline-text {
-		@apply text-[14px] leading-[19px] font-normal tracking-[10px] uppercase;
+		@apply text-[14px] leading-normal font-normal tracking-[10px] uppercase;
 	}
 
 	.subtitle-text {
@@ -169,9 +169,9 @@ footer {
 @utility heading-4 {
 	font-weight: bold;
 	text-transform: uppercase;
-	letter-spacing: 1px;
+	letter-spacing: 2px;
 	font-size: 28px;
-	line-height: 32px;
+	line-height: 38px;
 }
 
 @utility heading-5 {

@@ -13,7 +13,7 @@ export default function RelatedProductList({
 	return (
 		<section aria-label={`Products related to ${productName}`}>
 			<div className="w-full text-center">
-				<h2 className="heading-5 md:heading-3 mb-10 md:mb-13 xl:mb-16">
+				<h2 className="heading-5 md:heading-3 mb-10 leading-9 tracking-[0.86px] md:mb-13 md:tracking-[1.14px] xl:mb-16">
 					you may also like
 				</h2>
 				<ul className="flex list-none flex-col gap-y-14 md:flex-row md:gap-x-[11px] xl:gap-x-[30px]">

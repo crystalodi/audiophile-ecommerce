@@ -20,7 +20,7 @@ export default function RelatedProduct(props: RelatedProductProps) {
 
 	return (
 		<article className="flex flex-col gap-y-10 md:flex-1">
-			<div className="bg-audiophile-gray flex h-30 items-center justify-center overflow-hidden rounded-[8px] md:h-79.5">
+			<div className="bg-audiophile-gray flex h-30 items-center justify-center overflow-hidden rounded-lg md:h-79.5">
 				<div className="scale-125 transform md:scale-150">
 					<picture>
 						<source
@@ -41,7 +41,7 @@ export default function RelatedProduct(props: RelatedProductProps) {
 				</div>
 			</div>
 			<div className="flex flex-col items-center justify-center">
-				<h3 className="heading-5 mb-8 text-black">
+				<h3 className="heading-5 mb-8 leading-normal text-black">
 					{shortName ? shortName : productName}
 				</h3>
 				<Link

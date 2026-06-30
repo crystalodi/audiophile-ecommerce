@@ -34,7 +34,7 @@ export default async function PreFooter() {
 		},
 		block: {
 			normal: props => (
-				<h2 className="heading-4 md:heading-2 mb-8 max-w-[573px] text-center lg:text-left">
+				<h2 className="heading-4 md:heading-2 mb-8 max-w-[573px] text-center leading-normal tracking-[1px] lg:text-left">
 					{props.children}
 				</h2>
 			),
@@ -55,7 +55,7 @@ export default async function PreFooter() {
 					)}
 					{preFooterData && (
 						<div className="flex flex-col items-center justify-center gap-10 md:gap-[63px] lg:flex-row-reverse lg:gap-31.25">
-							<div className="lg:flex-1">
+							<div className="self-stretch lg:flex-1">
 								<picture>
 									<source
 										srcSet={imageUrl(preFooterData.image.desktop.asset).url()}

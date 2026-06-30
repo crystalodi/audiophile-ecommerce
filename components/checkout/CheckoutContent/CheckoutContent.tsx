@@ -21,7 +21,9 @@ export default function CheckoutContent({
 		<div className="flex flex-col gap-y-8 xl:flex-row xl:gap-x-[30px]">
 			<section aria-label="Checkout Form" className="xl:flex-1">
 				<div className="rounded-lg bg-white pt-6 pr-6 pb-[31px] pl-[23px] md:px-[27px] md:pb-[30px] lg:px-12 lg:pt-13.5 lg:pb-12">
-					<h1 className="heading-4 md:heading-3 mb-8">checkout</h1>
+					<h1 className="heading-4 md:heading-3 mb-8 leading-normal tracking-[1px] md:leading-9 md:tracking-[1.14px]">
+						checkout
+					</h1>
 					<CheckoutForm
 						ref={formRef}
 						onOrderSuccess={onOrderSuccess}

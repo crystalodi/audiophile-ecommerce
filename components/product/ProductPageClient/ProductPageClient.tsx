@@ -26,6 +26,8 @@ export default function ProductPageClient({
 		others,
 		_id,
 		slug,
+		firstPart,
+		lastWord,
 	} = detailProduct;
 
 	const product = {
@@ -38,6 +40,8 @@ export default function ProductPageClient({
 		price,
 		mediaImage,
 		_id,
+		firstPart,
+		lastWord,
 	};
 
 	return (

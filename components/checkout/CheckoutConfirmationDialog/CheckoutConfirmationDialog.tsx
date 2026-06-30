@@ -115,7 +115,7 @@ export default function CheckoutConfirmationDialog({
 					<OrderConfirmationIcon aria-hidden={true} />
 				</div>
 				<div className="mb-6">
-					<h1 className="heading-5 md:heading-3 mb-4 flex-shrink-0 leading-7 tracking-[0.83px] md:mb-6">
+					<h1 className="heading-5 md:heading-3 mb-4 flex-shrink-0 leading-7 tracking-[0.83px] md:mb-6 md:tracking-[1.14px]">
 						thank you
 						<br />
 						for your order

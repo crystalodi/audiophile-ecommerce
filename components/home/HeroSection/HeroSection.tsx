@@ -1,5 +1,4 @@
 import { imageUrl } from "@/lib/imageUrl";
-import { splitHeading } from "@/lib/splitHeading";
 import { getHeroContent } from "@/sanity/lib/contentApi";
 import Link from "next/link";
 
@@ -24,8 +23,6 @@ export default async function HeroSection() {
 		: "/images/home/desktop/image-header.jpg";
 
 	const featuredProductHref = `/${category?.categoryName?.toLowerCase()}/${slug?.current}`;
-
-	const { first, second } = splitHeading(productName);
 
 	return (
 		<section
@@ -57,8 +54,7 @@ export default async function HeroSection() {
 						id="hero-heading"
 						className="mb-6 text-[36px] leading-10 font-bold tracking-[1.29px] text-white uppercase md:mb-6 md:text-[56px] md:leading-[58px] md:tracking-[2px] lg:text-[46px] lg:leading-12 xl:text-[56px] xl:leading-[58px]"
 					>
-						<span className="block">{first}</span>
-						{second && <span className="block">{second}</span>}
+						{productName}
 					</h1>
 					<p className="body-text mb-7 text-white/75 md:mb-10 md:max-w-[349px]">
 						{featuredProductDescription}

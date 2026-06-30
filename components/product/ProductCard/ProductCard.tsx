@@ -8,7 +8,6 @@ import {
 	PRODUCTS_BY_CATEGORY_QUERYResult,
 } from "@/sanity.types";
 import { useProductStore } from "@/store/productStore";
-import { splitHeading } from "@/lib/splitHeading";
 
 type DetailProduct = Omit<
 	NonNullable<PRODUCT_BY_ID_QUERYResult>,
@@ -24,8 +23,16 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ variant, product }: ProductCardProps) {
-	const { slug, mediaImage, productName, isNewProduct, description, _id } =
-		product;
+	const {
+		slug,
+		mediaImage,
+		productName,
+		isNewProduct,
+		description,
+		_id,
+		firstPart,
+		lastWord,
+	} = product;
 	const productFromStore = useProductStore(state => state.products.get(_id));
 
 	const hasCategory = "category" in product;
@@ -35,8 +42,6 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 	const productHref = hasCategory
 		? `/${product.category.categoryName.toLowerCase()}/${slug.current}`
 		: "";
-
-	const { first, second } = splitHeading(productName);
 
 	const articleClasses = cn("flex flex-col", {
 		"gap-y-8 md:gap-y-[52px] lg:gap-y-0 lg:gap-x-31.25 lg:flex-row lg:even:flex-row-reverse":
@@ -48,10 +53,10 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 	});
 
 	const pictureWrapperClasses = cn(
-		"flex flex-col justify-center bg-audiophile-gray",
+		"flex flex-col justify-center bg-audiophile-gray rounded-lg overflow-hidden",
 		{
 			"items-center lg:flex-1": variant === "category",
-			"rounded-lg md:flex-1 md:w-2/5 lg:w-1/2": variant === "detail",
+			"md:flex-1 md:w-2/5 lg:w-1/2": variant === "detail",
 		}
 	);
 
@@ -61,9 +66,8 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 		"md:max-h-[481px] lg:max-h-[initial]": variant === "detail",
 	});
 
-	const imgClasses = cn("rounded-lg", {
-		"": variant === "category",
-		"h-full w-full md:object-cover": variant === "detail",
+	const imgClasses = cn("block h-full w-full", {
+		"md:object-cover": variant === "detail",
 	});
 
 	const contentWrapperClasses = cn("flex items-center justify-center", {
@@ -81,10 +85,11 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 		"mb-6 md:mb-[17px]": variant === "detail",
 	});
 
-	const titleClasses = cn("md:mb-8", {
-		"mb-4 heading-4 md:heading-2": variant === "category",
-		"heading-4 mb-6 lg:heading-2": variant === "detail",
-	});
+	const titleClasses = cn(
+		"mb-4 break-words heading-4 tracking-[1px] leading-normal md:mb-8 md:heading-2 md:tracking-[1.43px]",
+		variant === "detail" &&
+			"md:heading-4 md:tracking-[1px] md:leading-8 lg:heading-2 lg:tracking-[1.43px]"
+	);
 
 	const descriptionClasses = cn("body-text opacity-50", {
 		"text-black mb-4 md:mb-6": variant === "category",
@@ -121,8 +126,8 @@ export default function ProductCard({ variant, product }: ProductCardProps) {
 						role="heading"
 						aria-level={variant === "category" ? 2 : 1}
 					>
-						<span className="block">{first}</span>
-						{second && <span className="block">{second}</span>}
+						<span className="whitespace-nowrap">{firstPart}</span>
+						{lastWord && <div>{lastWord}</div>}
 					</div>
 
 					<p className={descriptionClasses}>{description}</p>
