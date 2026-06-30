@@ -4,10 +4,15 @@ import { PortableText } from "next-sanity";
 import { PortableTextComponents } from "next-sanity";
 import { ReactNode } from "react";
 import { headers } from "next/headers";
-import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
+import { getResolvedNavigation } from "@/sanity/lib/getResolvedNavigation";
+import NavigationList from "@/components/layout/Navigation/NavigationList";
 
 export default async function PreFooter() {
-	const preFooterData = await getPreFooterContent();
+	const [preFooterData, navigationItems] = await Promise.all([
+		getPreFooterContent(),
+		getResolvedNavigation("content"),
+	]);
+
 	const headersList = await headers();
 	const pathname = headersList.get("x-pathname") || "/";
 	const homePath = "/";
@@ -42,7 +47,10 @@ export default async function PreFooter() {
 				<div className="mb-30 flex flex-col gap-30">
 					{!isHomePath && (
 						<div className="flex">
-							<NavigationMenu menuType="content" />
+							<NavigationList
+								menuType="content"
+								navigationItems={navigationItems}
+							/>
 						</div>
 					)}
 					{preFooterData && (

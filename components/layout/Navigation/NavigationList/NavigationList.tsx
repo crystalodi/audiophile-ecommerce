@@ -21,20 +21,24 @@ export default function NavigationList({
 	const menuAriaLabel = `${menuType} navigation menu`;
 
 	const navigationMenuClasses = cn({
-		"hidden lg:flex lg:flex-1 lg:items-center": menuType === "header",
+		"hidden lg:block": menuType === "header",
 		"w-full": menuType === "content" || menuType === "mobile",
 	});
 
-	const navigationULClasses = cn("flex list-none gap-4 md:flex-row", {
-		"subtitle-text gap-[34px]": menuType === "header",
-		"flex-col md:flex-row md:gap-[10px] lg:gap-[30px]":
-			menuType === "content" || menuType === "mobile",
-		"subtitle-text flex-col items-center md:gap-[34px]": menuType === "footer",
-	});
+	const navigationULClasses = cn(
+		"flex justify-start list-none gap-4 md:flex-row",
+		{
+			"gap-[34px]": menuType === "header",
+			"flex-col md:flex-row md:gap-[10px] lg:gap-[30px]":
+				menuType === "content" || menuType === "mobile",
+			"flex-col items-center md:gap-[34px]": menuType === "footer",
+		}
+	);
 
 	const listItemClasses = cn({
 		"flex-1": menuType === "content" || menuType === "mobile",
-		"text-white": menuType === "footer" || menuType === "header",
+		"text-white font-bold text-[13px] tracking-[2px] leading-[25px] uppercase":
+			menuType === "footer" || menuType === "header",
 	});
 
 	return (

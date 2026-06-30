@@ -8,12 +8,14 @@ import CartIcon from "@/assets/icons/icon-cart.svg";
 import NavigationList from "@/components/layout/Navigation/NavigationList";
 import { useRouter } from "next/navigation";
 import { useCartDataStore } from "@/store/cartDataStore";
+import NavigationLogo from "@/components/layout/Navigation/NavigationLogo";
+import type { NavigationItem } from "@/sanity/lib/getResolvedNavigation";
 
 const BREAKPOINT_XL = 1280;
 
 interface HeaderProps {
-	children: React.ReactNode;
-	navigationItems: Array<{ title: string; href: string; image?: string }>;
+	headerNavigationItems: NavigationItem[];
+	mobileNavigationItems: NavigationItem[];
 	disableCartDialog?: boolean;
 }
 
@@ -39,23 +41,9 @@ function CartBadge() {
 	);
 }
 
-function ConditionalNavigation({ children }: { children: React.ReactNode }) {
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
-	if (!mounted) {
-		return null;
-	}
-
-	return <>{children}</>;
-}
-
 export default function Header({
-	children,
-	navigationItems,
+	headerNavigationItems,
+	mobileNavigationItems,
 	disableCartDialog,
 }: HeaderProps) {
 	const [isNavModalOpen, setIsNavModalOpen] = useState(false);
@@ -166,11 +154,11 @@ export default function Header({
 		<>
 			<header className="bg-audiophile-black relative z-50">
 				<div className="main-container py-[32px]">
-					<div className="flex">
-						<div className="flex flex-1 items-center md:flex-[initial] lg:hidden">
+					<div className="flex justify-between md:justify-start lg:justify-between">
+						<div className="flex items-center lg:hidden">
 							<button
 								ref={hamburgerButtonRef}
-								className="mr-10.5 cursor-pointer"
+								className="cursor-pointer md:mr-10.5"
 								aria-label="Open mobile menu"
 								aria-expanded={isNavModalOpen}
 								aria-controls="mobile-navigation"
@@ -185,8 +173,15 @@ export default function Header({
 								/>
 							</button>
 						</div>
-						<ConditionalNavigation>{children}</ConditionalNavigation>
-						<div className="flex flex-1 items-center justify-end">
+
+						<NavigationLogo menuType="header" />
+
+						<NavigationList
+							menuType="header"
+							navigationItems={headerNavigationItems}
+						/>
+
+						<div className="flex items-center">
 							<button
 								aria-label="Shopping cart"
 								popoverTarget="cart-popover"
@@ -238,7 +233,7 @@ export default function Header({
 							<NavigationList
 								onNavigate={closeNavModal}
 								menuType="content"
-								navigationItems={navigationItems}
+								navigationItems={mobileNavigationItems}
 							/>
 						</div>
 					</>,

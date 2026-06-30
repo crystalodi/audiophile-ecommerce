@@ -3,11 +3,16 @@ import FacebookIcon from "@/assets/icons/icon-facebook.svg";
 import InstagramIcon from "@/assets/icons/icon-instagram.svg";
 import TwitterIcon from "@/assets/icons/icon-twitter.svg";
 import { cn } from "@/lib/utils";
-import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
 import CopyrightYear from "@/components/layout/CopyrightYear";
+import NavigationLogo from "@/components/layout/Navigation/NavigationLogo";
+import NavigationList from "@/components/layout/Navigation/NavigationList";
+import { getResolvedNavigation } from "@/sanity/lib/getResolvedNavigation";
 
 export default async function Footer() {
-	const footerData = await getFooterContent();
+	const [footerData, navigationItems] = await Promise.all([
+		getFooterContent(),
+		getResolvedNavigation("footer"),
+	]);
 
 	const getIconComponent = (iconName: string) => {
 		const className = cn("[&>path]:fill-current [&>g]:fill-current"); // Target nested elements
@@ -29,7 +34,11 @@ export default async function Footer() {
 				<div className="pt-13 pb-[38px] md:pt-15 md:pb-[46px] lg:pt-[75px] lg:pb-12">
 					<div className="flex flex-col items-center gap-y-12 md:items-start md:gap-y-8 lg:gap-y-9">
 						<div className="flex flex-col items-center gap-y-12 md:items-start md:gap-y-8 lg:w-full lg:flex-row lg:justify-between lg:gap-y-0">
-							<NavigationMenu menuType="footer" />
+							<NavigationLogo menuType="footer" />
+							<NavigationList
+								menuType="footer"
+								navigationItems={navigationItems}
+							/>
 						</div>
 						<div className="grid w-full grid-cols-1 place-items-center gap-y-12 md:grid-cols-2 md:place-items-start md:gap-y-20 md:[grid-template-areas:'text_text''copyright_social'] lg:grid-cols-2 lg:gap-y-14 lg:[grid-template-areas:'text_social''copyright_copyright']">
 							<p className="body-text text-center text-white/50 md:text-left md:[grid-area:text]">

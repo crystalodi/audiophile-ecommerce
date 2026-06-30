@@ -34,6 +34,8 @@ export const navigationMenuType = defineType({
 			name: "showLogo",
 			title: "Show Logo",
 			type: "boolean",
+			readOnly: true,
+			deprecated: { reason: "Separating the logo from the navigation menu" },
 			initialValue: ({ parent }) => {
 				const menuType = parent?.menuType;
 				return menuType === "header" || menuType === "footer";
@@ -135,13 +137,10 @@ export const navigationMenuType = defineType({
 	preview: {
 		select: {
 			menuType: "menuType",
-			showLogo: "showLogo",
 		},
-		prepare({ menuType, showLogo }) {
-			const logoStatus = showLogo ? "With Logo" : "No Logo";
+		prepare({ menuType }) {
 			return {
 				title: `${menuType} Menu`,
-				subtitle: logoStatus,
 			};
 		},
 	},

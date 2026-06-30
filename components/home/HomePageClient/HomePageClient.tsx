@@ -1,14 +1,17 @@
 import FeaturedProductSection from "@/components/home/FeaturedProductSection";
 import HeroSection from "@/components/home/HeroSection";
-import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
+import NavigationList from "@/components/layout/Navigation/NavigationList";
 import { HOME_PAGE_CONTENT_QUERYResult } from "@/sanity.types";
+import type { NavigationItem } from "@/sanity/lib/getResolvedNavigation";
 
 interface HomePageClientProps {
 	homePageContent: HOME_PAGE_CONTENT_QUERYResult;
+	navigationItems: NavigationItem[];
 }
 
 export default function HomePageClient({
 	homePageContent,
+	navigationItems,
 }: HomePageClientProps) {
 	const featuredProducts = homePageContent?.featuredProducts ?? [];
 	return (
@@ -19,7 +22,10 @@ export default function HomePageClient({
 			<div className="main-container mb-30 flex flex-col gap-y-30">
 				<section aria-label="Site Navigation">
 					<div className="flex">
-						<NavigationMenu menuType="content" />
+						<NavigationList
+							menuType="content"
+							navigationItems={navigationItems}
+						/>
 					</div>
 				</section>
 				{featuredProducts.length && (

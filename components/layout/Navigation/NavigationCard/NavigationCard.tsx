@@ -24,6 +24,8 @@ export default function NavigationCard({
 					aria-hidden
 					className="absolute top-1/10 left-1/2 w-[147px] -translate-x-1/2 -translate-y-1/10 object-cover lg:top-1/5 lg:w-[178px] lg:-translate-y-1/5"
 					alt={`Category ${title}`}
+					width={178}
+					height={171}
 				/>
 			)}
 			<div className="flex-1 p-6.5 md:p-6.25 lg:p-10"></div>

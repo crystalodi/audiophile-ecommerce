@@ -1,21 +1,15 @@
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Logo from "@/assets/icons/logo.svg";
 
-export default function NavigationLogo({
-	showLogo,
-	menuType,
-}: {
-	showLogo: boolean;
-	menuType: string;
-}) {
-	if (!showLogo) {
-		return null;
-	}
+type NavigationLogoProps = {
+	menuType: "header" | "footer" | "mobile" | "content";
+};
 
-	const logoClasses = cn("flex items-center justify-center md:justify-start", {
-		"flex-1": menuType === "header",
-	});
+export default function NavigationLogo({ menuType }: NavigationLogoProps) {
+	const logoClasses =
+		menuType === "header"
+			? "flex items-center justify-center md:mr-auto lg:mr-0"
+			: "flex items-center justify-center";
 
 	return (
 		<div className={logoClasses}>

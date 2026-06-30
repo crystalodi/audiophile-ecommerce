@@ -1,39 +1,23 @@
-import { getNavigationMenu } from "@/sanity/lib/contentApi";
 import Header from "./Header";
-import NavigationMenu from "@/components/layout/Navigation/NavigationMenu";
-import { urlFor } from "@/sanity/lib/image";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { getResolvedNavigation } from "@/sanity/lib/getResolvedNavigation";
 
 interface HeaderWrapperProps {
 	disableCartDialog?: boolean;
 }
 
-async function getNavigationList() {
-	const navigationMenuData = await getNavigationMenu("mobile");
-	return (
-		navigationMenuData?.navigationItems?.map(item => ({
-			title: item.title,
-			href: item.href,
-			image: urlFor(item.image?.asset as SanityImageSource).url(),
-		})) ?? [
-			{ title: "Home", href: "/" },
-			{ title: "Headphones", href: "/headphones" },
-			{ title: "Speakers", href: "/speakers" },
-			{ title: "Earphones", href: "/earphones" },
-		]
-	);
-}
-
 export default async function HeaderWrapper({
 	disableCartDialog = false,
 }: HeaderWrapperProps) {
-	const navigationItems = await getNavigationList();
+	const [mobileNavigationItems, headerNavigationItems] = await Promise.all([
+		getResolvedNavigation("mobile"),
+		getResolvedNavigation("header"),
+	]);
+
 	return (
 		<Header
-			navigationItems={navigationItems}
+			mobileNavigationItems={mobileNavigationItems}
+			headerNavigationItems={headerNavigationItems}
 			disableCartDialog={disableCartDialog}
-		>
-			<NavigationMenu menuType="header" />
-		</Header>
+		/>
 	);
 }
